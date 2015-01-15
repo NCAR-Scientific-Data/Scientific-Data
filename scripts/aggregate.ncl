@@ -149,12 +149,12 @@ end if
 
 if (verbose) then print("Setting up time_bnds") end if
 
-if (isatt(time,"bounds")) then
-  tbname = time@bounds
-  time_bnds = fin->$tbname$
-else
+;if (isatt(time,"bounds")) then
+ ; tbname = time@bounds
+  ;time_bnds = fin->$tbname$
+;else
   time_bnds = transpose(onedtond(time,(/2,nt/)))
-end if
+;end if
 
  
 ;; Extract month & year using ut_calendar
