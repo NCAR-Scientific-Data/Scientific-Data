@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Results | NCAR</title>
+		<script type="text/javascript">
+		function inputSource()
+		{
+			document.getElementById("results").src = localStorage.getItem("sourceimage");
+			localStorage.removeItem("sourceimage");
+		}
+		</script>	
+	</head>
+	<body onload="inputSource()">
+		<img id="results" src="">
+		
+	</body>
+</html>
