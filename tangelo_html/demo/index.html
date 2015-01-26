@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Design Your Experiment | NCAR</title>
+		<title>Subset Your Data | NCAR</title>
 		<script src=http://code.jquery.com/jquery-1.11.0.min.js></script>
 		<script src=/js/tangelo.js></script>
 		<script src=myapp.js></script>
@@ -18,6 +18,7 @@
 	</head>
 
 	<body>
+		<h1>Select Your Data</h1>
 		<div id="createExp" class="form-inline">
 			<label for="model">Model:</label>
 			<select id="model">
@@ -59,13 +60,6 @@
 			<label for="start">Start:</label> <input type="date" name="start" id="start"> 
 			<label for="end">End:</label> <input type="date" name="end" id="end">
 			<br>
-
-			<label for="calc">Calculation</label>
-			<select id="calc">
-				<option id="avg">Average</option>
-				<option id="min">Find Minimum</option>
-				<option id="max">Find Maximum</option>
-			</select>
 			
 			<!-- Input Button - Need To Fix <input type="submit" name="Submit"> -->
 			<button onClick="runScript()">Submit</button>

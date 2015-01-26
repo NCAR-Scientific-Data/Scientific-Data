@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Calculations | NCAR</title>
+		<script src=http://code.jquery.com/jquery-1.11.0.min.js></script>
+		<script src=/js/tangelo.js></script>
+		<script src=myapp.js></script>
+		<style type="text/css">
+		body {
+		padding: 0;
+		font-family: AppleGothic, Dotum;
+		font-size: 14px; 
+		line-height: 240%; 
+		margin-left: 38%;
+		margin-top: 10%;
+		}
+		</style>
+	</head>
+
+	<body>
+		<h1>Calculations</h1>
+		<div id="createExp" class="form-inline">
+			<label for="calc">Calculation</label>
+			<select id="calc">
+				<option id="avg">Average</option>
+				<option id="min">Find Minimum</option>
+				<option id="max">Find Maximum</option>
+			</select>
+			
+			<!-- Input Button - Need To Fix <input type="submit" name="Submit"> -->
+			<button onClick="runScript()">Submit</button>
+		</div>
+	</body>
+</html>
