@@ -32,14 +32,14 @@ begin
   new_time = cd_calendar(tmin&time,opt)    ; ntime x 6
 
 ;---SW and NE corners of a lat/lon area of interest.
-  sw_lat =  37.5    
-  sw_lon = 255.0
-  ne_lat =  45.0
-  ne_lon = 265.0
+  sw_lat =  swLat    
+  sw_lon = swLon
+  ne_lat =  neLat
+  ne_lon = neLon
 
 ;---Start and end year of interest (Jan 1 SY to Dec 31 EY)
-  start_year  = 1990
-  end_year    = 2000
+  start_year  = startYear
+  end_year    = endYear
 
 ;---Call function to get indexes closest to the SW and NE corners
   ii_sw = getind_latlon2d (lat2d, lon2d, sw_lat, sw_lon)

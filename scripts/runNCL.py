@@ -1,8 +1,8 @@
 import subprocess
 import sys
 
-def runNCL():
-    status = subprocess.call(["ncl narccap_subset_tmin_time_latlon.ncl"], shell=True)
+def runNCL(float selat, float selon, float nwlat, float nwlon, int startyear, int endyear):
+    status = subprocess.call(["ncl 'seLat=selat' seLon=selon' 'nwLat=nwlat' 'nwLon=nwlon' 'startYear=startyear' 'endYear=endyear' narccap_subset_tmin_time_latlon.ncl"], shell=True)
     if status < 0:
         print "Error subsetting data"
     else:
