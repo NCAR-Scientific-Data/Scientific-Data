@@ -5,14 +5,11 @@ function runScript() {
 		var neLon = $("#neLon").val();
 		var start = $("#start").val();
 		var end = $("#end").val();
-
-		alert(swLat);
-        $.getJSON("runNCL?swlat=" + encodeURIComponent(swLat) + "&swlon=" + encodeURIComponent(swLon) + "&nelat=" + encodeURIComponent("neLat") + "&nelon=" + encodeURIComponent("neLon") + "&startyear=" + encodeURIComponent(start) + "&endyear=" + encodeURIComponent(end), function (data) {
+        $.getJSON("runNCL?swlat=" + encodeURIComponent(swLat) + "&swlon=" + encodeURIComponent(swLon) + "&nelat=" + encodeURIComponent(neLat) + "&nelon=" + encodeURIComponent(neLon) + "&startyear=" + encodeURIComponent(start) + "&endyear=" + encodeURIComponent(end), function (data) {
 		if(data.image)
 		{
 			localStorage.setItem("sourceimage?", data.image);
-			alert("Made it!");
-			//window.open("resultPage.html", "_self");
+			window.open("resultPage.html", "_self");
 		}
 		else
 		{
