@@ -19,9 +19,9 @@ function subset() {
 }
 
 function calculate() {
-	var calc = $("#calc").val();
-	var interval = $("#interval").val();
-	var out = $("#outtime").val();
+	var calc = $("#calc option:selected").val();
+	var interval = $("#interval option:selected").val();
+	var out = $("#outtime option:selected").val();
 	alert("Calc: " + calc);
 	$.getJSON("runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + "&interval=" + encodeURIComponent(interval) + "&method=" + encodeURIComponent(calc) + "&outtime=" + encodeURIComponent(outtime), function (data) {
 		if(data.result)
