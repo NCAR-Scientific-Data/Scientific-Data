@@ -22,8 +22,7 @@ function calculate() {
 	var calc = $("#calc option:selected").val();
 	var interval = $("#interval option:selected").val();
 	var out = $("#outtime option:selected").val();
-	alert("Calc: " + calc);
-	$.getJSON("runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + "&interval=" + encodeURIComponent(interval) + "&method=" + encodeURIComponent(calc) + "&outtime=" + encodeURIComponent(outtime), function (data) {
+	$.getJSON("runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + "&interval=" + encodeURIComponent(interval) + "&method=" + encodeURIComponent(calc) + "&outtime=" + encodeURIComponent(out), function (data) {
 		if(data.result)
 		{
 			localStorage.setItem("calculations", data.result);
