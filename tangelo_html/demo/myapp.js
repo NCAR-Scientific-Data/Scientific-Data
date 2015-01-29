@@ -3,7 +3,8 @@ function runScript() {
 		if(data.image)
 		{
 			localStorage.setItem("sourceimage?", data.image);
-			window.open("resultPage.html", "_self");
+			alert("Made it!");
+			//window.open("resultPage.html", "_self");
 		}
 		else
 		{
