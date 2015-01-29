@@ -46,23 +46,13 @@
 
 			<label>Time Period:</label>
 			<br>
-			<label for="freq">Frequency:</label>
-			<select id="freq">
-				<option id="daily">Daily</option>
-				<option id="xDays">Every X Days</option>
-				<option id="weekly">Weekly</option>
-				<option id="xWeeks">Every X Weeks</option>
-				<option id="Monthly">Monthly</option>
-				<option id="xMonths">Every X Months</option>
-			</select>
-			<br>
 			<label>Range:</label>
-			<label for="start">Start:</label> <input type="number" name="start" id="start"> 
-			<label for="end">End:</label> <input type="number" name="end" id="end">
+			<label for="start">Start Year:</label> <input type="number" name="start" id="start"> 
+			<label for="end">End Year:</label> <input type="number" name="end" id="end">
 			<br>
 			
 			<!-- Input Button - Need To Fix <input type="submit" name="Submit"> -->
-			<button onClick="runScript()" class ="btn btn-class">Submit</button>
+			<button onClick="subset()" class ="btn btn-class">Submit</button>
 		</div>
 	</body>
 </html>

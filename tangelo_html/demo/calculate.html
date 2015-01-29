@@ -19,16 +19,29 @@
 
 	<body>
 		<h1>Calculations</h1>
-		<div id="createExp" class="form-inline">
+		<div id="calc" class="form-inline">
 			<label for="calc">Calculation</label>
 			<select id="calc">
-				<option id="avg">Average</option>
-				<option id="min">Find Minimum</option>
-				<option id="max">Find Maximum</option>
+				<option id="avg" value="mean">Average</option>
+				<option id="min" value="min">Find Minimum</option>
+				<option id="max" value="max">Find Maximum</option>
 			</select>
-			
+			<br>
+			<label for="interval">Interval:</label>
+			<select id="interval">
+				<option id="daily" value="day">Daily</option>
+				<option id="monthly" value="month">Monthly</option>
+				<option id="yearly" value="year">Yearly</option>
+				<option id="seasonal" value="season">Seasonal</option>
+			</select>
+			<label for="outtime">Out Time:</label>
+			<select id="outtime">
+				<option id="start" value="start">Start</option>
+				<option id="mid" value="mid">Mid</option>
+				<option id="end" value="end">End</option>
+			</select>
 			<!-- Input Button - Need To Fix <input type="submit" name="Submit"> -->
-			<button onClick="runScript()">Submit</button>
+			<button onClick="calculate()">Submit</button>
 		</div>
 	</body>
 </html>
