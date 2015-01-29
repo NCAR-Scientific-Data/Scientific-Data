@@ -3,15 +3,11 @@
 	<head>
 		<title>Results | NCAR</title>
 		<script type="text/javascript">
-		function inputSource()
-		{
-			document.getElementById("results").src = localStorage.getItem("sourceimage");
-			localStorage.removeItem("sourceimage");
-		}
 		</script>	
 	</head>
-	<body onload="inputSource()">
+	<body onload="plot()">
+		<h1>Results</h1>
+		<p id="waitMessage">Please wait, your data is being plotted...</p>
 		<img id="results" src="">
-		
 	</body>
 </html>
