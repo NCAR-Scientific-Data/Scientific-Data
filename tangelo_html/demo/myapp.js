@@ -1,11 +1,12 @@
 function subset() {
-	var swLat = $("#swLat").val();
-	var swLon = $("#swLon").val();
-	var neLat = $("#neLat").val();
-	var neLon = $("#neLon").val();
-	var start = $("#start").val();
-	var end = $("#end").val();
-    $.getJSON("runSubset?swlat=" + encodeURIComponent(swLat) + "&swlon=" + encodeURIComponent(swLon) + "&nelat=" + encodeURIComponent(neLat) + "&nelon=" + encodeURIComponent(neLon) + "&startyear=" + encodeURIComponent(start) + "&endyear=" + encodeURIComponent(end), function (data) {
+	var swLat = "swlat=" + encodeURIComponent($("#swLat").val());
+	var swLon = "&swlon=" + encodeURIComponent($("#swLon").val());
+	var neLat = "&nelat=" + encodeURIComponent($("#neLat").val());
+	var neLon = "&nelon=" + encodeURIComponent($("#neLon").val());
+	var start = "&startyear=" + encodeURIComponent($("#start").val());
+	var end = "&endyear=" + encodeURIComponent($("#end").val());
+	var url = "runSubset?" + swLat + swLon + neLat + neLon + start + end;
+    $.getJSON(url, function (data) {
 		if(data.subset)
 		{
 			localStorage.setItem("subset", data.subset);
@@ -19,10 +20,11 @@ function subset() {
 }
 
 function calculate() {
-	var calc = $("#calc option:selected").val();
-	var interval = $("#interval option:selected").val();
-	var out = $("#outtime option:selected").val();
-	$.getJSON("runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + "&interval=" + encodeURIComponent(interval) + "&method=" + encodeURIComponent(calc) + "&outtime=" + encodeURIComponent(out), function (data) {
+	var calc = "&method=" + encodeURIComponent($("#calc option:selected").val());
+	var interval = "&interval=" + encodeURIComponent($("#interval option:selected").val());
+	var out = "&outtime" + encodeURIComponent($("#outtime option:selected").val());
+	var url = "runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
+	$.getJSON(url, function (data) {
 		if(data.result)
 		{
 			localStorage.setItem("calculations", data.result);
@@ -37,7 +39,8 @@ function calculate() {
 
 function plot()
 {
-	$.getJSON("runPlot?filename=" + encodeURIComponent(localStorage.getItem("calculations")), function (data) {
+	var url = "runPlot?filename=" + encodeURIComponent(localStorage.getItem("calculations"));
+	$.getJSON(url, function (data) {
 		if(data.image)
 		{
 			document.getElementById("results").src = data.image;
