@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Subset Your Data | NCAR</title>
+		<script src=http://code.jquery.com/jquery-1.11.0.min.js></script>
+		<script src=/js/tangelo.js></script>
+		<script src=myapp.js></script>
+		<style type="text/css">
+		body {
+		padding: 0;
+		font-family: AppleGothic, Dotum;
+		font-size: 14px; 
+		line-height: 240%; 
+		margin-left: 38%;
+		margin-top: 10%;
+		}
+		</style>
+	</head>
+
+	<body>
+		<h1>Select Your Data</h1>
+		<div id="createExp" class="form-inline">
+			<label for="model">Model:</label>
+			<select id="model" title="Select your model">
+				<option id="narccap">NARCCAP</option>
+			</select>
+			<br>
+			<label for="data">Data:</label>
+			<select id="data" title="Select your data">
+				<option id="temp">Daily Minimum Temperature</option>
+			</select>
+			<br>
+			
+			<label>Region:</label>
+			<br>
+			<label>Southwest Corner:</label>
+			<br>
+			<label for="swLat">Latitude:</label> <input type="number" name="swLat" id="swLat" min="0" max="90" title="Select your latitude">
+			<label for="swLon">Longitude:</label> <input type="number" name="swLon" id="swLon" min="0" max="180" title="Select your longitude">
+			<br>
+			<label>Northeast Corner:</label>
+			<br>
+			<label for="neLat">Latitude:</label> <input type="number" name="neLat" id="neLat" min="0" max="90" title="Select your latitude">
+			<label for="neLon">Longitude:</label> <input type="number" name="neLon" id="neLon" min="0" max="180" title="Select your longitude">
+			<br>
+
+			<label>Time Period:</label>
+			<br>
+			<label>Range:</label>
+			<label for="start">Start Year:</label> <input type="number" name="start" id="start" title="Select your start year"> 
+			<label for="end">End Year:</label> <input type="number" name="end" id="end" title="Select your end year">
+			<br>
+			
+			<!-- Input Button - Need To Fix <input type="submit" name="Submit"> -->
+			<button onClick="subset()" class ="btn btn-class">Submit</button>
+		</div>
+	</body>
+</html>
