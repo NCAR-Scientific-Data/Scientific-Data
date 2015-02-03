@@ -1,3 +1,8 @@
+"""@package docstring
+This script plots a given NetCDF file and returns a .png of the plot via a NCL script. The NCL script
+simply takes in a NetCDF file and returns a plot using a standard projection.
+"""
+
 import subprocess
 import sys
 

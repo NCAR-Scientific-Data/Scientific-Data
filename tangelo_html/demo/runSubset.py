@@ -1,3 +1,8 @@
+"""@package docstring
+This script subsets a NetCDF file via a NCL script. The NCL script subsets the NetCDF file by
+a bounding rectangle given a Southwest Lat/Lon point and Northeast Lat/Lon point. It then creates
+a new NetCDF file of the subsetted data
+"""
 import subprocess
 import sys
 
