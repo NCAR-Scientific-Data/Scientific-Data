@@ -9,17 +9,21 @@ function subset() {
     $.getJSON(url, function (data) {
 		if(data.subset)
 		{
-			localStorage.setItem("subset", data.subset);
+			localStorage.subset = data.subset;
 			window.open("calculate.html", "_self");
 		}
 		else
 		{
+			localStorage.subset = "";
 			alert(data.alert);
 		}
     });
 }
 
 function calculate() {
+
+	document.getElementById("submitMessage").innerHTML = "<p>Your results are being calculated.</p>"
+
 	var calc = "&method=" + encodeURIComponent($("#calc option:selected").val());
 	var interval = "&interval=" + encodeURIComponent($("#interval option:selected").val());
 	var out = "&outtime" + encodeURIComponent($("#outtime option:selected").val());
@@ -27,11 +31,12 @@ function calculate() {
 	$.getJSON(url, function (data) {
 		if(data.result)
 		{
-			localStorage.setItem("calculations", data.result);
+			localStorage.result = data.result;
 			window.open("resultPage.html", "_self");
 		}
 		else
 		{
+			localStorage.result = "";
 			alert(data.alert);
 		}
         });
@@ -39,19 +44,17 @@ function calculate() {
 
 function plot()
 {
-	var url = "runPlot?filename=" + encodeURIComponent(localStorage.getItem("calculations"));
+	var url = "runPlot?filename=" + encodeURIComponent(localStorage.result);
 	$.getJSON(url, function (data) {
 		if(data.image)
 		{
 			document.getElementById("results").src = data.image;
 			document.getElementById("waitMessage").innerHTML = "";
-			localStorage.removeItem("calculations");
-			localStorage.removeItem("subset");
-
+			localStorage.clear();
 		}
 		else
 		{
-			alert(data.alert);
+			document.getElementById("waitMessage").innerHTML = data.alert;
 		}
     });	
 }
