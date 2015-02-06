@@ -6,63 +6,194 @@
 		<script src="/js/tangelo.js"></script>
 		<script src="javascript/myapp.js"></script>
 		<style type="text/css">
-		body {
-		padding: 0;
-		font-family: AppleGothic, Dotum;
-		font-size: 14px; 
-		line-height: 240%; 
-		margin-left: 38%;
-		margin-top: 10%;
+		* {
+			padding: 0;
+			margin: 0;
 		}
 
-		h1 {display:inline;}
+		body {
+		position: relative;
+		font-family: AppleGothic, Dotum;
+		font-size: 14px; 
+		margin: 10% auto;
+		width: 50%;
+		}
+
+		h1 {
+			display:inline;
+			padding: 10px;
+		}
 
 		a.tooltip {outline:none; } 
 		a.tooltip strong {line-height:30px;} 
 		a.tooltip:hover {text-decoration:none;} 
 		a.tooltip span { z-index:10;display:none; padding:14px 20px; margin-top:-30px; margin-left:28px; width:300px; line-height:16px; } 
 		a.tooltip:hover span{ display:inline; position:absolute; color:#111; border:1px solid #DCA; background:#fffAF0;} .callout {z-index:20;position:absolute;top:30px;border:0;left:-12px;} 
+
+		.radio-selection {
+			display: block;
+		}
+
+		.label {
+			width: 30%;
+		}
+
+		.choice {
+			width: 70%;
+		}
+
+		.container {
+			display: inline-flex;
+			justify-content: space-between;
+			align-items: baseline;
+			width: 100%;
+			margin: 10px auto;
+		}
+
+		input {
+			margin: 5px 5px 0px 0px;
+		}
+
+		#subsetter {
+			padding: 20px 0px;
+		}
+
 		</style>
 	</head>
 
 	<body>
 	
 		<h1>Select Your Data </h1> 
-		<a href="#" class="tooltip"> ????? <span>  <strong>Explanation title</strong><br /> Explanation body Explanation body Explanation body Explanation body Explanation body Explanation body </span> </a>
-		<div id="createExp" class="form-inline">
-			<label for="model">Model:</label>
-			<select id="model" title="Select your model">
-				<option id="narccap">NARCCAP</option>
-			</select>
-			<br>
-			<label for="data">Data:</label>
-			<select id="data" title="Select your data">
-				<option id="temp">Daily Minimum Temperature</option>
-			</select>
-			<br>
+		<a href="#" class="tooltip"> ????? <span>  <strong>Explanation title</strong>
+		<br>Explanation body Explanation body Explanation body Explanation body Explanation body Explanation body </span> </a>
+		<div id="subsetter" class="form-inline">
+			<div class="container">
+				<div class="label">
+					<label for="sim">Simulation Type</label>
+					<p><i>explanation could go here</i></p>
+				</div>
+				<div class="choice">
+					<select id="sim">
+						<option value="ncep">NCEP</option>
+						<option value="gcm-current">GCM Current</option>
+						<option value="gcm-future">GCM Future</option>
+					</select>
+				</div>
+			</div>
 			
-			<label>Region:</label>
-			<br>
-			<label>Southwest Corner:</label>
-			<br>
-			<label for="swLat">Latitude:</label> <input type="number" name="swLat" id="swLat" min="0" max="90" title="Select your latitude">
-			<label for="swLon">Longitude:</label> <input type="number" name="swLon" id="swLon" min="0" max="180" title="Select your longitude">
-			<br>
-			<label>Northeast Corner:</label>
-			<br>
-			<label for="neLat">Latitude:</label> <input type="number" name="neLat" id="neLat" min="0" max="90" title="Select your latitude">
-			<label for="neLon">Longitude:</label> <input type="number" name="neLon" id="neLon" min="0" max="180" title="Select your longitude">
-			<br>
+			<div class="container">
+				<div class="label">
+					<label>Variable</label>
+					<p><i>explanation could go here</i></p>
+				</div>
+				<div class="choice">
+					<label><i>Daily Fields</i></label>
+					<span class="radio-selection"><input type="radio" name="var" id="sic" value="sic"><label for="sic">Daily Average Sea-ice Fraction</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="spdmax" value="spdmax"><label for="spdmax">Maximum Daily 10-Meter Wind Speed</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="tasmax" value="tasmax"><label for="tasmax">Maximum Daily Surface Air Temperature</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="tasmin" value="tasmin"><label for="tasmin">Minimum Daily Surface Air Temperature</label></span>
+					
+					<label><i>3-Hourly Fields</i></label>
+					<span class="radio-selection"><input type="radio" name="var" id="huss" value="huss"><label for="huss">Surface Specific Humidity</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="pr" value="pr"><label for="pr">Precipitation</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="ps" value="ps"><label for="ps">Surface Pressure</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="rsds" value="rsds"><label for="rsds">Surface Downwelling Shortwave Radiation</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="tas" value="tas"><label for="tas">Surface Air Temperature</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="uas" value="uas"><label for="uas">Zonal Surface Wind Speed</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="vas" value="vas"><label for="vas">Meridional Surface Wind Speed</label></span>
+				</div>
+			</div>
 
-			<label>Time Period:</label>
-			<br>
-			<label>Range:</label>
-			<label for="start">Start Year:</label> <input type="number" name="start" id="start" title="Select your start year"> 
-			<label for="end">End Year:</label> <input type="number" name="end" id="end" title="Select your end year">
-			<br>
+			<div class="container">
+				<div class="label">
+					<label>Space</label>
+					<p><i>explanation could go here</i></p>
+				</div>
+				<div class="choice">
+					<label><i>Southwest Corner</i></label>
+					<br>
+					<label for="swlat">Latitude</label>
+					<input id="swlat" type="text" width="40px">
+					<br>
+					<label for="swlon">Longitude</label>
+					<input id="swlon" type="text" width="40px">
+					<br>
+					<br>
+					<label><i>Northeast Corner</i></label>
+					<br>
+					<label for="nelat">Latitude</label>
+					<input id="nelat" type="text" width="40px">
+					<br>
+					<label for="nelon">Longitude</label>
+					<input id="nelon" type="text" width="40px">
+				</div>
+			</div>
+
+			<div class="container">
+				<div class="label">
+					<label>Time Range</label>
+					<p><i>explanation could go here</i></p>
+				</div>
+				<div class="choice">
+					<label><i>Start</i></label>
+					<select id="syear">
+						<option value="1979">1979</option>
+					</select>
+					<select id="smonth">
+						<option value="12">12</option>
+					</select>
+					<select id="sday">
+						<option value="01">01</option>
+					</select>
+
+					<br>
+
+					<label><i>End</i></label>
+					<select id="eyear">
+						<option value="1979">1979</option>
+					</select>
+					<select id="emonth">
+						<option value="12">12</option>
+					</select>
+					<select id="eday">
+						<option value="01">01</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="container">
+				<div class="label">
+					<label>Regional Climate Model</label>
+					<p><i>explanation could go here</i></p>
+				</div>
+				<div class="choice">
+					<label><i>Daily Fields</i></label>
+					<span class="radio-selection"><input type="radio" name="rcm" id="crcm" value="crcm"><label for="crcm">CRCM</label></span>
+					<span class="radio-selection"><input type="radio" name="rcm" id="ecp2" value="ecp2"><label for="ecp2">ECP2</label></span>
+					<span class="radio-selection"><input type="radio" name="rcm" id="hrm3" value="hrm3"><label for="hrm3">HRM3</label></span>
+					<span class="radio-selection"><input type="radio" name="rcm" id="mm5i" value="mm5i"><label for="mm5i">MM5I</label></span>
+					<span class="radio-selection"><input type="radio" name="rcm" id="rcm3" value="rcm3"><label for="rcm3">RCM3</label></span>
+					<span class="radio-selection"><input type="radio" name="rcm" id="wrfg" value="wrfg"><label for="wrfg">WRFG</label></span>
+				</div>
+			</div>
+
+			<div class="container">
+				<div class="label">
+					<label>Global Climate Model</label>
+					<p><i>explanation could go here</i></p>
+				</div>
+				<div class="choice">
+					<label><i>Daily Fields</i></label>
+					<span class="radio-selection"><input type="radio" name="gcm" id="GFDL" value="GFDL"><label for="GFDL">Cgcm</label></span>
+					<span class="radio-selection"><input type="radio" name="gcm" id="CGCM3" value="CGCM3"><label for="CGCM3">ECP2</label></span>
+					<span class="radio-selection"><input type="radio" name="gcm" id="HADCM3" value="HADCM3"><label for="HADCM3">HRM3</label></span>
+					<span class="radio-selection"><input type="radio" name="gcm" id="CCSM" value="CCSM"><label for="CCSM">MM5I</label></span>
+				</div>
+			</div>
+			
 			
 			<!-- Input Button - Need To Fix <input type="submit" name="Submit"> -->
-			<button onClick="subset()" class ="btn btn-class">Submit</button>
+			<button type="submit" onClick="subset()" class ="btn btn-class">Submit</button>
 
 		</div>
 	</body>
