@@ -14,11 +14,21 @@
 		margin-left: 38%;
 		margin-top: 10%;
 		}
+
+		h1 {display:inline;}
+
+		a.tooltip {outline:none; } 
+		a.tooltip strong {line-height:30px;} 
+		a.tooltip:hover {text-decoration:none;} 
+		a.tooltip span { z-index:10;display:none; padding:14px 20px; margin-top:-30px; margin-left:28px; width:300px; line-height:16px; } 
+		a.tooltip:hover span{ display:inline; position:absolute; color:#111; border:1px solid #DCA; background:#fffAF0;} .callout {z-index:20;position:absolute;top:30px;border:0;left:-12px;} 
 		</style>
 	</head>
 
 	<body>
-		<h1>Select Your Data</h1>
+	
+		<h1>Select Your Data </h1> 
+		<a href="#" class="tooltip"> ????? <span>  <strong>Explanation title</strong><br /> Explanation body Explanation body Explanation body Explanation body Explanation body Explanation body </span> </a>
 		<div id="createExp" class="form-inline">
 			<label for="model">Model:</label>
 			<select id="model" title="Select your model">
@@ -53,6 +63,7 @@
 			
 			<!-- Input Button - Need To Fix <input type="submit" name="Submit"> -->
 			<button onClick="subset()" class ="btn btn-class">Submit</button>
+
 		</div>
 	</body>
 </html>
