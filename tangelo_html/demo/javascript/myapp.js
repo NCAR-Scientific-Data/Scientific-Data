@@ -1,11 +1,16 @@
 function subset() {
-	var swLat = "swlat=" + encodeURIComponent($("#swLat").val());
-	var swLon = "&swlon=" + encodeURIComponent($("#swLon").val());
-	var neLat = "&nelat=" + encodeURIComponent($("#neLat").val());
-	var neLon = "&nelon=" + encodeURIComponent($("#neLon").val());
-	var start = "&startyear=" + encodeURIComponent($("#start").val());
-	var end = "&endyear=" + encodeURIComponent($("#end").val());
-	var url = "runSubset?" + swLat + swLon + neLat + neLon + start + end;
+	var sim = "simulation_type=" + $("#sim option:selected").val();
+	var v = "&variable=" + $("input[name='var']:checked").val();
+	var swlat = "&swLat=" + $("#swlat").val();
+	var swlon = "&swLon=" + $("#swlon").val();
+	var nelat = "&neLat=" + $("#nelat").val();
+	var nelon = "&neLon=" + $("#nelon").val();
+	var start = "&timestart=" + $("#syear option:selected").val() + "-" + $("#smonth option:selected").val() + "-" + $("#sday option:selected");
+	var end = "&timeend=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected");
+    var rcm = "&rcm=" + $("input[name='rcm']:checked").val();
+    var gcm = "&gcm=" + $("input[name='gcm']:checked").val();
+
+    url = "grabNetcdf?" + sim + v + swlat + swlon + nelat + nelon + start + end + rcm + gcm
     $.getJSON(url, function (data) {
 		if(data.subset)
 		{

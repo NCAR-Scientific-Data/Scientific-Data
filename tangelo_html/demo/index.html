@@ -75,8 +75,8 @@
 				<div class="choice">
 					<select id="sim">
 						<option value="ncep">NCEP</option>
-						<option value="gcm-current">GCM Current</option>
-						<option value="gcm-future">GCM Future</option>
+						<option value="-current">GCM Current</option>
+						<option value="-future">GCM Future</option>
 					</select>
 				</div>
 			</div>
@@ -88,19 +88,19 @@
 				</div>
 				<div class="choice">
 					<label><i>Daily Fields</i></label>
-					<span class="radio-selection"><input type="radio" name="var" id="sic" value="sic"><label for="sic">Daily Average Sea-ice Fraction</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="spdmax" value="spdmax"><label for="spdmax">Maximum Daily 10-Meter Wind Speed</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="tasmax" value="tasmax"><label for="tasmax">Maximum Daily Surface Air Temperature</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="tasmin" value="tasmin"><label for="tasmin">Minimum Daily Surface Air Temperature</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="sic" value="table1.sic"><label for="sic">Daily Average Sea-ice Fraction</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="spdmax" value="table1.spdmax"><label for="spdmax">Maximum Daily 10-Meter Wind Speed</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="tasmax" value="table1.tasmax"><label for="tasmax">Maximum Daily Surface Air Temperature</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="tasmin" value="table1.tasmin"><label for="tasmin">Minimum Daily Surface Air Temperature</label></span>
 					
 					<label><i>3-Hourly Fields</i></label>
-					<span class="radio-selection"><input type="radio" name="var" id="huss" value="huss"><label for="huss">Surface Specific Humidity</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="pr" value="pr"><label for="pr">Precipitation</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="ps" value="ps"><label for="ps">Surface Pressure</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="rsds" value="rsds"><label for="rsds">Surface Downwelling Shortwave Radiation</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="tas" value="tas"><label for="tas">Surface Air Temperature</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="uas" value="uas"><label for="uas">Zonal Surface Wind Speed</label></span>
-					<span class="radio-selection"><input type="radio" name="var" id="vas" value="vas"><label for="vas">Meridional Surface Wind Speed</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="huss" value="table2.huss"><label for="huss">Surface Specific Humidity</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="pr" value="table2.pr"><label for="pr">Precipitation</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="ps" value="table2.ps"><label for="ps">Surface Pressure</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="rsds" value="table2.rsds"><label for="rsds">Surface Downwelling Shortwave Radiation</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="tas" value="table2.tas"><label for="tas">Surface Air Temperature</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="uas" value="table2.uas"><label for="uas">Zonal Surface Wind Speed</label></span>
+					<span class="radio-selection"><input type="radio" name="var" id="vas" value="table2.vas"><label for="vas">Meridional Surface Wind Speed</label></span>
 				</div>
 			</div>
 
@@ -183,11 +183,10 @@
 					<p><i>explanation could go here</i></p>
 				</div>
 				<div class="choice">
-					<label><i>Daily Fields</i></label>
-					<span class="radio-selection"><input type="radio" name="gcm" id="GFDL" value="GFDL"><label for="GFDL">Cgcm</label></span>
-					<span class="radio-selection"><input type="radio" name="gcm" id="CGCM3" value="CGCM3"><label for="CGCM3">ECP2</label></span>
-					<span class="radio-selection"><input type="radio" name="gcm" id="HADCM3" value="HADCM3"><label for="HADCM3">HRM3</label></span>
-					<span class="radio-selection"><input type="radio" name="gcm" id="CCSM" value="CCSM"><label for="CCSM">MM5I</label></span>
+					<span class="radio-selection"><input type="radio" name="gcm" id="GFDL" value="gfdl"><label for="GFDL">GFDL</label></span>
+					<span class="radio-selection"><input type="radio" name="gcm" id="CGCM3" value="cgcm3"><label for="CGCM3">CGCM3</label></span>
+					<span class="radio-selection"><input type="radio" name="gcm" id="HADCM3" value="hadcm3"><label for="HADCM3">HADCM3</label></span>
+					<span class="radio-selection"><input type="radio" name="gcm" id="CCSM" value="ccsm"><label for="CCSM">CCSM</label></span>
 				</div>
 			</div>
 			
