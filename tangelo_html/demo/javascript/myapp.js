@@ -5,12 +5,11 @@ function subset() {
 	var swlon = "&swLon=" + $("#swlon").val();
 	var nelat = "&neLat=" + $("#nelat").val();
 	var nelon = "&neLon=" + $("#nelon").val();
-	var start = "&timestart=" + $("#syear option:selected").val() + "-" + $("#smonth option:selected").val() + "-" + $("#sday option:selected");
-	var end = "&timeend=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected");
+	var start = "&timestart=" + $("#syear option:selected").val() + "-" + $("#smonth option:selected").val() + "-" + $("#sday option:selected").val();
+	var end = "&timeend=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected").val();
     var rcm = "&rcm=" + $("input[name='rcm']:checked").val();
     var gcm = "&gcm=" + $("input[name='gcm']:checked").val();
-
-    url = "grabNetcdf?" + sim + v + swlat + swlon + nelat + nelon + start + end + rcm + gcm
+    url = "python/grabNetcdf?" + sim + v + swlat + swlon + nelat + nelon + start + end + rcm + gcm
     $.getJSON(url, function (data) {
 		if(data.subset)
 		{

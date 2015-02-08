@@ -15,7 +15,7 @@ Parameters:
 	rcm: the regional climate model.
 	gcm: the global climate model (empty if ncep is selected) 	
 """
-import runSubset.py
+import runSubset
 
 def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="", timestart="", timeend="", rcm="", gcm=""):
 	basicString = "http://tds.ucar.edu/thredds/dodsC/narccap."
