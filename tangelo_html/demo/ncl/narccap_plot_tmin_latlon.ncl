@@ -23,7 +23,7 @@ begin
   nt = 0    ; which time index to plot
 
 ;---The graphics section
-  wks = gsn_open_wks("png","tmin_latlon")    ; "png", "x11", "ps", "pdf"
+  wks = gsn_open_wks("png",outfile)    ; "png", "x11", "ps", "pdf"
     
   res                      = True
 

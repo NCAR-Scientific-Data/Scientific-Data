@@ -24,7 +24,7 @@ begin
   nlat  = dims(1)
   nlon  = dims(2)
 
-  nt = 0    ; which time index to plot
+  nt = timeindex    ; which time index to plot
 
 ;---The graphics section
   wks = gsn_open_wks("png","tmin_native")          

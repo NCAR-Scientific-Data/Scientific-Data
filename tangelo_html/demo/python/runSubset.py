@@ -7,7 +7,14 @@ import subprocess
 import sys
 
 def run(url, swlat, swlon, nelat, nelon, startyear, endyear):
-    status = subprocess.call(["ncl swLat={0} swLon={1} neLat={2} neLon={3} startYear={4} endYear={5} ncl/narccap_subset_tmin_time_latlon.ncl".format(swlat,swlon,nelat,nelon,startyear,endyear)], shell=True)
+    swLat = "swLat={}".format(swlat)
+    swLon = "swLon={}".format(swlon)
+    neLat = "neLat={}".format(nelat)
+    neLon = "neLon={}".format(nelon)
+    startYear = "startYear={}".format(startyear)
+    endYear = "endYear={}".format(endyear)
+    args = ['ncl' ,swLat, swLon, neLat, neLon, startYear, endYear, '../ncl/narccap_subset_tmin_time_latlon.ncl']
+    status = subprocess.Popen(args)
     if status < 0:
         print "Error subsetting data"
 	return { "alert": "Error subsetting data" }

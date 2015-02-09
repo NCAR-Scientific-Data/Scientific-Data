@@ -8,8 +8,21 @@ to set the aggregate result). The output file is then a NetCDF with the aggregat
 import subprocess
 import sys
 
-def run(filename,interval, method, outtime):
-	status = subprocess.call(["ncl 'infile=\"{0}\"' 'outfile=\"tmin_aggregate_monthly.nc\"' 'varname=\"tmin\"' 'interval=\"{1}\"' 'method=\"{2}\"' 'outtime=\"{3}\"' ncl/aggregate.ncl".format(filename, interval, method, outtime)], shell=True)
+def run(filename, interval, method, outtime):
+        infile = "'infile=\"{}\"'".format(filename)
+        sInterval = "'interval=\"{}\"'".format(interval)
+        if not method:
+                sMethod = ""
+        else:
+                sMethod = "'method=\"{}\"'".format(method)
+        if not outtime:
+                sOuttime = ""
+        else:
+                sOuttime = "'outtime=\"{}\"'".format(outtime)
+        outfile = "'outfile=\"tmin_aggregate_monthly.nc\"'"
+        varname = "'varname=\"tmin\"'"
+        args = ['ncl', infile, outfile, varname, sInterval, sMethod, sOuttime, '../ncl/aggregate.ncl']
+	status = subprocess.Popen(args)
       	if status < 0:
 		print "Error aggregating data"
 		return { "alert": "Error aggregating data" }
