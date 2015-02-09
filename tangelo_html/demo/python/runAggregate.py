@@ -9,16 +9,16 @@ import subprocess
 import sys
 
 def run(filename, interval, method, outtime):
-        infile = "'infile=\"{}\"'".format(filename)
-        sInterval = "'interval=\"{}\"'".format(interval)
+        infile = "'infile=\"{0}\"'".format(filename)
+        sInterval = "'interval=\"{0}\"'".format(interval)
         if not method:
                 sMethod = ""
         else:
-                sMethod = "'method=\"{}\"'".format(method)
+                sMethod = "'method=\"{0}\"'".format(method)
         if not outtime:
                 sOuttime = ""
         else:
-                sOuttime = "'outtime=\"{}\"'".format(outtime)
+                sOuttime = "'outtime=\"{0}\"'".format(outtime)
         outfile = "'outfile=\"tmin_aggregate_monthly.nc\"'"
         varname = "'varname=\"tmin\"'"
         args = ['ncl', infile, outfile, varname, sInterval, sMethod, sOuttime, '../ncl/aggregate.ncl']

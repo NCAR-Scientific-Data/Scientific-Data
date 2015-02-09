@@ -7,12 +7,12 @@ import subprocess
 import sys
 
 def run(url, swlat, swlon, nelat, nelon, startyear, endyear):
-    swLat = "swLat={}".format(swlat)
-    swLon = "swLon={}".format(swlon)
-    neLat = "neLat={}".format(nelat)
-    neLon = "neLon={}".format(nelon)
-    startYear = "startYear={}".format(startyear)
-    endYear = "endYear={}".format(endyear)
+    swLat = "swLat={0}".format(swlat)
+    swLon = "swLon={0}".format(swlon)
+    neLat = "neLat={0}".format(nelat)
+    neLon = "neLon={0}".format(nelon)
+    startYear = "startYear={0}".format(startyear)
+    endYear = "endYear={0}".format(endyear)
     args = ['ncl' ,swLat, swLon, neLat, neLon, startYear, endYear, '../ncl/narccap_subset_tmin_time_latlon.ncl']
     status = subprocess.Popen(args)
     if status < 0:

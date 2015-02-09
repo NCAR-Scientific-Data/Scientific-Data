@@ -7,8 +7,8 @@ import subprocess
 import sys
 
 def run(filename, timeindex):
-        sFilename = "'filename=\"{}\"'".format(filename)
-        sTimeindex = "timeindex={}".format(timeindex)
+        sFilename = "'filename=\"{0}\"'".format(filename)
+        sTimeindex = "timeindex={0}".format(timeindex)
         sOutfile = "'outfile=\"tmin_latlon\"'"
         args = ['ncl', sFilename, sTimeindex, sOutfile, '../ncl/narccap_plot_tmin_latlon.ncl']
 	status = subprocess.Popen(args)
