@@ -18,6 +18,6 @@ def run(url, swlat, swlon, nelat, nelon, startyear, endyear):
     status = subprocess.call(args)
     if status < 0:
         print "Error subsetting data"
-		return { "alert": "Error subsetting data" }
+        return { "alert": "Error subsetting data" }
     else:
       return { "subset": "tmin_subset_time_latlon.nc" }
