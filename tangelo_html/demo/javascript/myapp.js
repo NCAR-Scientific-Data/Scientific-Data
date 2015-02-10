@@ -30,7 +30,7 @@ function calculate() {
 
 	var calc = "&method=" + encodeURIComponent($("#calc option:selected").val());
 	var interval = "&interval=" + encodeURIComponent($("#interval option:selected").val());
-	var out = "&outtime" + encodeURIComponent($("#outtime option:selected").val());
+	var out = "&outtime=" + encodeURIComponent($("#outtime option:selected").val());
 	var url = "python/runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
 	$.getJSON(url, function (data) {
 		if(data.result)
