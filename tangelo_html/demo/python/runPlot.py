@@ -7,11 +7,11 @@ import subprocess
 import sys
 
 def run(filename, timeindex):
-        sFilename = "'filename=\"{0}\"'".format(filename)
+        sFilename = "filename=\"{0}\"".format(filename)
         sTimeindex = "timeindex={0}".format(timeindex)
-        sOutfile = "'outfile=\"tmin_latlon\"'"
+        sOutfile = "outfile=\"../tmin_latlon\""
         args = ['ncl', sFilename, sTimeindex, sOutfile, '../ncl/narccap_plot_tmin_latlon.ncl']
-	status = subprocess.Popen(args)
+	status = subprocess.call(args)
 	if status < 0:
 		print "Error plotting data"
 		return { "alert": "Error plotting data" }

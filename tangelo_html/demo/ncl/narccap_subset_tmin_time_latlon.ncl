@@ -15,8 +15,8 @@
 ;----------------------------------------------------------------------
 
 begin
-  dir      = "/glade/p/image/narccap/summaries/daily/"
-  filename = "tmin.CRCM.ncep.dayavg.native.nc"
+  ;dir      = "/glade/p/image/narccap/summaries/daily/"
+  ;filename = "tmin.CRCM.ncep.dayavg.native.nc"
   f        = addfile(filename,"r")
 
 ;---Read tmin, lat, lon off the file
