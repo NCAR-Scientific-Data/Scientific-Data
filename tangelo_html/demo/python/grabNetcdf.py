@@ -19,6 +19,6 @@ import runSubset
 
 def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="", timestart="", timeend="", rcm="", gcm=""):
 	basicString = "http://tds.ucar.edu/thredds/dodsC/narccap."
-	grabString = rcm + "." + gcm + simulation_type + "." + variable +".1.aggregation"
+	grabString = rcm + "." + gcm + simulation_type + "." + variable + ".1.aggregation"
 	url = basicString + grabString
 	return runSubset.run(url, swLat, swLon, neLat, neLon, timestart, timeend)

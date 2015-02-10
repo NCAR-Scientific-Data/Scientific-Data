@@ -31,7 +31,7 @@ function calculate() {
 	var calc = "&method=" + encodeURIComponent($("#calc option:selected").val());
 	var interval = "&interval=" + encodeURIComponent($("#interval option:selected").val());
 	var out = "&outtime" + encodeURIComponent($("#outtime option:selected").val());
-	var url = "runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
+	var url = "python/runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
 	$.getJSON(url, function (data) {
 		if(data.result)
 		{
@@ -48,7 +48,7 @@ function calculate() {
 
 function plot()
 {
-	var url = "runPlot?filename=" + encodeURIComponent(localStorage.result);
+	var url = "python/runPlot?filename=" + encodeURIComponent(localStorage.result);
 	$.getJSON(url, function (data) {
 		if(data.image)
 		{
