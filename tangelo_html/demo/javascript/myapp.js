@@ -9,7 +9,7 @@ function subset() {
 	var end = "&timeend=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected").val();
     var rcm = "&rcm=" + $("input[name='rcm']:checked").val();
     var gcm = "&gcm=" + $("input[name='gcm']:checked").val();
-    url = "python/grabNetcdf?" + sim + v + swlat + swlon + nelat + nelon + start + end + rcm + gcm
+    var url = "python/grabNetcdf?" + sim + v + swlat + swlon + nelat + nelon + start + end + rcm + gcm
     $.getJSON(url, function (data) {
 		if(data.subset)
 		{
