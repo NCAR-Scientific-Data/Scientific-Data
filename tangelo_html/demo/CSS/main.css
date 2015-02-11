@@ -1,0 +1,55 @@
+/*!
+ * CSS
+ */
+
+* {
+			padding: 0;
+			margin: 0;
+		}
+
+body {
+		position: relative;
+		font-family: AppleGothic, Dotum;
+		font-size: 14px; 
+		margin: 10% auto;
+		width: 50%;
+		}
+
+.radio-selection {
+			display: block;
+		}
+
+		.label {
+			width: 30%;
+		}
+
+		.choice {
+			width: 70%;
+		}
+
+		.container {
+			display: inline-flex;
+			justify-content: space-between;
+			align-items: baseline;
+			width: 100%;
+			margin: 10px auto;
+		}
+
+		input {
+			margin: 5px 5px 0px 0px;
+		}
+
+		#subsetter {
+			padding: 20px 0px;
+		}
+
+h1 {display:inline;
+	padding: 10px;
+}
+
+a.tooltip {outline:none; } 
+a.tooltip strong {line-height:30px;} 
+a.tooltip:hover {text-decoration:none;} 
+a.tooltip span { z-index:10;display:none; padding:14px 20px; margin-top:-30px; margin-left:28px; width:300px; line-height:16px; } 
+a.tooltip:hover span{ display:inline; position:absolute; color:#111; border:1px solid #DCA; background:#fffAF0;} .callout {z-index:20;position:absolute;top:30px;border:0;left:-12px;} 
+
