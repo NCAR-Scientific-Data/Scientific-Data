@@ -13,7 +13,7 @@ Parameters:
 	timestart: the beginning time range, in format YYYY-MM-DD
 	timeend: the ending time block, in format YYYY-MM-DD
 	rcm: the regional climate model.
-	gcm: the global climate model (empty if ncep is selected) 	
+	gcm: the global climate model (empty if ncep is selected) 
 """
 import runSubset
 
