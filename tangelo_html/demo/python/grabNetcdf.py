@@ -13,12 +13,15 @@ Parameters:
 	timestart: the beginning time range, in format YYYY-MM-DD
 	timeend: the ending time block, in format YYYY-MM-DD
 	rcm: the regional climate model.
-	gcm: the global climate model (empty if ncep is selected) 	
+	gcm: the global climate model (empty if ncep is selected) 
 """
 import runSubset
 
 def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="", timestart="", timeend="", rcm="", gcm=""):
 	basicString = "http://tds.ucar.edu/thredds/dodsC/narccap."
-	grabString = rcm + "." + gcm + simulation_type + "." + variable + ".1.aggregation"
+	lastString = ".1.aggregation"
+	if simulation_type == "ncep":
+		lastString = ".aggregation"
+	grabString = rcm + "." + gcm + simulation_type + "." + variable + lastString
 	url = basicString + grabString
 	return runSubset.run(url, swLat, swLon, neLat, neLon, timestart, timeend)
