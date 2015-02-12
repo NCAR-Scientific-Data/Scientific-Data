@@ -65,7 +65,6 @@ function plot()
 
 function changeDateRange() {
 	var v = $("#sim option:selected").val();
-	alert(v);
 	var start;
 	var end;
 	if(v === "ncep") {
@@ -81,12 +80,12 @@ function changeDateRange() {
 		end = 2070;
 	}
 
-	$("syear").empty();
-	$("eyear").empty();
+	$("#syear").empty();
+	$("#eyear").empty();
 
 	for(i = start; i <= end; i++)
 	{
-		$("syear").append($('<option></option>').val(i).html(i.toString()));
-		$("eyear").append($('<option></option>').val(i).html(i.toString()));
+		$("#syear").append($('<option></option>').val(i).html(i.toString()));
+		$("#eyear").append($('<option></option>').val(i).html(i.toString()));
 	}
 }
