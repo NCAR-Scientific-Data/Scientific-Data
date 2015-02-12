@@ -32,6 +32,5 @@ def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="",
 	url = basicString + modelString + version
 	timeStart = "\"{0}\"".format(timestart)
 	timeEnd = "\"{0}\"".format(timeend)
-	v = "\"{0}\"".format(variable[7:])
 	
-	return runSubset.run(url, v, swLat, swLon, neLat, neLon, timeStart, timeEnd)
+	return runSubset.run(url, swLat, swLon, neLat, neLon, timeStart, timeEnd)
