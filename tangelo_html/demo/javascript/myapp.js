@@ -106,7 +106,7 @@ function changeGCM()
 		});
 	}
 	else {
-		$("input[name='gcm'").each(function(){
+		$("input[name='gcm']").each(function(){
 			if($(this).val() !== "") {
 				$(this).attr('disabled','false');
 			}
