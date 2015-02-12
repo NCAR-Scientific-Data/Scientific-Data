@@ -14,7 +14,7 @@ def run(url, swlat, swlon, nelat, nelon, startyear, endyear):
     startYear = "startYear={0}".format(startyear)
     endYear = "endYear={0}".format(endyear)
     filename = "filename={0}".format(url)
-    args = ['ncl', filename, swLat, swLon, neLat, neLon, startYear, endYear, '../ncl/narccap_subset_tmin_time_latlon.ncl']
+    args = ['ncl', filename, swLat, swLon, neLat, neLon, startYear, endYear, 'ncl/narccap_subset_tmin_time_latlon.ncl']
     status = subprocess.call(args)
     if status < 0:
         print "Error subsetting data"

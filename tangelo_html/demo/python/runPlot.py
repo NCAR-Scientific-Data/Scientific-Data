@@ -11,7 +11,7 @@ def run(filename, timeindex, native):
         sTimeindex = "timeindex={0}".format(timeindex)
         sOutfile = "outfile=\"tmin_latlon\""
         if native:
-                plotScript = '../ncl/narccap_plot_tmin_native.ncl'
+                plotScript = 'ncl/narccap_plot_tmin_native.ncl'
         else:
                 plotScript = 'ncl/narccap_plot_tmin_latlon.ncl'
         args = ['ncl', sFilename, sTimeindex, sOutfile, plotScript]
