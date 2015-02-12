@@ -111,7 +111,7 @@ function changeGCM()
 				$(this).attr('disabled','false');
 			}
 			else {
-				$(this.attr('disabled', 'true'));
+				$(this).attr('disabled', 'true'));
 			}
 		});
 	}
