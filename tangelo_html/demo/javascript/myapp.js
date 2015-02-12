@@ -120,5 +120,6 @@ function changeGCM()
 function changeBasedOnSim()
 {
 	changeDateRange();
+	changeGCM();
 
 }
