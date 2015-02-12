@@ -102,6 +102,7 @@ function changeGCM()
 			}
 			else {
 				$(this).attr('disabled',false);
+				$(this).attr('checked',true);
 			}
 		});
 	}
@@ -121,5 +122,9 @@ function changeBasedOnSim()
 {
 	changeDateRange();
 	changeGCM();
+}
+
+function changeBasedOnRCM()
+{
 
 }

@@ -13,6 +13,7 @@ body {
 	font-size: 14px; 
 	margin: 10% auto;
 	width: 50%;
+	color: black;
 }
 
 .radio-selection {
@@ -81,3 +82,6 @@ a.tooltip:hover span {
 	left:-12px;
 } 
 
+:disabled {
+	color: #CCCCCC;
+}
