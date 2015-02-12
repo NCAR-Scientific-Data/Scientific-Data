@@ -98,20 +98,20 @@ function changeGCM()
 	if(sim === "ncep") {
 		$("input[name='gcm']").each(function(){
 			if($(this).val() !== "") {
-				$(this).attr('disabled','true');
+				$(this).prop('disabled','true');
 			}
 			else {
-				$(this).attr('disabled', 'false');
+				$(this).prop('disabled', 'false');
 			}
 		});
 	}
 	else {
 		$("input[name='gcm']").each(function(){
 			if($(this).val() !== "") {
-				$(this).attr('disabled','false');
+				$(this).prop('disabled','false');
 			}
 			else {
-				$(this).attr('disabled', 'true');
+				$(this).prop('disabled', 'true');
 			}
 		});
 	}
