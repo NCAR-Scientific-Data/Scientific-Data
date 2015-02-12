@@ -28,4 +28,6 @@ def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="",
 	else:
 		version = "." + str(version) + ".aggregation"
 	url = basicString + modelString + version
-	return runSubset.run(url, swLat, swLon, neLat, neLon, timestart, timeend)
+	timeStart = "\"{0}\"".format(timestart)
+	timeEnd = "\"{0}\"".format(timeend)
+	return runSubset.run(url, swLat, swLon, neLat, neLon, timeStart, timeEnd)

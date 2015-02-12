@@ -6,15 +6,15 @@ a new NetCDF file of the subsetted data
 import subprocess
 import sys
 
-def run(url, swlat, swlon, nelat, nelon, startyear, endyear):
+def run(url, swlat, swlon, nelat, nelon, startdate, enddate):
     swLat = "swLat={0}".format(swlat)
     swLon = "swLon={0}".format(swlon)
     neLat = "neLat={0}".format(nelat)
     neLon = "neLon={0}".format(nelon)
-    startYear = "startYear={0}".format(startyear)
-    endYear = "endYear={0}".format(endyear)
-    filename = "filename={0}".format(url)
-    args = ['ncl', filename, swLat, swLon, neLat, neLon, startYear, endYear, 'ncl/narccap_subset_tmin_time_latlon.ncl']
+    startDate = "startDate={0}".format(startdate)
+    endDate = "endDate={0}".format(enddate)
+    filename = "filename=\"{0}\"".format(url)
+    args = ['ncl', filename, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
     status = subprocess.call(args)
     if status < 0:
         print "Error subsetting data"

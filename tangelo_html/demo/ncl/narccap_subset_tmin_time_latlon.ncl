@@ -28,26 +28,37 @@ begin
   printMinMax(tmin,0)
 
 ;---Convert "time" array into something we can more easily understand.
-  opt      = 0
+  opt      = -2
   new_time = cd_calendar(tmin&time,opt)    ; ntime x 6
-
+  stDate = str_split(startDate, "-")
+  edDate = str_split(endDate, "-")
+  
 ;---SW and NE corners of a lat/lon area of interest.
   sw_lat =  swLat    
   sw_lon = swLon
   ne_lat =  neLat
   ne_lon = neLon
 
-;---Start and end year of interest (Jan 1 SY to Dec 31 EY)
-  start_year  = startYear
-  end_year    = endYear
+;---Start and end date of interest
+  start_year  = stringtointeger(stDate(0))
+  end_year    = stringtointeger(edDate(0))
+  start_month = stringtointeger(stDate(1))
+  end_month   = stringtointeger(edDate(1))
+  start_day   = stringtointeger(stDate(2))
+  end_day     = stringtointeger(edDate(2))
+  
+  startTime = start_year*100 + start_month
+  startTime = startTime*100 + start_day
+  endTime   = end_year*100 + end_month
+  endTime   = endTime*100 + end_day
 
 ;---Call function to get indexes closest to the SW and NE corners
   ii_sw = getind_latlon2d (lat2d, lon2d, sw_lat, sw_lon)
   ii_ne = getind_latlon2d (lat2d, lon2d, ne_lat, ne_lon)
 
-;---Call function to get year range of interest
-  years   = new_time(:,0)
-  ii_time = ind(years.ge.start_year.and.years.le.end_year)
+;---Call function to get date range of interest
+ 
+  ii_time = ind(new_time.ge.startTime.and.new_time.le.endTime)
 
 ;---Subset the variables with calculated indexes
   tmin_sub =  tmin(ii_time,ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
