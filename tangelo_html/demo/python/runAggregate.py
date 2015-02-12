@@ -19,9 +19,9 @@ def run(filename, interval, method, outtime):
                 sOuttime = ""
         else:
                 sOuttime = "outtime=\"{0}\"".format(outtime)
-        outfile = "outfile=\"../tmin_aggregate_monthly.nc\""
+        outfile = "outfile=\"tmin_aggregate_monthly.nc\""
         varname = "varname=\"tmin\""
-        args = ['ncl', infile, outfile, varname, sInterval, sMethod, sOuttime, '../ncl/aggregate.ncl']
+        args = ['ncl', infile, outfile, varname, sInterval, sMethod, sOuttime, 'ncl/aggregate.ncl']
 	status = subprocess.call(args)
       	if status < 0:
 		print "Error aggregating data"
