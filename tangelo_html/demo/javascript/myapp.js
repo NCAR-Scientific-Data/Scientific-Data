@@ -62,3 +62,30 @@ function plot()
 		}
     });	
 }
+
+$("#sim").change(function() {
+	var v = $("#sim option:selected").val();
+	var start;
+	var end;
+	if(v == "ncep") {
+		start = 1979;
+		end = 2004;
+	}
+	else if (v == "-current") {
+		start = 1970;
+		end = 2000;
+	}
+	else {
+		start = 2040;
+		end = 2070;
+	}
+
+	$("syear").empty();
+	$("eyear").empty();
+
+	for(int i = start; i <= end; i++)
+	{
+		$("syear").append($('<option></option>').val(i).html(i.toString()));
+		$("eyear").append($('<option></option>').val(i).html(i.toString()));
+	}
+});
