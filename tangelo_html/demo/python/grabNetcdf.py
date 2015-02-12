@@ -16,12 +16,12 @@ Parameters:
 	gcm: the global climate model ('none' if ncep is selected) 
 """
 import runSubset
-import urlCatelog
+import urlCatalog
 
 def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="", timestart="", timeend="", rcm="", gcm=""):
 	basicString = "http://tds.ucar.edu/thredds/dodsC/narccap."
 	modelString = rcm + "." + gcm + simulation_type + "." + variable[:6]
-	version = urlCatelog.urlCatelog[modelString]
+	version = urlCatalog.urlCatalog[modelString]
 	if version == 0:
 		version = ".aggregation"
 	else:
