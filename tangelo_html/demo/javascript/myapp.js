@@ -83,7 +83,7 @@ $("#sim").change(function() {
 	$("syear").empty();
 	$("eyear").empty();
 
-	for(var i = start; i <= end; i++)
+	for(i = start; i <= end; i++)
 	{
 		$("syear").append($('<option></option>').val(i).html(i.toString()));
 		$("eyear").append($('<option></option>').val(i).html(i.toString()));
