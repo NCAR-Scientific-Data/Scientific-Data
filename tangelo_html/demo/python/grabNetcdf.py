@@ -22,6 +22,7 @@ def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="",
 	basicString = "http://tds.ucar.edu/thredds/dodsC/narccap."
 	modelString = rcm + "." + gcm + simulation_type + "." + variable[:6]
 	version = urlCatalog.urlCatalog[modelString]
+	modelString += variable[6:]
 	if version == 0:
 		version = ".aggregation"
 	else:
