@@ -67,11 +67,11 @@ $("#sim").change(function() {
 	var v = $("#sim option:selected").val();
 	var start;
 	var end;
-	if(v == "ncep") {
+	if(v === "ncep") {
 		start = 1979;
 		end = 2004;
 	}
-	else if (v == "-current") {
+	else if (v === "-current") {
 		start = 1970;
 		end = 2000;
 	}
