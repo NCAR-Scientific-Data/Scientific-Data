@@ -6,11 +6,15 @@ simply takes in a NetCDF file and returns a plot using a standard projection.
 import subprocess
 import sys
 
-def run(filename, timeindex):
+def run(filename, timeindex, native):
         sFilename = "filename=\"{0}\"".format(filename)
         sTimeindex = "timeindex={0}".format(timeindex)
-        sOutfile = "outfile=\"../tmin_latlon\""
-        args = ['ncl', sFilename, sTimeindex, sOutfile, '../ncl/narccap_plot_tmin_latlon.ncl']
+        sOutfile = "outfile=\"tmin_latlon\""
+        if native:
+                plotScript = '../ncl/narccap_plot_tmin_native.ncl'
+        else:
+                plotScript = 'ncl/narccap_plot_tmin_latlon.ncl'
+        args = ['ncl', sFilename, sTimeindex, sOutfile, plotScript]
 	status = subprocess.call(args)
 	if status < 0:
 		print "Error plotting data"

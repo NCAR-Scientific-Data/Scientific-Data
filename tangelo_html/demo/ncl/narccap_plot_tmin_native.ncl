@@ -27,7 +27,7 @@ begin
   nt = timeindex    ; which time index to plot
 
 ;---The graphics section
-  wks = gsn_open_wks("png","tmin_native")          
+  wks = gsn_open_wks("png","outfile")          
     
   res                   = True
 

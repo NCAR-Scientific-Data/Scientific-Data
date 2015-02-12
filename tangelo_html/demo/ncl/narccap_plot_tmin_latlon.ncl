@@ -20,7 +20,7 @@ begin
   ntime = dims(0)        ; Leftmost dimension is "time")
   print("tmin has " + ntime + " time steps.")
 
-  nt = 0    ; which time index to plot
+  nt = timeindex    ; which time index to plot
 
 ;---The graphics section
   wks = gsn_open_wks("png",outfile)    ; "png", "x11", "ps", "pdf"
