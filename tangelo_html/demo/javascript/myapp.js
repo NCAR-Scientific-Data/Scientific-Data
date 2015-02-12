@@ -63,7 +63,7 @@ function plot()
     });	
 }
 
-$("#sim").change(function() {
+function changeDateRange() {
 	var v = $("#sim option:selected").val();
 	var start;
 	var end;
@@ -88,4 +88,4 @@ $("#sim").change(function() {
 		$("syear").append($('<option></option>').val(i).html(i.toString()));
 		$("eyear").append($('<option></option>').val(i).html(i.toString()));
 	}
-});
+}
