@@ -37,9 +37,14 @@ class BashWriter(Observer):
                     for line in lines:
                         f.write(line)
                     f.close()
-            elif(args[1] == 'comment'):
-                f = open(args[3], 'r+')
+            elif(task == 'comment'):
+                f = open(filename, 'r+')
                 lines = f.readlines()
+                lines.insert(index, "# "+ message)
+                f.close()
+                f = open(filename, 'w')
+                for line in lines:
+                    f.write(line)                
                 f.close()
         else:
         	pass
@@ -54,4 +59,4 @@ if __name__ == "__main__":
  
     #observable.update_observers('bashWriter',  'insert', 1, "free willy \n", 'bash/test.sh')
     observable.update_observers('foo', 'append', 0, "echo hello mars \n", 'bash/test.sh')
-    observable.update_observers('bashWriter', 'delete', 1, "echo Hello World \n", 'bash/test.sh')
+    observable.update_observers('bashWriter', 'comment', 1, "echo Hello World \n", 'bash/test.sh')
