@@ -23,11 +23,15 @@ def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="",
 	modelString = rcm + "." + gcm + simulation_type + "." + variable[:6]
 	version = urlCatalog.urlCatalog[modelString]
 	modelString += variable[6:]
+	
 	if version == 0:
 		version = ".aggregation"
 	else:
 		version = "." + str(version) + ".aggregation"
+	
 	url = basicString + modelString + version
 	timeStart = "\"{0}\"".format(timestart)
 	timeEnd = "\"{0}\"".format(timeend)
-	return runSubset.run(url, swLat, swLon, neLat, neLon, timeStart, timeEnd)
+	v = "\"{0}\"".format(variable[7:])
+	
+	return runSubset.run(url, v, swLat, swLon, neLat, neLon, timeStart, timeEnd)

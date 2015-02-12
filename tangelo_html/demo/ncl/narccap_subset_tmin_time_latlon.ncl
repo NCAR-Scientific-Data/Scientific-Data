@@ -20,7 +20,7 @@ begin
   f        = addfile(filename,"r")
 
 ;---Read tmin, lat, lon off the file
-  tmin  = f->tmin             ; 8766 x 115 x 140 (time x lat x lon)
+  tmin  = f->variable             ; 8766 x 115 x 140 (time x lat x lon)
   lat2d = f->lat              ; 115 x 140
   lon2d = f->lon              ; 115 x 140
 
