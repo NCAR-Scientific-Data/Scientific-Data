@@ -63,7 +63,8 @@ function plot()
     });	
 }
 
-function changeDateRange() {
+function changeDateRange()
+{
 	var v = $("#sim option:selected").val();
 	var start;
 	var end;
@@ -88,4 +89,36 @@ function changeDateRange() {
 		$("#syear").append($('<option></option>').val(i).html(i.toString()));
 		$("#eyear").append($('<option></option>').val(i).html(i.toString()));
 	}
+}
+
+function changeGCM()
+{
+	var sim = $("#sim option:selected").val();
+
+	if(sim === "ncep") {
+		$("input[name='gcm']").each(function(){
+			if($(this).val() !== "") {
+				$(this).attr('disabled','true');
+			}
+			else {
+				$(this).attr('disabled', 'false');
+			}
+		});
+	}
+	else {
+		$("input[name='gcm'").each(function(){
+			if($(this).val() !== "") {
+				$(this).attr('disabled','false');
+			}
+			else {
+				$(this.attr('disabled', 'true'));
+			}
+		});
+	}
+}
+
+function changeBasedOnSim()
+{
+	changeDateRange();
+
 }
