@@ -3,22 +3,22 @@ from observer import Observer
  
 class BashWriter(Observer):
     def update(self, *args, **kwargs): 
-        if(args[0]) == 'bashWriter'):   
-            if(args[0] == 'add'):
-                f = open(args[2], 'a')
-                f.write(args[1])
+        if(args[0] == 'bashWriter'):   
+            if(args[1] == 'add'):
+                f = open(args[3], 'a')
+                f.write(args[2])
                 f.close()
-            elif(args[0] == 'delete'):
-                f = open(args[2], 'r+')
+            elif(args[1] == 'delete'):
+                f = open(args[3], 'r+')
                 lines = f.readlines()
                 try:
-                    lines.remove(args[1])
+                    lines.remove(args[2])
                     found = True
                 except ValueError:
                     found = False
                 f.close()
                 if(found):
-                    f = open(args[2], 'w')
+                    f = open(args[3], 'w')
                     for line in lines:
                         f.write(line)
                     f.close()
