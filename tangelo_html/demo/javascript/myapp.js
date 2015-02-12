@@ -65,6 +65,7 @@ function plot()
 
 function changeDateRange() {
 	var v = $("#sim option:selected").val();
+	alert(v);
 	var start;
 	var end;
 	if(v === "ncep") {
