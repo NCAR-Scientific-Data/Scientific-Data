@@ -153,11 +153,6 @@ function changeGCM()
 	}
 }
 
-function changeRCM()
-{
-
-}
-
 function changeBasedOnSim()
 {
 	changeDateRange();
@@ -167,9 +162,4 @@ function changeBasedOnSim()
 function changeBasedOnRCM()
 {
 	changeGCM();
-}
-
-function changeBasedOnCoords()
-{
-	changeRCM();
 }
