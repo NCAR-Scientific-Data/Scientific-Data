@@ -82,6 +82,6 @@ a.tooltip:hover span {
 	left:-12px;
 } 
 
-.radio-selection:disabled {
+input:disabled {
 	color: #CCCCCC;
 }
