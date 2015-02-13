@@ -94,6 +94,7 @@ function changeDateRange()
 function changeGCM()
 {
 	var sim = $("#sim option:selected").val();
+	var rcm = $("input[name='rcm']").val();
 
 	if(sim === "ncep") {
 		$("input[name='gcm']").each(function(){
@@ -106,20 +107,69 @@ function changeGCM()
 		});
 	}
 	else {
-		$("input[name='gcm']").each(function(){
-			if($(this).val() !== "") {
-				$(this).attr('disabled',false);
+		if(rcm === "crcm") {
+			$("input[name='gcm']").each(function(){
+				$(this).attr('disabled',true);
+			});
+			$('#CCSM').attr('disabled',false);
+			$('#CGCM3').attr('disabled',false);
+		}
+		else if(rcm === "ecp2") {
+			$("input[name='gcm']").each(function(){
+				$(this).attr('disabled',true);
+			});
+			$('#GFDL').attr('disabled',false);
+		}
+		else if(rcm === "hrm3") {
+			$("input[name='gcm']").each(function(){
+				$(this).attr('disabled',true);
+			});
+			$('#GFDL').attr('disabled',false);
+			$('#HADCM3').attr('disabled',false);
+		}
+		else if(rcm === "mm5i") {
+			$("input[name='gcm']").each(function(){
+				$(this).attr('disabled',true);
+			});
+			$('#CCSM').attr('disabled',false);
+			if(sim === "-current") {
+				$('#HADCM3').attr('disabled',false);
 			}
-			else {
-				$(this).attr('disabled', true);
-			}
-		});
+		}
+		if(rcm === "rcm3") {
+			$("input[name='gcm']").each(function(){
+				$(this).attr('disabled',true);
+			});
+			$('#GFDL').attr('disabled',false);
+			$('#CGCM3').attr('disabled',false);
+		}
+		if(rcm === "wrfg") {
+			$("input[name='gcm']").each(function(){
+				$(this).attr('disabled',true);
+			});
+			$('#CCSM').attr('disabled',false);
+			$('#CGCM3').attr('disabled',false);
+		}
 	}
+}
+
+function changeRCM()
+{
+
 }
 
 function changeBasedOnSim()
 {
 	changeDateRange();
 	changeGCM();
+}
 
+function changeBasedOnRCM()
+{
+	changeGCM();
+}
+
+function changeBasedOnCoords()
+{
+	changeRCM();
 }
