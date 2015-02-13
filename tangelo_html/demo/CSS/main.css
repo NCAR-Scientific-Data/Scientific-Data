@@ -7,14 +7,16 @@
 	margin: 0;
 }
 
-body {
+#content-wrapper {
 	position: relative;
 	font-family: AppleGothic, Dotum;
 	font-size: 14px; 
-	margin: 10% auto;
+	padding:20px;
 	width: 50%;
 	color: black;
+	line-height: 140%;
 }
+
 
 .radio-selection {
 	display: block;
@@ -46,7 +48,6 @@ input {
 
 h1 {
 	display:inline;
-	padding: 10px;
 }
 
 a.tooltip {
