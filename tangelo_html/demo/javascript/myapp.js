@@ -94,7 +94,7 @@ function changeDateRange()
 function changeGCM()
 {
 	var sim = $("#sim option:selected").val();
-	var rcm = $("input[name='rcm']").val();
+	var rcm = $("input[name='rcm']:checked").val();
 
 	if(sim === "ncep") {
 		$("input[name='gcm']").each(function(){
