@@ -103,7 +103,7 @@ function changeGCM()
 			}
 			else {
 				$(this).attr('disabled',false);
-				$(this).attr('checked',true);
+				$(this).prop('checked',true);
 			}
 		});
 	}
@@ -113,7 +113,7 @@ function changeGCM()
 				$(this).attr('disabled',true);
 			});
 			$('#CCSM').attr('disabled',false);
-			$('#CCSM').attr('checked', true);
+			$('#CCSM').prop('checked', true);
 			$('#CGCM3').attr('disabled',false);
 		}
 		else if(rcm === "ecp2") {
@@ -121,7 +121,7 @@ function changeGCM()
 				$(this).attr('disabled',true);
 			});
 			$('#GFDL').attr('disabled',false);
-			$('#GFDL').attr('checked', true);
+			$('#GFDL').prop('checked', true);
 		}
 		else if(rcm === "hrm3") {
 			$("input[name='gcm']").each(function(){
@@ -129,14 +129,14 @@ function changeGCM()
 			});
 			$('#GFDL').attr('disabled',false);
 			$('#HADCM3').attr('disabled',false);
-			$('#GFDL').attr('checked', true);
+			$('#GFDL').prop('checked', true);
 		}
 		else if(rcm === "mm5i") {
 			$("input[name='gcm']").each(function(){
 				$(this).attr('disabled',true);
 			});
 			$('#CCSM').attr('disabled',false);
-			$('#CCSM').attr('checked', true);
+			$('#CCSM').prop('checked', true);
 			if(sim === "-current") {
 				$('#HADCM3').attr('disabled',false);
 			}
@@ -147,7 +147,7 @@ function changeGCM()
 			});
 			$('#GFDL').attr('disabled',false);
 			$('#CGCM3').attr('disabled',false);
-			$('#GFDL').attr('checked', true);
+			$('#GFDL').prop('checked', true);
 		}
 		if(rcm === "wrfg") {
 			$("input[name='gcm']").each(function(){
@@ -155,7 +155,7 @@ function changeGCM()
 			});
 			$('#CCSM').attr('disabled',false);
 			$('#CGCM3').attr('disabled',false);
-			$('#CCSM').attr('checked', true);
+			$('#CCSM').prop('checked', true);
 		}
 	}
 }
