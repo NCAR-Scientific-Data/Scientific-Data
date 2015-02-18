@@ -48,7 +48,10 @@ function calculate() {
 
 function plot()
 {
-	var url = "python/runPlot?filename=" + encodeURIComponent(localStorage.result);
+	var filename = "?filename=" + encodeURIComponent(localStorage.result);
+	var timeindex = "&timeindex=" + encodeURIComponent(0);
+	var natively = "&native=" + encodeURIComponent("True");
+	var url = "python/runPlot" + filename + timeindex + natively;
 	$.getJSON(url, function (data) {
 		if(data.image)
 		{
