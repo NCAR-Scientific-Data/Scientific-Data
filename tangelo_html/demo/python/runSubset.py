@@ -14,7 +14,7 @@ def run(url, variable, swlat, swlon, nelat, nelon, startdate, enddate):
     startDate = "startDate={0}".format(startdate)
     endDate = "endDate={0}".format(enddate)
     filename = "filename=\"{0}\"".format(url)
-    v = "variable={0}".format(variable)
+    v = "variable=\"{0}\"".format(variable)
     args = ['ncl', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
     status = subprocess.call(args)
     if status < 0:
