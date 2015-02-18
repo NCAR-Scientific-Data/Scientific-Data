@@ -33,4 +33,4 @@ def run(simulation_type="", variable="", swLat="", swLon="", neLat="", neLon="",
 	timeStart = "\"{0}\"".format(timestart)
 	timeEnd = "\"{0}\"".format(timeend)
 	
-	return runSubset.run(url, variable[6:], swLat, swLon, neLat, neLon, timeStart, timeEnd)
+	return runSubset.run(url, variable[7:], swLat, swLon, neLat, neLon, timeStart, timeEnd)
