@@ -50,7 +50,7 @@ function plot()
 {
 	var filename = "?filename=" + encodeURIComponent(localStorage.result);
 	var timeindex = "&timeindex=" + encodeURIComponent(0);
-	var natively = "&native=" + encodeURIComponent("True");
+	var natively = "&native=" + encodeURIComponent("False");
 	var url = "python/runPlot" + filename + timeindex + natively;
 	$.getJSON(url, function (data) {
 		if(data.image)
