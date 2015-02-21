@@ -2,22 +2,9 @@ $(document).ready( function() {
 	$("main").load("chooseStep.html")
 });
 
-$(document).ready(function() {
-	$("#chooseSub").click(function() {
-		alert("Subsetting");
-		$("main").load("subset.html");
-	});
-
-	$("#chooseAnalyze").click(function() {
-		$("main").load("calculations.html");
-	});
-
-	$("#chooseView").click(function() {
-		$("main").load("viewResults.html");
-	});
-});
-
-
+function createPage(page) {
+	$("main").load(page);
+}
 
 function subset() {
 	var sim = "simulation_type=" + $("#sim option:selected").val();
