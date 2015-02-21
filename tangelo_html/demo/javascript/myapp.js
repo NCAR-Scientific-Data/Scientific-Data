@@ -1,4 +1,4 @@
-function newStep() {
+function newStep(jQuery) {
 	$("main").load("chooseStep.html");
 }
 
