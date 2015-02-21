@@ -1,5 +1,3 @@
-$(document).ready(newStep());
-
 function newStep() {
 	$("main").load("chooseStep.html");
 }
@@ -189,3 +187,5 @@ function changeBasedOnRCM()
 {
 	changeGCM();
 }
+
+$(document).ready(newStep());
