@@ -1,40 +1,50 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="CSS/main.css">
-		<title>Calculations | NCAR</title>
-		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-		<script src="/js/tangelo.js"></script>
-		<script src="javascript/myapp.js"></script>
-	</head>
+<h1>Analyze Data</h1>
 
-	<body>
-		<h1>Calculations</h1>
-		<a href="#" class="tooltip"> ????? <span>  <strong>Explanation title</strong><br /> Explanation body Explanation body Explanation body Explanation body Explanation body Explanation body </span> </a>
-		<div id="calc" class="form-inline">
-			<label for="calc">Calculation</label>
-			<select id="calc">
-				<option id="avg" value="mean">Average</option>
-				<option id="min" value="min">Find Minimum</option>
-				<option id="max" value="max">Find Maximum</option>
-			</select>
-			<br>
-			<label for="interval">Interval:</label>
-			<select id="interval">
-				<option id="daily" value="day">Daily</option>
-				<option id="monthly" value="month">Monthly</option>
-				<option id="yearly" value="year">Yearly</option>
-				<option id="seasonal" value="season">Seasonal</option>
-			</select>
-			<label for="outtime">Out Time:</label>
-			<select id="outtime">
-				<option id="start" value="start">Start</option>
-				<option id="mid" value="mid">Mid</option>
-				<option id="end" value="end">End</option>
-			</select>
-			<!-- Input Button - Need To Fix <input type="submit" name="Submit"> -->
-			<button onClick="calculate()">Submit</button>
+<!--Calculation Form-->
+<form onsubmit="calculate()">
+
+	<!--Analysis Type Section-->
+	<section>
+		<div class="title">
+			<h2>Analysis Type</h2>
+			<h3>About Analysis Types</h3>
 		</div>
-		<div id="submitMessage"></div>
-	</body>
-</html>
+		<select id="analysisType">
+			<option value="mean">Average</option>
+			<option value="min">Find Minimum</option>
+			<option value="max">Find Maximum</option>
+		</select>
+	</section>
+	<!--End Analysis Type Section-->
+
+	<!--Time Interval Section-->
+	<section>
+		<div class="title">
+			<h2>Time Interval</h2>
+			<h3>Explanation of Time Interval</h3>
+		</div>
+		<select id="interval">
+			<option value="day">Daily</option>
+			<option value="month">Monthly</option>
+			<option value="year">Yearly</option>
+			<option value="season">Seasonally</option>
+		</select>
+	</section>
+	<!--End Time Interval Section-->
+
+	<!--Output Date Section-->
+	<section>
+		<div class="title">
+			<h2>Output Date</h2>
+			<h3>Explanation of Output Date</h3>
+		</div>
+		<select id="outtime">
+			<option value="start">Beginning</option>
+			<option value="mid">Middle</option>
+			<option value="end">End</option>
+		</select>
+	</section>
+
+	<input type="submit" name="Submit">
+</form>
+<!--End Calculation Form-->
