@@ -4,15 +4,15 @@ $(document).ready( function() {
 
 $("#chooseSub").click(function() {
 	$("main").load("subset.html");
-})
+});
 
 $("#chooseAnalyze").click(function() {
 	$("main").load("calculations.html");
-})
+});
 
 $("#chooseView").click(function() {
 	$("main").load("viewResults.html");
-})
+});
 
 
 
