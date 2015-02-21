@@ -4,7 +4,7 @@ $(document).ready( function() {
 
 function createPage(page) {
 	$("main").load(page);
-	insertStep(page.substring(0,page.length-5), null);
+	insertStep(page.substring(0,page.length-5, null);
 }
 
 function insertStep(stepName, stepValues) {
