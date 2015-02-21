@@ -2,6 +2,20 @@ $(document).ready( function() {
 	$("main").load("chooseStep.html")
 });
 
+$("#chooseSub").click(function() {
+	$("main").load("subset.html");
+})
+
+$("#chooseAnalyze").click(function() {
+	$("main").load("calculations.html");
+})
+
+$("#chooseView").click(function() {
+	$("main").load("viewResults.html");
+})
+
+
+
 function subset() {
 	var sim = "simulation_type=" + $("#sim option:selected").val();
 	var v = "&variable=" + $("input[name='var']:checked").val();
