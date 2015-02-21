@@ -1,6 +1,8 @@
-$(document).ready( function() {
-	$("main").load("chooseStep.html")
-});
+$(document).ready(newStep());
+
+function newStep() {
+	$("main").load("chooseStep.html");
+}
 
 function createPage(page) {
 	$("main").load(page);
