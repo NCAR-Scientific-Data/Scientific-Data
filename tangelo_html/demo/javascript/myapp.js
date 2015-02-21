@@ -4,6 +4,12 @@ $(document).ready( function() {
 
 function createPage(page) {
 	$("main").load(page);
+	insertStep(page.substring(0,page.length-5));
+}
+
+function insertStep(stepName, stepValues) {
+	var newstep = "<a onclick=createPage('" + stepName + ".html'>" + stepName + "</a>";
+	$(newstep).insertBefore($("aside a :last"));
 }
 
 function subset() {
