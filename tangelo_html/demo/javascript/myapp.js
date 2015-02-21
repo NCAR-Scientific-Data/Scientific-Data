@@ -1,4 +1,6 @@
-$(document).ready($("main").load("chooseStep.html"));
+$(document).ready( function() {
+	$("main").load("chooseStep.html")
+});
 
 function subset() {
 	var sim = "simulation_type=" + $("#sim option:selected").val();
