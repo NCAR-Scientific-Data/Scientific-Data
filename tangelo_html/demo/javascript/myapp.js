@@ -8,7 +8,7 @@ function createPage(page) {
 }
 
 function insertStep(stepName, stepValues) {
-	var newstep = "<a onclick=createPage('" + stepName + ".html'>" + stepName + "</a>";
+	var newstep = "<a onclick=createPage('" + stepName + ".html')>" + stepName + "</a>";
 	$(newstep).insertBefore($("aside a:last"));
 }
 
