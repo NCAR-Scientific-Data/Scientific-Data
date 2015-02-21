@@ -3,6 +3,7 @@ $(document).ready( function() {
 });
 
 $("#chooseSub").click(function() {
+	alert("Subsetting");
 	$("main").load("subset.html");
 });
 
