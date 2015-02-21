@@ -1,3 +1,5 @@
+$(document).ready($.load("chooseStep.html"));
+
 function subset() {
 	var sim = "simulation_type=" + $("#sim option:selected").val();
 	var v = "&variable=" + $("input[name='var']:checked").val();
