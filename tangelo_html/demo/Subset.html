@@ -10,7 +10,7 @@
 			<h3>Explanation of Simulation</h3>
 		</div>
 		<select id="simulationType" onchange="changeBasedOnSim()">
-			<option value="ncep">NCEP</option>
+			<option value="ncep" selected>NCEP</option>
 			<option value="-current">GCM Current</option>
 			<option value="-future">GCM Future</option>
 		</select>
@@ -23,7 +23,7 @@
 			<h2>Variable</h2>
 			<h3>Explanation of Variable</h3>
 		</div>
-		<span class="radioButton"><input type="radio" name="variable" id="sic" value="table1.sic"><label for="sic">Daily Average Sea Ice Fraction</label></span>
+		<span class="radioButton"><input type="radio" name="variable" id="sic" value="table1.sic" checked><label for="sic">Daily Average Sea Ice Fraction</label></span>
 		<span class="radioButton"><input type="radio" name="variable" id="spdmax" value="table1.spdmax"><label for="spdmax">Maximum Daily 10-Meter Wind Speed</label></span>
 		<span class="radioButton"><input type="radio" name="variable" id="tasmax" value="table1.tasmax"><label for="tasmax">Maximum Daily Surface Air Temperature</label></span>
 		<span class="radioButton"><input type="radio" name="variable" id="tasmin" value="table1.tasmin"><label for="tasmin">Minimum Daily Surface Air Temperature</label></span>
@@ -59,28 +59,28 @@
 		<h3>Explanation of Time</h3>
 		</div>
 		<label>Begin</label>
-		<select id="startyear">
+		<select id="startYear">
 			<option value="0">Year</option>
 		</select>
 
-		<select id="startmonth">
+		<select id="startMonth">
 			<option value="0">Month</option>
 		</select>
 
-		<select id="startday">
+		<select id="startDay">
 			<option value="0">Day</option>
 		</select>
 
 		<label>End</label>
-		<select id="endyear">
+		<select id="endYear">
 			<option value="0">Year</option>
 		</select>
 
-		<select id="endmonth">
+		<select id="endMonth">
 			<option value="0">Month</option>
 		</select>
 
-		<select id="endday">
+		<select id="endDay">
 			<option value="0">Day</option>
 		</select>
 	</section>
@@ -92,7 +92,7 @@
 			<h2>Regional Climate Model</h2>
 			<h3>Explanation of Regional Climate Model</h3>
 		</div>
-		<span class="radioButton"><input type="radio" name="rcm" id="crcm" value="crcm"><label for="crcm">CRCM</label></span>
+		<span class="radioButton"><input type="radio" name="rcm" id="crcm" value="crcm" checked><label for="crcm">CRCM</label></span>
 		<span class="radioButton"><input type="radio" name="rcm" id="ecp2" value="ecp2"><label for="ecp2">ECP2</label></span>
 		<span class="radioButton"><input type="radio" name="rcm" id="hrm3" value="hrm3"><label for="hrm3">HRM3</label></span>
 		<span class="radioButton"><input type="radio" name="rcm" id="mm5i" value="mm5i"><label for="mm5i">MM5I</label></span>
@@ -107,11 +107,11 @@
 			<h2>Global Climate Model</h2>
 			<h3>Explanation on Global Climate Model</h3>
 		</div>
-		<span class="radioButton"><input type="radio" name="gcm" id="gfdl" value="gfdl"><label for="gfdl">GFDL</label></span>
-		<span class="radioButton"><input type="radio" name="gcm" id="cgcm3" value="cgcm3"><label for="cgcm3">CGCM3</label></span>
-		<span class="radioButton"><input type="radio" name="gcm" id="hadcm3" value="hadcm3"><label for="hadcm3">HADCM3</label></span>
-		<span class="radioButton"><input type="radio" name="gcm" id="ccsm" value="ccsm"><label for="ccsm">CCSM</label></span>
-		<span class="radioButton"><input type="radio" name="gcm" id="none" value=""><label for="none">None</label></span>
+		<span class="radioButton"><input type="radio" name="gcm" id="gfdl" value="gfdl" disabled><label for="gfdl">GFDL</label></span>
+		<span class="radioButton"><input type="radio" name="gcm" id="cgcm3" value="cgcm3" disabled><label for="cgcm3">CGCM3</label></span>
+		<span class="radioButton"><input type="radio" name="gcm" id="hadcm3" value="hadcm3" disabled><label for="hadcm3">HADCM3</label></span>
+		<span class="radioButton"><input type="radio" name="gcm" id="ccsm" value="ccsm" disabled><label for="ccsm">CCSM</label></span>
+		<span class="radioButton"><input type="radio" name="gcm" id="none" value="" checked><label for="none">None</label></span>
 	</section>
 	<!--End Global Climate Model Section-->
 

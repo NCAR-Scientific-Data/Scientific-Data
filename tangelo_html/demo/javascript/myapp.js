@@ -13,27 +13,31 @@ function insertStep(stepName, stepValues) {
 }
 
 function subset() {
-	var sim = "simulation_type=" + $("#sim option:selected").val();
-	var v = "&variable=" + $("input[name='var']:checked").val();
-	var swlat = "&swLat=" + $("#swlat").val();
-	var swlon = "&swLon=" + $("#swlon").val();
-	var nelat = "&neLat=" + $("#nelat").val();
-	var nelon = "&neLon=" + $("#nelon").val();
-	var start = "&timestart=" + $("#syear option:selected").val() + "-" + $("#smonth option:selected").val() + "-" + $("#sday option:selected").val();
-	var end = "&timeend=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected").val();
+	var simulationType = "simulationType=" + $("#simulationType option:selected").val();
+	var variable = "&variable=" + $("input[name='variable']:checked").val();
+	var swlat = "&swlat=" + $("#swlat").val();
+	var swlon = "&swlon=" + $("#swlon").val();
+	var nelat = "&nelat=" + $("#nelat").val();
+	var nelon = "&nelon=" + $("#nelon").val();
+	var timestart = "&timeStart=" + $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#sDay option:selected").val();
+	var timeend = "&timeEnd=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected").val();
     var rcm = "&rcm=" + $("input[name='rcm']:checked").val();
     var gcm = "&gcm=" + $("input[name='gcm']:checked").val();
     var url = "python/grabNetcdf?" + sim + v + swlat + swlon + nelat + nelon + start + end + rcm + gcm;
+
+    $("<p>Subsetting. Please Wait.").insertAfter($("form"));
+
     $.getJSON(url, function (data) {
 		if(data.subset)
 		{
+			$("p").innerHTML("Subset Succesful!");
 			localStorage.subset = data.subset;
-			window.open("calculate.html", "_self");
+
 		}
 		else
 		{
+			$("p").innerHTML("Subset Failed.<br>" + data.alert)
 			localStorage.subset = "";
-			alert(data.alert);
 		}
     });
 }
