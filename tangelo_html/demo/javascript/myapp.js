@@ -190,7 +190,7 @@ function changeBasedOnRCM()
 	var simulationType = $("#simulationType option:selected").val();
 	var rcm = $("input[name='rcm']:checked").val();
 	
-	changeGCM();
+	changeGCM(simulationType, rcm);
 }
 //------------------------------------------------------------------------------
 
