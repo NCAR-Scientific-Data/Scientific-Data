@@ -22,13 +22,13 @@ function subset() {
 	var swlon = "&swlon=" + $("#swlon").val();
 	var nelat = "&nelat=" + $("#nelat").val();
 	var nelon = "&nelon=" + $("#nelon").val();
-	var timestart = "&timeStart=" + $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#sDay option:selected").val();
-	var timeend = "&timeEnd=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected").val();
+	var timestart = "&timeStart=" + $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#startDay option:selected").val();
+	var timeend = "&timeEnd=" + $("#endYear option:selected").val() + "-" + $("#endMonth option:selected").val() + "-" + $("#endDay option:selected").val();
     var rcm = "&rcm=" + $("input[name='rcm']:checked").val();
     var gcm = "&gcm=" + $("input[name='gcm']:checked").val();
     var url = "python/grabNetcdf?" + simulationType + variable + swlat + swlon + nelat + nelon + timestart + timeend + rcm + gcm;
 
-    $("<p>Subsetting. Please Wait.").insertAfter($("form"));
+    $("<p>Subsetting. Please Wait.</p>").insertAfter($("button"));
 
     $.getJSON(url, function (data) {
 		if(data.subset)
