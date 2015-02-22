@@ -1,7 +1,7 @@
 <h1>Subset Data</h1>
 
 <!--Subset Form-->
-	<form onsubmit="subset()" class="form-inline">
+	<form onsubmit="return false" class="form-inline">
 
 	<!--Simulation Type Section-->
 	<section>
@@ -260,6 +260,6 @@
 	</section>
 	<!--End Global Climate Model Section-->
 
-	<input type="submit" name="Subset Data">
+	<input type="submit" onclick="subset()" name="Subset Data">
 </form>
 <!--End Subset Form-->
