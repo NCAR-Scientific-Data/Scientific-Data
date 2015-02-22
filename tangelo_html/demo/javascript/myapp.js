@@ -33,13 +33,13 @@ function subset() {
     $.getJSON(url, function (data) {
 		if(data.subset)
 		{
-			$("p").innerHTML("Subset Succesful!");
+			$("p").html("Subset Succesful!");
 			localStorage.subset = data.subset;
 
 		}
 		else
 		{
-			$("p").innerHTML("Subset Failed.<br>" + data.alert)
+			$("p").html("Subset Failed.<br>" + data.alert)
 			localStorage.subset = "";
 		}
     });
