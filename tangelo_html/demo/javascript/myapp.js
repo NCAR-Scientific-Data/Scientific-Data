@@ -1,3 +1,4 @@
+//Creating/Using Steps----------------------------------------------------------
 function newStep() {
 	$("main").load("chooseStep.html");
 }
@@ -11,7 +12,9 @@ function insertStep(stepName, stepValues) {
 	var newstep = "<a onclick=createPage('" + stepName + ".html')>" + stepName + "</a>";
 	$(newstep).insertBefore($("aside a:last"));
 }
+//------------------------------------------------------------------------------
 
+//Manipulating NetCDFs----------------------------------------------------------
 function subset() {
 	var simulationType = "simulationType=" + $("#simulationType option:selected").val();
 	var variable = "&variable=" + $("input[name='variable']:checked").val();
@@ -83,17 +86,18 @@ function plot()
 		}
     });	
 }
+//------------------------------------------------------------------------------
 
-function changeDateRange()
+//Subset Functions--------------------------------------------------------------
+function changeDateRange(simulationType)
 {
-	var v = $("#sim option:selected").val();
 	var start;
 	var end;
-	if(v === "ncep") {
+	if(simulationType === "ncep") {
 		start = 1979;
 		end = 2004;
 	}
-	else if (v === "-current") {
+	else if (simulationType === "-current") {
 		start = 1970;
 		end = 2000;
 	}
@@ -101,95 +105,93 @@ function changeDateRange()
 		start = 2040;
 		end = 2070;
 	}
+	var startYearDropDown = $("#startYear");
+	var endYearDropDown = $("#endYear");
 
-	$("#syear").empty();
-	$("#eyear").empty();
+	startYearDropDown.empty();
+	endYearDropDown.empty();
 
 	for(i = start; i <= end; i++)
 	{
-		$("#syear").append($('<option></option>').val(i).html(i.toString()));
-		$("#eyear").append($('<option></option>').val(i).html(i.toString()));
+		startYearDropDown.append($('<option></option>').val(i).html(i.toString()));
+		endYearDropDown.append($('<option></option>').val(i).html(i.toString()));
 	}
 }
 
-function changeGCM()
+function changeGCM(simulationType, rcm)
 {
-	var sim = $("#sim option:selected").val();
-	var rcm = $("input[name='rcm']:checked").val();
+	var ccsm = $("#ccsm");
+	var cgcm3 = $("#cgcm3");
+	var gfdl = $("#gfdl");
+	var hadcm3 = $("#hadcm3");
 
-	if(sim === "ncep") {
-		$("input[name='gcm']").each(function(){
-			if($(this).val() !== "") {
-				$(this).attr('disabled',true);
-			}
-			else {
-				$(this).attr('disabled',false);
-				$(this).prop('checked',true);
-			}
-		});
+	$("input[name='gcm']").each(function() {
+		$(this).attr("disabled", true);
+	})
+
+	if(simulationType === "ncep") {
+		$("#none").attr('disabled', false);
+
+		$("#none").prop('checked', true);
 	}
 	else {
 		if(rcm === "crcm") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#CCSM').attr('disabled',false);
-			$('#CCSM').prop('checked', true);
-			$('#CGCM3').attr('disabled',false);
+			ccsm.attr('disabled',false);
+			cgcm3.attr('disabled',false);
+
+			ccsm.prop('checked', true);
 		}
 		else if(rcm === "ecp2") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#GFDL').attr('disabled',false);
-			$('#GFDL').prop('checked', true);
+			gfdl.attr('disabled',false);
+
+			gfdl.prop('checked', true);
 		}
 		else if(rcm === "hrm3") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#GFDL').attr('disabled',false);
-			$('#HADCM3').attr('disabled',false);
-			$('#GFDL').prop('checked', true);
+			gfdl.attr('disabled',false);
+			hadcm3.attr('disabled',false);
+
+			gfdl.prop('checked', true);
 		}
 		else if(rcm === "mm5i") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#CCSM').attr('disabled',false);
-			$('#CCSM').prop('checked', true);
-			if(sim === "-current") {
-				$('#HADCM3').attr('disabled',false);
+			ccsm.attr('disabled',false);
+
+			ccsm.prop('checked', true);
+
+			if(simulationType === "-current") {
+				hadcm3.attr('disabled',false);
 			}
 		}
-		if(rcm === "rcm3") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#GFDL').attr('disabled',false);
-			$('#CGCM3').attr('disabled',false);
-			$('#GFDL').prop('checked', true);
+		else if(rcm === "rcm3") {
+			gfdl.attr('disabled',false);
+			cgcm3.attr('disabled',false);
+
+			gfdl.prop('checked', true);
 		}
-		if(rcm === "wrfg") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#CCSM').attr('disabled',false);
-			$('#CGCM3').attr('disabled',false);
-			$('#CCSM').prop('checked', true);
+		else if(rcm === "wrfg") {
+			ccsm.attr('disabled',false);
+			cgcm3.attr('disabled',false);
+
+			ccsm.prop('checked', true);
 		}
 	}
 }
 
 function changeBasedOnSim()
 {
-	changeDateRange();
-	changeGCM();
+	var simulationType = $("#simulationType option:selected").val();
+	var rcm = $("input[name='rcm']:checked").val();
+
+	changeDateRange(simulationType);
+	changeGCM(simulationType, rcm);
 }
 
 function changeBasedOnRCM()
 {
+	var simulationType = $("#simulationType option:selected").val();
+	var rcm = $("input[name='rcm']:checked").val();
+	
 	changeGCM();
 }
+//------------------------------------------------------------------------------
 
 $(document).ready(newStep);

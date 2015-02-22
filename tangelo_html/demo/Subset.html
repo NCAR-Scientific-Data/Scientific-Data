@@ -9,11 +9,13 @@
 			<h2>Simulation Type</h2>
 			<h3>Explanation of Simulation</h3>
 		</div>
-		<select id="simulationType" onchange="changeBasedOnSim()">
-			<option value="ncep" selected>NCEP</option>
-			<option value="-current">GCM Current</option>
-			<option value="-future">GCM Future</option>
-		</select>
+		<div class="inputs">
+			<select id="simulationType" onchange="changeBasedOnSim()">
+				<option value="ncep" selected>NCEP</option>
+				<option value="-current">GCM Current</option>
+				<option value="-future">GCM Future</option>
+			</select>
+		</div>
 	</section>
 	<!--End Simulation Type Section-->
 
@@ -23,17 +25,20 @@
 			<h2>Variable</h2>
 			<h3>Explanation of Variable</h3>
 		</div>
-		<span class="radioButton"><input type="radio" name="variable" id="sic" value="table1.sic" checked><label for="sic">Daily Average Sea Ice Fraction</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="spdmax" value="table1.spdmax"><label for="spdmax">Maximum Daily 10-Meter Wind Speed</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="tasmax" value="table1.tasmax"><label for="tasmax">Maximum Daily Surface Air Temperature</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="tasmin" value="table1.tasmin"><label for="tasmin">Minimum Daily Surface Air Temperature</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="huss" value="table2.huss"><label for="huss">Surface Specific Humidity</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="pr" value="table2.pr"><label for="pr">Precipitation</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="ps" value="table2.ps"><label for="ps">Surface Pressure</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="rsds" value="table2.rsds"><label for="rsds">Surface Downwelling Shortwave Radiation</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="tas" value="table2.tas"><label for="tas">Surface Air Temperature</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="uas" value="table2.uas"><label for="uas">Zonal Surface Wind Speed</label></span>
-		<span class="radioButton"><input type="radio" name="variable" id="vas" value="table2.vas"><label for="vas">Meridional Surface Wind Speed</label></span>
+
+		<div class="inputs">
+			<span class="radioButton"><input type="radio" name="variable" id="sic" value="table1.sic" checked><label for="sic">Daily Average Sea Ice Fraction</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="spdmax" value="table1.spdmax"><label for="spdmax">Maximum Daily 10-Meter Wind Speed</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="tasmax" value="table1.tasmax"><label for="tasmax">Maximum Daily Surface Air Temperature</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="tasmin" value="table1.tasmin"><label for="tasmin">Minimum Daily Surface Air Temperature</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="huss" value="table2.huss"><label for="huss">Surface Specific Humidity</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="pr" value="table2.pr"><label for="pr">Precipitation</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="ps" value="table2.ps"><label for="ps">Surface Pressure</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="rsds" value="table2.rsds"><label for="rsds">Surface Downwelling Shortwave Radiation</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="tas" value="table2.tas"><label for="tas">Surface Air Temperature</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="uas" value="table2.uas"><label for="uas">Zonal Surface Wind Speed</label></span>
+			<span class="radioButton"><input type="radio" name="variable" id="vas" value="table2.vas"><label for="vas">Meridional Surface Wind Speed</label></span>
+		</div>
 	</section>
 	<!--End Variable Section-->
 
@@ -43,46 +48,52 @@
 			<h2>Region</h2>
 			<h3>Explanation of Region</h3>
 		</div>
-		<label>Southwest Corner</label>
-		<span class="textbox"><label for="swlat">Latitude</label><input type="text" id="swlat"></span>
-		<span class="textbox"><label for="swlon">Longitude</label><input type="text" id="swlon"></span>
-		<label>Northeast Corner</label>
-		<span class="textbox"><label for="nelat">Latitude</label><input type="text" id="nelat"></span>
-		<span class="textbox"><label for="nelon">Longitude</label><input type="text" id="nelon"></span>
+
+		<div class="inputs">
+			<label>Southwest Corner</label>
+			<span class="textbox"><label for="swlat">Latitude</label><input type="text" id="swlat"></span>
+			<span class="textbox"><label for="swlon">Longitude</label><input type="text" id="swlon"></span>
+			<label>Northeast Corner</label>
+			<span class="textbox"><label for="nelat">Latitude</label><input type="text" id="nelat"></span>
+			<span class="textbox"><label for="nelon">Longitude</label><input type="text" id="nelon"></span>
+		</div>
 	</section>
 	<!--End Region Section-->
 
 	<!--Time Section-->
 	<section>
 		<div class="title">
-		<h2>Time</h2>
-		<h3>Explanation of Time</h3>
+			<h2>Time</h2>
+			<h3>Explanation of Time</h3>
 		</div>
-		<label>Begin</label>
-		<select id="startYear">
-			<option value="0">Year</option>
-		</select>
 
-		<select id="startMonth">
-			<option value="0">Month</option>
-		</select>
+		<div class="inputs">
+			<label>Begin</label>
+			<select id="startYear">
+				<option value="0"></option>
+			</select>
 
-		<select id="startDay">
-			<option value="0">Day</option>
-		</select>
+			<select id="startMonth">
+				<option value="0">Month</option>
+			</select>
 
-		<label>End</label>
-		<select id="endYear">
-			<option value="0">Year</option>
-		</select>
+			<select id="startDay">
+				<option value="0">Day</option>
+			</select>
 
-		<select id="endMonth">
-			<option value="0">Month</option>
-		</select>
+			<label>End</label>
+			<select id="endYear">
+				<option value="0">Year</option>
+			</select>
 
-		<select id="endDay">
-			<option value="0">Day</option>
-		</select>
+			<select id="endMonth">
+				<option value="0">Month</option>
+			</select>
+
+			<select id="endDay">
+				<option value="0">Day</option>
+			</select>
+		</div>
 	</section>
 	<!--End Time Section-->
 
@@ -92,12 +103,14 @@
 			<h2>Regional Climate Model</h2>
 			<h3>Explanation of Regional Climate Model</h3>
 		</div>
-		<span class="radioButton"><input type="radio" name="rcm" id="crcm" value="crcm" checked><label for="crcm">CRCM</label></span>
-		<span class="radioButton"><input type="radio" name="rcm" id="ecp2" value="ecp2"><label for="ecp2">ECP2</label></span>
-		<span class="radioButton"><input type="radio" name="rcm" id="hrm3" value="hrm3"><label for="hrm3">HRM3</label></span>
-		<span class="radioButton"><input type="radio" name="rcm" id="mm5i" value="mm5i"><label for="mm5i">MM5I</label></span>
-		<span class="radioButton"><input type="radio" name="rcm" id="rcm3" value="rcm3"><label for="rcm3">RCM3</label></span>
-		<span class="radioButton"><input type="radio" name="rcm" id="wrfg" value="wrfg"><label for="wrfg">WRFG</label></span>
+		<div class="inputs" onclick="changeBasedOnRCM()">
+			<span class="radioButton"><input type="radio" name="rcm" id="crcm" value="crcm" checked><label for="crcm">CRCM</label></span>
+			<span class="radioButton"><input type="radio" name="rcm" id="ecp2" value="ecp2"><label for="ecp2">ECP2</label></span>
+			<span class="radioButton"><input type="radio" name="rcm" id="hrm3" value="hrm3"><label for="hrm3">HRM3</label></span>
+			<span class="radioButton"><input type="radio" name="rcm" id="mm5i" value="mm5i"><label for="mm5i">MM5I</label></span>
+			<span class="radioButton"><input type="radio" name="rcm" id="rcm3" value="rcm3"><label for="rcm3">RCM3</label></span>
+			<span class="radioButton"><input type="radio" name="rcm" id="wrfg" value="wrfg"><label for="wrfg">WRFG</label></span>
+		</div>
 	</section>
 	<!--End Regional Climate Model Section-->
 
@@ -107,14 +120,16 @@
 			<h2>Global Climate Model</h2>
 			<h3>Explanation on Global Climate Model</h3>
 		</div>
-		<span class="radioButton"><input type="radio" name="gcm" id="gfdl" value="gfdl" disabled><label for="gfdl">GFDL</label></span>
-		<span class="radioButton"><input type="radio" name="gcm" id="cgcm3" value="cgcm3" disabled><label for="cgcm3">CGCM3</label></span>
-		<span class="radioButton"><input type="radio" name="gcm" id="hadcm3" value="hadcm3" disabled><label for="hadcm3">HADCM3</label></span>
-		<span class="radioButton"><input type="radio" name="gcm" id="ccsm" value="ccsm" disabled><label for="ccsm">CCSM</label></span>
-		<span class="radioButton"><input type="radio" name="gcm" id="none" value="" checked><label for="none">None</label></span>
+		<div class="inputs">
+			<span class="radioButton"><input type="radio" name="gcm" id="gfdl" value="gfdl" disabled><label for="gfdl">GFDL</label></span>
+			<span class="radioButton"><input type="radio" name="gcm" id="cgcm3" value="cgcm3" disabled><label for="cgcm3">CGCM3</label></span>
+			<span class="radioButton"><input type="radio" name="gcm" id="hadcm3" value="hadcm3" disabled><label for="hadcm3">HADCM3</label></span>
+			<span class="radioButton"><input type="radio" name="gcm" id="ccsm" value="ccsm" disabled><label for="ccsm">CCSM</label></span>
+			<span class="radioButton"><input type="radio" name="gcm" id="none" value="" checked><label for="none">None</label></span>
+		</div>
 	</section>
 	<!--End Global Climate Model Section-->
 
-	<input type="submit" name="Submit">
+	<input type="submit" name="Subset Data">
 </form>
 <!--End Subset Form-->
