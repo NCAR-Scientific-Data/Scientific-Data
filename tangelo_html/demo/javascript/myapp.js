@@ -26,7 +26,7 @@ function subset() {
 	var timeend = "&timeEnd=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected").val();
     var rcm = "&rcm=" + $("input[name='rcm']:checked").val();
     var gcm = "&gcm=" + $("input[name='gcm']:checked").val();
-    var url = "python/grabNetcdf?" + sim + v + swlat + swlon + nelat + nelon + start + end + rcm + gcm;
+    var url = "python/grabNetcdf?" + simulationType + variable + swlat + swlon + nelat + nelon + timestart + timeend + rcm + gcm;
 
     $("<p>Subsetting. Please Wait.").insertAfter($("form"));
 
