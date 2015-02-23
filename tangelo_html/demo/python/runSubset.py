@@ -5,6 +5,7 @@ a new NetCDF file of the subsetted data
 """
 import subprocess
 import sys
+import re
 
 def run(url, variable, swlat, swlon, nelat, nelon, startdate, enddate):
     swLat = "swLat={0}".format(swlat)
@@ -15,10 +16,32 @@ def run(url, variable, swlat, swlon, nelat, nelon, startdate, enddate):
     endDate = "endDate={0}".format(enddate)
     filename = "filename=\"{0}\"".format(url)
     v = "variable=\"{0}\"".format(variable)
+    
     args = ['ncl', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
-    status = subprocess.call(args)
-    if status < 0:
-        print "Error subsetting data"
-        return { "alert": "Error subsetting data" }
+    sysError = False
+    try:
+        status = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    except OSError as e:
+        print "Error: {0}".format(e.strerror)
+        sysError = True
+        raise
+    except ValueError as e:
+        print "Error: Invalid argument to Popen."
+        sysError = True
+        raise
+    except:
+        print "Unknown error."
+        sysError = True
+        raise
+    isError = False
+    error = ''
+    if not sysError:
+        for line in status.stdout:
+            if line.find("fatal") != -1:
+                isError = True
+                error = re.sub('\[.*?\]:',' ',line)
+                break
+    if isError:
+        return { "error": error }
     else:
-      return { "subset": "tmin_subset_time_latlon.nc" }
+        return { "subset": "tmin_subset_time_latlon.nc" }

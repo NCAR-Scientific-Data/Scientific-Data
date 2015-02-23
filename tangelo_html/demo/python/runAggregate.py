@@ -7,6 +7,7 @@ to set the aggregate result). The output file is then a NetCDF with the aggregat
 
 import subprocess
 import sys
+import re
 
 def run(filename, interval, method, outtime):
         infile = "infile=\"{0}\"".format(filename)
@@ -22,10 +23,38 @@ def run(filename, interval, method, outtime):
         outfile = "outfile=\"tmin_aggregate_monthly.nc\""
         varname = "varname=\"tmin\""
         args = ['ncl', infile, outfile, varname, sInterval, sMethod, sOuttime, 'ncl/aggregate.ncl']
-	status = subprocess.call(args)
-      	if status < 0:
-		print "Error aggregating data"
-		return { "alert": "Error aggregating data" }
-      	else:
-       		return { "result":  "tmin_aggregate_monthly.nc" }
+        args = filter(None,args)
+
+        sysError = False
+        try:
+                status = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+        except OSError as e:
+                print "Error: {0}".format(e.strerror)
+                sysError = True
+                raise
+        except ValueError as e:
+                print "Error: Invalid argument to Popen."
+                sysError = True
+                raise
+        except:
+                print "Unknown error."
+                sysError = True
+                raise
+    
+        isError = False
+        error = ''
+        if not sysError:
+                for line in status.stdout:
+                        if line.find("fatal") != -1:
+                            isError = True
+                            error = re.sub('\[.*?\]:',' ',line)
+                            break
+                        if line.find("Invalid") != -1:
+                            isError = True
+                            error = re.sub('.*?Invalid','Invalid',line)
+                            break
+        if isError:
+                return { "error": error }
+        else:
+                return { "result":  "tmin_aggregate_monthly.nc" }
 
