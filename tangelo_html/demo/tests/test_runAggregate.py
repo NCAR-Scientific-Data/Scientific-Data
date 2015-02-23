@@ -9,24 +9,19 @@ class TestAggregate(unittest.TestCase):
         self.goodAggregate = { "result" : "tmin_aggregate_monthly.nc" }
     def testAggregate(self):
         aggregate = runAggregate.run(self.subsetFile, 'month','mean','start')
-        self.assertIsInstance(aggregate, dict)
-        self.assertDictEqual(aggregate, self.goodAggregate)
+        self.assertEqual(aggregate, self.goodAggregate)
     def testAggregateError(self):
         badAggregate = runAggregate.run(self.subsetFile, 'moth', 'mean','start')
-        self.assertIsInstance(badAggregate, dict)
-        self.assertIn("error", badAggregate)
+        self.assertNotEqual(badAggregate, self.goodAggregate)
     def testNoMethod(self):
         noMethod = runAggregate.run(self.subsetFile, 'month','', 'start')
-        self.assertIsInstance(noMethod, dict)
-        self.assertDictEqual(noMethod, self.goodAggregate)
+        self.assertEqual(noMethod, self.goodAggregate)
     def testNoOuttime(self):
         noOuttime = runAggregate.run(self.subsetFile, 'month', 'mean', '')
-        self.assertIsInstance(noOuttime, dict)
-        self.assertDictEqual(noOuttime, self.goodAggregate)
+        self.assertEqual(noOuttime, self.goodAggregate)
     def testNoMethodOut(self):
         noMethodOut = runAggregate.run(self.subsetFile, 'month', '', '')
-        self.assertIsInstance(noMethodOut, dict)
-        self.assertDictEqual(noMethodOut, self.goodAggregate)
+        self.assertEqual(noMethodOut, self.goodAggregate)
 
 if __name__ == '__main__':
         unittest.main()
