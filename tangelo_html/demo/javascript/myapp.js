@@ -15,20 +15,35 @@ function insertStep(stepName, stepValues) {
 //------------------------------------------------------------------------------
 
 //Manipulating NetCDFs----------------------------------------------------------
-function subset() {
-	var simulationType = "simulationType=" + $("#simulationType option:selected").val();
-	var variable = "&variable=" + $("input[name='variable']:checked").val();
-	var swlat = "&swlat=" + $("#swlat").val();
-	var swlon = "&swlon=" + $("#swlon").val();
-	var nelat = "&nelat=" + $("#nelat").val();
-	var nelon = "&nelon=" + $("#nelon").val();
-	var timestart = "&timeStart=" + $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#startDay option:selected").val();
-	var timeend = "&timeEnd=" + $("#endYear option:selected").val() + "-" + $("#endMonth option:selected").val() + "-" + $("#endDay option:selected").val();
-    var rcm = "&rcm=" + $("input[name='rcm']:checked").val();
-    var gcm = "&gcm=" + $("input[name='gcm']:checked").val();
-    var url = "python/grabNetcdf?" + simulationType + variable + swlat + swlon + nelat + nelon + timestart + timeend + rcm + gcm;
+function callSubset() {
+	var simulationType = $("#simulationType option:selected").val();
+	var variable = $("input[name='variable']:checked").val();
+	var swlat = $("#swlat").val();
+	var swlon = $("#swlon").val();
+	var nelat = $("#nelat").val();
+	var nelon = $("#nelon").val();
+	var timestart = $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#startDay option:selected").val();
+	var timeend = $("#endYear option:selected").val() + "-" + $("#endMonth option:selected").val() + "-" + $("#endDay option:selected").val();
+    var rcm = $("input[name='rcm']:checked").val();
+    var gcm = $("input[name='gcm']:checked").val();
 
-    $("<p>Subsetting. Please Wait.</p>").insertAfter($("button"));
+    subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm);
+}
+
+function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm) {
+	simulationType = "simulationType=" + simulationType;
+	variable = "&variable=" + variable;
+	swlat = "&swlat=" + swlat;
+	swlon = "&swlon=" + swlon;
+	nelat = "&nelat=" + nelat;
+	nelon = "&nelon=" + nelon;
+	timestart = "&timeStart=" + timestart;
+	timeend = "&timeEnd=" + timeend;
+    rcm = "&rcm=" + rcm;
+    gcm = "&gcm=" + gcm;
+    url = "python/grabNetcdf?" + simulationType + variable + swlat + swlon + nelat + nelon + timestart + timeend + rcm + gcm;
+
+    $("<p>Subsetting. Please Wait.</p>").insertAfter($(".form-inline"));
 
     $.getJSON(url, function (data) {
 		if(data.subset)
@@ -39,50 +54,71 @@ function subset() {
 		}
 		else
 		{
-			$("p").html("Subset Failed.<br>" + data.alert)
+			$("p").html("Subset Failed.<br>" + data.alert);
 			localStorage.subset = "";
 		}
     });
 }
 
-function calculate() {
+function callCalculate() {
 
-	document.getElementById("submitMessage").innerHTML = "<p>Your results are being calculated.</p>"
+	var calc = encodeURIComponent($("#calc option:selected").val());
+	var interval = encodeURIComponent($("#interval option:selected").val());
+	var out = encodeURIComponent($("#outtime option:selected").val());
+	
+	calculate(calc, interval, out);
+}
 
-	var calc = "&method=" + encodeURIComponent($("#calc option:selected").val());
-	var interval = "&interval=" + encodeURIComponent($("#interval option:selected").val());
-	var out = "&outtime=" + encodeURIComponent($("#outtime option:selected").val());
-	var url = "python/runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
+function calculate(calc, interval, out) {
+	calc = "&method=" + calc;
+	interval = "&interval=" + interval;
+	out = "&outtime=" + out;
+	url = "python/runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
+
+	$("<p>Running Calculations. Please Wait.</p>").insertAfter($(".form-inline"));
+
 	$.getJSON(url, function (data) {
 		if(data.result)
 		{
 			localStorage.result = data.result;
-			window.open("resultPage.html", "_self");
+			$("p").html("Calculations Succesful!");
 		}
 		else
 		{
 			localStorage.result = "";
-			alert(data.alert);
+			$("p").html("Calculations Failed.<br>" + data.alert);
 		}
-        });
+    });
 }
 
-function plot()
+function callPlot() {
+	var filename = encodeURIComponent(localStorage.result);
+	var timeindex = encodeURIComponent(0);
+	var natively = encodeURIComponent("False");
+
+	plot(filename, timeindex, natively);
+}
+
+function plot(filename, timeindex, natively)
 {
-	var filename = "?filename=" + encodeURIComponent(localStorage.result);
-	var timeindex = "&timeindex=" + encodeURIComponent(0);
-	var natively = "&native=" + encodeURIComponent("False");
-	var url = "python/runPlot" + filename + timeindex + natively;
+	filename = "?filename=" + filename;
+	timeindex = "&timeindex=" + timeindex;
+	natively = "&native=" + natively;
+
+	url = "python/runPlot" + filename + timeindex + natively;
+
+	$("<p>Plotting. Please Wait.</p>").insertAfter($(".form-inline"));
+
 	$.getJSON(url, function (data) {
 		if(data.image)
 		{
 			document.getElementById("results").src = data.image;
-			document.getElementById("waitMessage").innerHTML = "";
+			$("p").html("Calculations Succesful!");
 			localStorage.clear();
 		}
 		else
 		{
-			document.getElementById("waitMessage").innerHTML = data.alert;
+			$("p").html("Plotting Failed.<br>" + data.alert);
 		}
     });	
 }
@@ -116,6 +152,8 @@ function changeDateRange(simulationType)
 		startYearDropDown.append($('<option></option>').val(i).html(i.toString()));
 		endYearDropDown.append($('<option></option>').val(i).html(i.toString()));
 	}
+	
+	$("#endYear option:last-child").prop("selected", true);
 }
 
 function changeGCM(simulationType, rcm)
@@ -139,7 +177,7 @@ function changeGCM(simulationType, rcm)
 			ccsm.attr('disabled',false);
 			cgcm3.attr('disabled',false);
 
-			ccsm.prop('checked', true);
+			cgcm3.prop('checked', true);
 		}
 		else if(rcm === "ecp2") {
 			gfdl.attr('disabled',false);
@@ -155,10 +193,12 @@ function changeGCM(simulationType, rcm)
 		else if(rcm === "mm5i") {
 			ccsm.attr('disabled',false);
 
-			ccsm.prop('checked', true);
-
 			if(simulationType === "-current") {
 				hadcm3.attr('disabled',false);
+				hadcm3.prop('checked', true);
+			}
+			else {
+				ccsm.prop('checked', true);
 			}
 		}
 		else if(rcm === "rcm3") {
@@ -171,7 +211,7 @@ function changeGCM(simulationType, rcm)
 			ccsm.attr('disabled',false);
 			cgcm3.attr('disabled',false);
 
-			ccsm.prop('checked', true);
+			cgcm3.prop('checked', true);
 		}
 	}
 }
