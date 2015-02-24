@@ -1,6 +1,6 @@
 import sys
 import unittest
-sys.path.insert(0,'/usr/local/CUProject/Scientific-Data/tangelo_html/demo/python')
+sys.path.insert(1,'/usr/local/CUProject/Scientific-Data/tangelo_html/demo/python')
 import runPlot
 
 class TestPlot(unittest.TestCase):

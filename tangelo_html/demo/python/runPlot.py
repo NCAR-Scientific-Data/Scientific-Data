@@ -20,35 +20,26 @@ def run(filename, timeindex, native):
                 plotScript = 'ncl/narccap_plot_tmin_latlon.ncl'
         args = ['ncl', sFilename, sTimeindex, sOutfile, plotScript]
         sysError = False
+        nclError = False
         try:
                 status = subprocess.Popen(args, stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-	except OSError as e:
-                print "Error: {0}".format(e.strerror)
-                sysError = True
-                raise
-        except ValueError as e:
-                print "Error: Invalid argument to Popen."
-                sysError = True
-                raise
         except:
-                print "Unknown error."
                 sysError = True
-                raise
+                error = "System error, please contact site administrator."
     
-        isError = False
+        nclError = False
         error = ''
         if not sysError:
                 for line in status.stdout:
                         if line.find("fatal") != -1:
-                            isError = True
+                            nclError = True
                             error = re.sub('\[.*?\]:',' ',line)
                             break
                         if line.find("Invalid") != -1:
-                            isError = True
+                            nclError = True
                             error = re.sub('.*?Invalid','Invalid',line)
                             break
-        if isError:
+        if nclError:
                 return { "error": error }
         else:
-		return { "image": "tmin_latlon.png" }
-
+		        return { "image": "tmin_latlon.png" }

@@ -23,8 +23,8 @@ begin
   lat2d = f->lat
   lon2d = f->lon
 
-  printVarSummary(tmin)       ; Print some info about "tmin"
-  printMinMax(tmin,0)
+  ;printVarSummary(tmin)       ; Print some info about "tmin"
+  ;printMinMax(tmin,0)
 
 ;---Convert "time" array into something we can more easily understand.
   opt      = -2
@@ -64,7 +64,7 @@ begin
   lat_sub  = lat2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   lon_sub  = lon2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
 
-  printVarSummary(tmin_sub)    ; Note metadata still attached
+  ;printVarSummary(tmin_sub)    ; Note metadata still attached
   printMinMax(tmin_sub,0)
 
 ;----------------------------------------------------------------------

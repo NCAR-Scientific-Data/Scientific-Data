@@ -1,6 +1,6 @@
 import unittest
 import sys
-sys.path.insert(0,'/usr/local/CUProject/Scientific-Data/tangelo_html/demo/python')
+sys.path.insert(1,'/usr/local/CUProject/Scientific-Data/tangelo_html/demo/python')
 import runSubset
 
 class TestSubset(unittest.TestCase):            

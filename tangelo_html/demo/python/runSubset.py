@@ -19,29 +19,19 @@ def run(url, variable, swlat, swlon, nelat, nelon, startdate, enddate):
     
     args = ['ncl', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
     sysError = False
+    nclError = False
     try:
         status = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    except OSError as e:
-        print "Error: {0}".format(e.strerror)
-        sysError = True
-        raise
-    except ValueError as e:
-        print "Error: Invalid argument to Popen."
-        sysError = True
-        raise
     except:
-        print "Unknown error."
         sysError = True
-        raise
-    isError = False
-    error = ''
+        error = "System error, please contact the site administrator"
     if not sysError:
         for line in status.stdout:
             if line.find("fatal") != -1:
-                isError = True
+                nclError = True
                 error = re.sub('\[.*?\]:',' ',line)
                 break
-    if isError:
+    if nclError or sysError:
         return { "error": error }
     else:
         return { "subset": "tmin_subset_time_latlon.nc" }
