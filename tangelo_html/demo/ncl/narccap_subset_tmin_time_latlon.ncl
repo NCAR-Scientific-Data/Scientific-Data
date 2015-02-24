@@ -15,14 +15,13 @@
 ;----------------------------------------------------------------------
 
 begin
-  ;dir      = "/glade/p/image/narccap/summaries/daily/"
-  ;filename = "tmin.CRCM.ncep.dayavg.native.nc"
+;---Get NetCDF file
   f        = addfile(filename,"r")
 
 ;---Read tmin, lat, lon off the file
-  tmin  = f->$variable$             ; 8766 x 115 x 140 (time x lat x lon)
-  lat2d = f->lat              ; 115 x 140
-  lon2d = f->lon              ; 115 x 140
+  tmin  = f->$variable$
+  lat2d = f->lat
+  lon2d = f->lon
 
   printVarSummary(tmin)       ; Print some info about "tmin"
   printMinMax(tmin,0)
