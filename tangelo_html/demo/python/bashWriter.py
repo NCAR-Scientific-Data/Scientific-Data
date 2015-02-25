@@ -2,6 +2,9 @@ from observable import Observable
 from observer import Observer
 from pymongo import MongoClient
 import os.path
+from pyutilib import workflow
+from bson.binary import Binary
+import pickle
  
 class BashWriter(Observer):
 
@@ -120,16 +123,10 @@ class dbManager(Observer):
 				
 			# add shell script to mongodb
 			if (task == 'add'):
-				newDoc = { "_id": fileID, "filename": fileName}	
 				script = open(fileName)
-				for i, line in enumerate(script):
-					if i == 0:
-						newDoc['shell'] = line
-					elif i % 2 == 1:
-						newDoc['comment' + str(i/2)] = line					
-					elif (i % 2 == 0) and (i != 0):
-						newDoc['step' + str(i/2)] = line
+				scriptbytes = pickle.dump(script)
 				script.close()
+				newDoc = { "_id": fileID, "filename": fileName, "data": scriptbytes)}			
 				collection.insert(newDoc)
 				
 			elif (task == 'delete'):
