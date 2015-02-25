@@ -18,7 +18,7 @@ def run(filename, timeindex, native):
                 plotScript = 'ncl/narccap_plot_tmin_native.ncl'
         else:
                 plotScript = 'ncl/narccap_plot_tmin_latlon.ncl'
-        args = ['ncl', sFilename, sTimeindex, sOutfile, plotScript]
+        args = ['ncl', '-n', sFilename, sTimeindex, sOutfile, plotScript]
         sysError = False
         nclError = False
         try:

@@ -17,7 +17,7 @@ def run(url, variable, swlat, swlon, nelat, nelon, startdate, enddate):
     filename = "filename=\"{0}\"".format(url)
     v = "variable=\"{0}\"".format(variable)
     
-    args = ['ncl', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
+    args = ['ncl', '-n', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
     sysError = False
     nclError = False
     try:
