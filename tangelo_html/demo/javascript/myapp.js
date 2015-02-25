@@ -1,16 +1,45 @@
 //Creating/Using Steps----------------------------------------------------------
 function newStep() {
+	$("aside a").removeClass("active");
+	$("aside a:last").addClass("active");
 	$("main").load("chooseStep.html");
 }
 
-function createPage(page) {
-	$("main").load(page);
-	insertStep(page.substring(0,page.length-5), null);
+function createStep(step, isNew, id) {
+	$("main").load(step + ".html");
+	if(isNew)
+	{
+		insertStep(step, null);
+	}
+	else
+	{
+		$("aside a").removeClass("active");
+		$("#"+id).addClass("active");
+	}	
+}
+
+function deleteStep() {
+	var startId = Number($(".active").attr("id"));
+	$("aside a.active").nextAll().each(function (index) {
+		if($(this).attr('id') != 0)
+		{
+			$(this).attr('id', startId);
+			startId+= 1;
+		}
+	});
+	$(".active").remove();
+	newStep();
 }
 
 function insertStep(stepName, stepValues) {
-	var newstep = "<a onclick=createPage('" + stepName + ".html')>" + stepName + "</a>";
+	var id= $("aside a").length;
+	var idfull = "id=\"" + id +"\"";
+	var onclick = "onclick=\"createStep('" + stepName + "', false, this.id)\"";
+	
+	var newstep = "<a " + idfull + onclick + ">" + stepName + "</a>";
 	$(newstep).insertBefore($("aside a:last"));
+	$("aside a").removeClass("active");
+	$("#" + id).addClass("active");
 }
 //------------------------------------------------------------------------------
 
@@ -54,7 +83,7 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
 		}
 		else
 		{
-			$("p").html("Subset Failed.<br>" + data.alert);
+			$("p").html("Subset Failed.<br>" + data.error);
 			localStorage.subset = "";
 		}
     });
@@ -73,7 +102,7 @@ function calculate(calc, interval, out) {
 	calc = "&method=" + calc;
 	interval = "&interval=" + interval;
 	out = "&outtime=" + out;
-	url = "python/runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
+	url = "python/runCalculation?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
 
 	$("<p>Running Calculations. Please Wait.</p>").insertAfter($(".form-inline"));
 
@@ -86,7 +115,7 @@ function calculate(calc, interval, out) {
 		else
 		{
 			localStorage.result = "";
-			$("p").html("Calculations Failed.<br>" + data.alert);
+			$("p").html("Calculations Failed.<br>" + data.error);
 		}
     });
 }
@@ -118,7 +147,7 @@ function plot(filename, timeindex, natively)
 		}
 		else
 		{
-			$("p").html("Plotting Failed.<br>" + data.alert);
+			$("p").html("Plotting Failed.<br>" + data.error);
 		}
     });	
 }
