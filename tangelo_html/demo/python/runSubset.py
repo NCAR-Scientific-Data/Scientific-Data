@@ -5,8 +5,9 @@ a new NetCDF file of the subsetted data
 """
 import subprocess
 import sys
+import re
 
-def run(url, swlat, swlon, nelat, nelon, startdate, enddate):
+def run(url, variable, swlat, swlon, nelat, nelon, startdate, enddate):
     swLat = "swLat={0}".format(swlat)
     swLon = "swLon={0}".format(swlon)
     neLat = "neLat={0}".format(nelat)
@@ -14,10 +15,23 @@ def run(url, swlat, swlon, nelat, nelon, startdate, enddate):
     startDate = "startDate={0}".format(startdate)
     endDate = "endDate={0}".format(enddate)
     filename = "filename=\"{0}\"".format(url)
-    args = ['ncl', filename, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
-    status = subprocess.call(args)
-    if status < 0:
-        print "Error subsetting data"
-        return { "alert": "Error subsetting data" }
+    v = "variable=\"{0}\"".format(variable)
+    
+    args = ['ncl', '-n', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
+    sysError = False
+    nclError = False
+    try:
+        status = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    except:
+        sysError = True
+        error = "System error, please contact the site administrator"
+    if not sysError:
+        for line in status.stdout:
+            if line.find("fatal") != -1:
+                nclError = True
+                error = re.sub('\[.*?\]:',' ',line)
+                break
+    if nclError or sysError:
+        return { "error": error }
     else:
-      return { "subset": "tmin_subset_time_latlon.nc" }
+        return { "subset": "tmin_subset_time_latlon.nc" }

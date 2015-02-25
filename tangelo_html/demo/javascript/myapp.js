@@ -1,78 +1,139 @@
-function subset() {
-	var sim = "simulation_type=" + $("#sim option:selected").val();
-	var v = "&variable=" + $("input[name='var']:checked").val();
-	var swlat = "&swLat=" + $("#swlat").val();
-	var swlon = "&swLon=" + $("#swlon").val();
-	var nelat = "&neLat=" + $("#nelat").val();
-	var nelon = "&neLon=" + $("#nelon").val();
-	var start = "&timestart=" + $("#syear option:selected").val() + "-" + $("#smonth option:selected").val() + "-" + $("#sday option:selected").val();
-	var end = "&timeend=" + $("#eyear option:selected").val() + "-" + $("#emonth option:selected").val() + "-" + $("#eday option:selected").val();
-    var rcm = "&rcm=" + $("input[name='rcm']:checked").val();
-    var gcm = "&gcm=" + $("input[name='gcm']:checked").val();
-    var url = "python/grabNetcdf?" + sim + v + swlat + swlon + nelat + nelon + start + end + rcm + gcm;
+//Creating/Using Steps----------------------------------------------------------
+function newStep() {
+	$("main").load("chooseStep.html");
+}
+
+function createPage(page) {
+	$("main").load(page);
+	insertStep(page.substring(0,page.length-5), null);
+}
+
+function insertStep(stepName, stepValues) {
+	var newstep = "<a onclick=createPage('" + stepName + ".html')>" + stepName + "</a>";
+	$(newstep).insertBefore($("aside a:last"));
+}
+//------------------------------------------------------------------------------
+
+//Manipulating NetCDFs----------------------------------------------------------
+function callSubset() {
+	var simulationType = $("#simulationType option:selected").val();
+	var variable = $("input[name='variable']:checked").val();
+	var swlat = $("#swlat").val();
+	var swlon = $("#swlon").val();
+	var nelat = $("#nelat").val();
+	var nelon = $("#nelon").val();
+	var timestart = $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#startDay option:selected").val();
+	var timeend = $("#endYear option:selected").val() + "-" + $("#endMonth option:selected").val() + "-" + $("#endDay option:selected").val();
+    var rcm = $("input[name='rcm']:checked").val();
+    var gcm = $("input[name='gcm']:checked").val();
+
+    subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm);
+}
+
+function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm) {
+	simulationType = "simulationType=" + simulationType;
+	variable = "&variable=" + variable;
+	swlat = "&swlat=" + swlat;
+	swlon = "&swlon=" + swlon;
+	nelat = "&nelat=" + nelat;
+	nelon = "&nelon=" + nelon;
+	timestart = "&timeStart=" + timestart;
+	timeend = "&timeEnd=" + timeend;
+    rcm = "&rcm=" + rcm;
+    gcm = "&gcm=" + gcm;
+    url = "python/grabNetcdf?" + simulationType + variable + swlat + swlon + nelat + nelon + timestart + timeend + rcm + gcm;
+
+    $("<p>Subsetting. Please Wait.</p>").insertAfter($(".form-inline"));
+
     $.getJSON(url, function (data) {
 		if(data.subset)
 		{
+			$("p").html("Subset Succesful!");
 			localStorage.subset = data.subset;
-			window.open("calculate.html", "_self");
+
 		}
 		else
 		{
+			$("p").html("Subset Failed.<br>" + data.alert);
 			localStorage.subset = "";
-			alert(data.alert);
 		}
     });
 }
 
-function calculate() {
+function callCalculate() {
 
-	document.getElementById("submitMessage").innerHTML = "<p>Your results are being calculated.</p>"
+	var calc = encodeURIComponent($("#calc option:selected").val());
+	var interval = encodeURIComponent($("#interval option:selected").val());
+	var out = encodeURIComponent($("#outtime option:selected").val());
+	
+	calculate(calc, interval, out);
+}
 
-	var calc = "&method=" + encodeURIComponent($("#calc option:selected").val());
-	var interval = "&interval=" + encodeURIComponent($("#interval option:selected").val());
-	var out = "&outtime=" + encodeURIComponent($("#outtime option:selected").val());
-	var url = "python/runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
+function calculate(calc, interval, out) {
+	calc = "&method=" + calc;
+	interval = "&interval=" + interval;
+	out = "&outtime=" + out;
+	url = "python/runAggregate?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
+
+	$("<p>Running Calculations. Please Wait.</p>").insertAfter($(".form-inline"));
+
 	$.getJSON(url, function (data) {
 		if(data.result)
 		{
 			localStorage.result = data.result;
-			window.open("resultPage.html", "_self");
+			$("p").html("Calculations Succesful!");
 		}
 		else
 		{
 			localStorage.result = "";
-			alert(data.alert);
+			$("p").html("Calculations Failed.<br>" + data.alert);
 		}
-        });
+    });
 }
 
-function plot()
+function callPlot() {
+	var filename = encodeURIComponent(localStorage.result);
+	var timeindex = encodeURIComponent(0);
+	var natively = encodeURIComponent("False");
+
+	plot(filename, timeindex, natively);
+}
+
+function plot(filename, timeindex, natively)
 {
-	var url = "python/runPlot?filename=" + encodeURIComponent(localStorage.result);
+	filename = "?filename=" + filename;
+	timeindex = "&timeindex=" + timeindex;
+	natively = "&native=" + natively;
+
+	url = "python/runPlot" + filename + timeindex + natively;
+
+	$("<p>Plotting. Please Wait.</p>").insertAfter($(".form-inline"));
+
 	$.getJSON(url, function (data) {
 		if(data.image)
 		{
 			document.getElementById("results").src = data.image;
-			document.getElementById("waitMessage").innerHTML = "";
+			$("p").html("Calculations Succesful!");
 			localStorage.clear();
 		}
 		else
 		{
-			document.getElementById("waitMessage").innerHTML = data.alert;
+			$("p").html("Plotting Failed.<br>" + data.alert);
 		}
     });	
 }
+//------------------------------------------------------------------------------
 
-function changeDateRange()
+//Subset Functions--------------------------------------------------------------
+function changeDateRange(simulationType)
 {
-	var v = $("#sim option:selected").val();
 	var start;
 	var end;
-	if(v === "ncep") {
+	if(simulationType === "ncep") {
 		start = 1979;
 		end = 2004;
 	}
-	else if (v === "-current") {
+	else if (simulationType === "-current") {
 		start = 1970;
 		end = 2000;
 	}
@@ -80,93 +141,97 @@ function changeDateRange()
 		start = 2040;
 		end = 2070;
 	}
+	var startYearDropDown = $("#startYear");
+	var endYearDropDown = $("#endYear");
 
-	$("#syear").empty();
-	$("#eyear").empty();
+	startYearDropDown.empty();
+	endYearDropDown.empty();
 
 	for(i = start; i <= end; i++)
 	{
-		$("#syear").append($('<option></option>').val(i).html(i.toString()));
-		$("#eyear").append($('<option></option>').val(i).html(i.toString()));
+		startYearDropDown.append($('<option></option>').val(i).html(i.toString()));
+		endYearDropDown.append($('<option></option>').val(i).html(i.toString()));
 	}
+	
+	$("#endYear option:last-child").prop("selected", true);
 }
 
-function changeGCM()
+function changeGCM(simulationType, rcm)
 {
-	var sim = $("#sim option:selected").val();
-	var rcm = $("input[name='rcm']:checked").val();
+	var ccsm = $("#ccsm");
+	var cgcm3 = $("#cgcm3");
+	var gfdl = $("#gfdl");
+	var hadcm3 = $("#hadcm3");
 
-	if(sim === "ncep") {
-		$("input[name='gcm']").each(function(){
-			if($(this).val() !== "") {
-				$(this).attr('disabled',true);
-			}
-			else {
-				$(this).attr('disabled',false);
-				$(this).prop('checked',true);
-			}
-		});
+	$("input[name='gcm']").each(function() {
+		$(this).attr("disabled", true);
+	})
+
+	if(simulationType === "ncep") {
+		$("#none").attr('disabled', false);
+
+		$("#none").prop('checked', true);
 	}
 	else {
 		if(rcm === "crcm") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#CCSM').attr('disabled',false);
-			$('#CCSM').prop('checked', true);
-			$('#CGCM3').attr('disabled',false);
+			ccsm.attr('disabled',false);
+			cgcm3.attr('disabled',false);
+
+			cgcm3.prop('checked', true);
 		}
 		else if(rcm === "ecp2") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#GFDL').attr('disabled',false);
-			$('#GFDL').prop('checked', true);
+			gfdl.attr('disabled',false);
+
+			gfdl.prop('checked', true);
 		}
 		else if(rcm === "hrm3") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#GFDL').attr('disabled',false);
-			$('#HADCM3').attr('disabled',false);
-			$('#GFDL').prop('checked', true);
+			gfdl.attr('disabled',false);
+			hadcm3.attr('disabled',false);
+
+			gfdl.prop('checked', true);
 		}
 		else if(rcm === "mm5i") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#CCSM').attr('disabled',false);
-			$('#CCSM').prop('checked', true);
-			if(sim === "-current") {
-				$('#HADCM3').attr('disabled',false);
+			ccsm.attr('disabled',false);
+
+			if(simulationType === "-current") {
+				hadcm3.attr('disabled',false);
+				hadcm3.prop('checked', true);
+			}
+			else {
+				ccsm.prop('checked', true);
 			}
 		}
-		if(rcm === "rcm3") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#GFDL').attr('disabled',false);
-			$('#CGCM3').attr('disabled',false);
-			$('#GFDL').prop('checked', true);
+		else if(rcm === "rcm3") {
+			gfdl.attr('disabled',false);
+			cgcm3.attr('disabled',false);
+
+			gfdl.prop('checked', true);
 		}
-		if(rcm === "wrfg") {
-			$("input[name='gcm']").each(function(){
-				$(this).attr('disabled',true);
-			});
-			$('#CCSM').attr('disabled',false);
-			$('#CGCM3').attr('disabled',false);
-			$('#CCSM').prop('checked', true);
+		else if(rcm === "wrfg") {
+			ccsm.attr('disabled',false);
+			cgcm3.attr('disabled',false);
+
+			cgcm3.prop('checked', true);
 		}
 	}
 }
 
 function changeBasedOnSim()
 {
-	changeDateRange();
-	changeGCM();
+	var simulationType = $("#simulationType option:selected").val();
+	var rcm = $("input[name='rcm']:checked").val();
+
+	changeDateRange(simulationType);
+	changeGCM(simulationType, rcm);
 }
 
 function changeBasedOnRCM()
 {
-	changeGCM();
+	var simulationType = $("#simulationType option:selected").val();
+	var rcm = $("input[name='rcm']:checked").val();
+	
+	changeGCM(simulationType, rcm);
 }
+//------------------------------------------------------------------------------
+
+$(document).ready(newStep);
