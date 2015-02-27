@@ -7,14 +7,19 @@
 	margin: 0;
 }
 
-#content-wrapper {
+main {
 	position: relative;
-	font-family: AppleGothic, Dotum;
-	font-size: 14px; 
-	padding:20px;
-	width: 50%;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-size: 16px; 
+	padding:25px;
+	width: 75%;
 	color: black;
-	line-height: 140%;
+	margin:auto;
+}
+
+section{
+	padding:10px;
+	margin-left:-40px;
 }
 
 
@@ -47,7 +52,28 @@ input {
 }
 
 h1 {
+	font-size:50px;
+	font-weight:300;
+	padding:3px;
+	margin:auto;
+	text-align:center;
+}
+
+h2{
 	display:inline;
+	font-size:22px;
+	font-weight:300;
+}
+
+h3{
+	display:inline;
+	font-size:16px;
+	font-style:italic;
+	margin-left:8px;
+}
+
+a {
+	padding:5px;
 }
 
 a.tooltip {
@@ -85,4 +111,135 @@ a.tooltip:hover span {
 
 input:disabled + label{
 	color: #CCCCCC;
+}
+
+span.radioButton {
+	font-size:16px;
+	/*font-weight:600;*/
+}
+
+span.textbox {
+	font-size:16px;
+}
+
+#buttonContainer {
+	text-align:center;
+}
+
+button {
+	margin:30px;
+}
+
+#main-wrapper {
+	margin-left:310px;
+}
+
+button.choose {
+    color: #F4F4F4;
+    background: none repeat scroll 0% 0% #4AAAA5;
+    font-weight: 600;
+    padding: 8px 25px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size:18px;
+    border-width: 0px 0px 2px;
+    border-style: solid;
+    border-color: #E3EDF4 #E3EDF4 #3A9A95;;
+    border-radius: 4px;
+    cursor:pointer;
+}
+
+button.delete {
+    color: #F4F4F4;
+    background: none repeat scroll 0% 0% #4AAAA5;
+    font-weight: 600;
+    padding: 4px 12px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size:18px;
+    border-width: 0px 0px 2px;
+    border-style: solid;
+    border-color: #E3EDF4 #E3EDF4 #3A9A95;;
+    border-radius: 4px;
+    cursor:pointer;
+    margin:15px;
+    
+}
+
+button.subset {
+    color: #F4F4F4;
+    background: none repeat scroll 0% 0% #4AAAA5;
+    font-weight: 600;
+    padding: 4px 12px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size:18px;
+    border-width: 0px 0px 2px;
+    border-style: solid;
+    border-color: #E3EDF4 #E3EDF4 #3A9A95;;
+    border-radius: 4px;
+    cursor:pointer;
+    margin:15px;
+    margin-left:-30px;
+    
+}
+
+#simulationType {
+	margin-left:60px;
+}
+
+div.form-inline {
+	margin-left:50px;
+}
+
+#radioButtonContainerLeft {
+	float:left;
+	margin-right:30px;
+	margin-left:60px;
+}
+
+#radioButtonContainerRight {
+	margin-left:10px;
+}
+
+#regionSelect {
+	margin-left:60px;
+}
+
+#latlonContainer {
+	margin-left:50px;
+}
+
+#latlonLabel {
+	float:left;
+	margin-right:8px;
+}
+
+#timeSelect {
+	margin-left:60px;
+}
+
+#regionalCliModSelectLeft {
+	float:left;
+	margin-right:60px;
+	margin-left:60px;
+}
+
+#globalCliModSelectLeft {
+	float:left;
+	margin-right:60px;
+	margin-left:60px;
+}
+
+#analysisType {
+	margin-left:60px;
+}
+
+#interval {
+	margin-left:60px;
+}
+
+#outtime {
+	margin-left:60px;
+}
+
+#qunit {
+	margin-left: 310px;
 }
