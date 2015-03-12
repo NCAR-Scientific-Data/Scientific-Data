@@ -1,4 +1,11 @@
 window.onload = function () {
+
+    var url= "python/workflowOne";
+
+    $.getJSON(url, function (data) {
+        alert(data);
+    });
+
     var bobbiesReturn = {
         returned: [
             ["subset", [1, 2, 3]],
@@ -27,7 +34,7 @@ window.onload = function () {
     data.nodes[0].y = 300;
     data.nodes[0].fixed = true;
 
-    x += 100
+    x += 100;
 
     bobbiesReturn.returned.forEach( function(list) {
         list[1].forEach(function(index) {

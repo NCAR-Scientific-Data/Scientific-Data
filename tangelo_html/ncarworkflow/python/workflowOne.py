@@ -64,7 +64,7 @@ class TaskE(pyutilib.workflow.Task):
 		self.i = self.h+self.f
 
 
-def getWorkflow():
+def run():
 	A = TaskA()
 	B = TaskB()
 	C = TaskC()
@@ -85,4 +85,5 @@ def getWorkflow():
 	w.add(D)
 	w.add(E)
 
-	print(w.__list__())
+	print w.__list__()
+	return w.__list__()
