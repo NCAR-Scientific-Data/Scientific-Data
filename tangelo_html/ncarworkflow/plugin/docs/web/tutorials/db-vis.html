@@ -1,0 +1,919 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Driving a Visualization with SQLAlchemy &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="../index.html" />
+    <link rel="next" title="Fiddling with the Bundled Examples" href="fiddling.html" />
+    <link rel="prev" title="Building a Tangelo Web Application from Scratch" href="building-an-app.html" />
+<link rel=stylesheet type=text/css href=../_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="fiddling.html" title="Fiddling with the Bundled Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="building-an-app.html" title="Building a Tangelo Web Application from Scratch"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="driving-a-visualization-with-sqlalchemy">
+<h1>Driving a Visualization with SQLAlchemy<a class="headerlink" href="#driving-a-visualization-with-sqlalchemy" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial demonstrates how you might set up a SQL database to serve data to
+a visualization application using Tangelo.  This example demonstrates how an
+application-specific approach to building and using a database can provide
+flexibility and adaptability for your Tangelo application.</p>
+<p>In this tutorial we will</p>
+<ul class="simple">
+<li>obtain <em>Star Trek: The Next Generation</em> episode data</li>
+<li>create an SQLite database from it</li>
+<li>establish some object-relational mapping (ORM) classes using SQLAlchemy</li>
+<li>visualize the data using <a class="reference external" href="http://trifacta.github.io/vega">Vega</a></li>
+</ul>
+<p>To begin this tutorial, create a fresh directory somewhere where we can build
+a new project:</p>
+<div class="highlight-python"><div class="highlight"><pre>mkdir tng
+cd tng
+</pre></div>
+</div>
+<p>Here, we will create a database, along with appropriate ORM infrastructure;
+write some web services to be used as runtime data sources to pull requested
+data from the database; and a simple web frontend made from HTML and JavaScript,
+using the Vega visualization library.</p>
+<p>For convenience, you can download and unpack a ZIP archive of the entire web
+application as well: <a class="reference external" href="../_static/tng.zip">tng.zip</a>.  However, downloading and
+inspecting the files as we go, or writing them by hand from the listings below,
+may encourage a deeper understanding of what&#8217;s going on.</p>
+<div class="section" id="getting-the-data">
+<h2>Getting the Data<a class="headerlink" href="#getting-the-data" title="Permalink to this headline">¶</a></h2>
+<p>The episode data, gleaned from <a class="reference external" href="http://memory-alpha.org">Memory Alpha</a> by
+hand, is in these two CSV files:</p>
+<ul class="simple">
+<li><a class="reference external" href="../_static/tng/episodes.csv">episodes.csv</a></li>
+<li><a class="reference external" href="../_static/tng/people.csv">people.csv</a></li>
+</ul>
+<p>If you take a look in these files, you&#8217;ll see some basic data about episodes of
+<em>Star Trek: The Next Generation</em>.  <em>episodes.csv</em> contains one row per episode,
+indicating its overall episode number, season/episode, title, airdate, a link to
+the associated Memory Alpha article, and numeric indices into <em>people.csv</em> to
+indicate who wrote each teleplay, who developed each story, and who directed
+each episode.</p>
+</div>
+<div class="section" id="creating-the-database">
+<h2>Creating the Database<a class="headerlink" href="#creating-the-database" title="Permalink to this headline">¶</a></h2>
+<p>SQLAlchemy is a Python library that provides a programmatic API for creating,
+updating, and accessing SQL databases.  It includes an <em>object-relational
+mapping (ORM)</em> component, meaning it provides facilities for writing Python
+classes that transparently maintain a connection to the database, changing it as
+the object is updated, etc.</p>
+<p>To install SQLAlchemy, you can use the Python package manager <code class="docutils literal"><span class="pre">pip</span></code> as
+follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install sqlalchemy==0.9.8
+</pre></div>
+</div>
+<p>(The version specifier may not be necessary, but this tutorial was designed
+using SQLAlchemy 0.9.8.)</p>
+<div class="section" id="establishing-orm-classes">
+<h3>Establishing ORM Classes<a class="headerlink" href="#establishing-orm-classes" title="Permalink to this headline">¶</a></h3>
+<p>The first step in this visualization project is to establish our data model by
+writing some ORM classes, then using those classes to read in the CSV files from
+above and flow them into an SQLite database.  The file <a class="reference external" href="../_static/tng/startrek.py">startrek.py</a> has what we need.  Let&#8217;s analyze it, section by
+section.</p>
+<p>First, we need some support from <code class="docutils literal"><span class="pre">SQLAlchemy</span></code>:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&quot;sqlite:///tngeps.db&quot;</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">convert_unicode</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="n">DBSession</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p><code class="docutils literal"><span class="pre">create_engine</span></code> simply gives us a handle to a database - this one will exist
+on disk, in the file <code class="docutils literal"><span class="pre">tngeps.db</span></code>.  The <code class="docutils literal"><span class="pre">echo</span></code> keyword argument controls
+whether the behind-the-scenes translation to SQL commands will appear on the
+output when changes occur.  For now it may be a good idea to leave this set to
+<code class="docutils literal"><span class="pre">True</span></code> for the sake of education.</p>
+<p><code class="docutils literal"><span class="pre">declarative_base</span></code> is a base class that provides the foundation for creating
+ORM classes to model our data, while the <code class="docutils literal"><span class="pre">sessionmaker</span></code> function creates a
+function that can be used to establish a connection to the database.</p>
+<p>Next we need to import some types for the columns appearing in our data:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">String</span>
+</pre></div>
+</td></tr></table></div>
+<p><code class="docutils literal"><span class="pre">Date</span></code> and <code class="docutils literal"><span class="pre">String</span></code> will be used to store actual data values, such as
+airdates, and names of people and episodes.  <code class="docutils literal"><span class="pre">Integer</span></code> is useful as a unique
+ID field for the various objects we will be storing.</p>
+<p>Now, we finally get to the data modeling:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">ForeignKey</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">relationship</span>
+
+<span class="n">episode_teleplays</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s">&quot;episode_teleplays&quot;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+                          <span class="n">Column</span><span class="p">(</span><span class="s">&quot;episode_id&quot;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&quot;episodes.id&quot;</span><span class="p">)),</span>
+                          <span class="n">Column</span><span class="p">(</span><span class="s">&quot;teleplay_id&quot;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&quot;people.id&quot;</span><span class="p">)))</span>
+
+<span class="n">episode_stories</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s">&quot;episode_stories&quot;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+                        <span class="n">Column</span><span class="p">(</span><span class="s">&quot;episode_id&quot;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&quot;episodes.id&quot;</span><span class="p">)),</span>
+                        <span class="n">Column</span><span class="p">(</span><span class="s">&quot;story_id&quot;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&quot;people.id&quot;</span><span class="p">)))</span>
+
+<span class="n">episode_directors</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s">&quot;episode_directors&quot;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+                          <span class="n">Column</span><span class="p">(</span><span class="s">&quot;episode_id&quot;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&quot;episodes.id&quot;</span><span class="p">)),</span>
+                          <span class="n">Column</span><span class="p">(</span><span class="s">&quot;director_id&quot;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&quot;people.id&quot;</span><span class="p">)))</span>
+
+
+<span class="k">class</span> <span class="nc">Episode</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&quot;episodes&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">season</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">episode</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">airdate</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Date</span><span class="p">)</span>
+    <span class="n">teleplay</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Person&quot;</span><span class="p">,</span> <span class="n">secondary</span><span class="o">=</span><span class="n">episode_teleplays</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s">&quot;teleplays&quot;</span><span class="p">)</span>
+    <span class="n">story</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Person&quot;</span><span class="p">,</span> <span class="n">secondary</span><span class="o">=</span><span class="n">episode_stories</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s">&quot;stories&quot;</span><span class="p">)</span>
+    <span class="n">director</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&quot;Person&quot;</span><span class="p">,</span> <span class="n">secondary</span><span class="o">=</span><span class="n">episode_directors</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s">&quot;directors&quot;</span><span class="p">)</span>
+    <span class="n">stardate</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s">u&quot;Episode(&#39;</span><span class="si">%s</span><span class="s">&#39;)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&quot;people&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s">u&quot;Person(&#39;</span><span class="si">%s</span><span class="s">&#39;)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>First take a look at the classes <code class="docutils literal"><span class="pre">Episode</span></code> and <code class="docutils literal"><span class="pre">Person</span></code>.  These make use of
+SQLAlchemy&#8217;s <code class="docutils literal"><span class="pre">declarative_base</span></code> to establish classes whose structure reflect
+the semantics of a table in the database.  The <code class="docutils literal"><span class="pre">__tablename__</span></code> attribute gives
+the name of the associated table, while the other named attributes give the
+names of the columns appearing in it, along with the data type.</p>
+<p>Note that the <code class="docutils literal"><span class="pre">teleplay</span></code>, <code class="docutils literal"><span class="pre">story</span></code>, and <code class="docutils literal"><span class="pre">director</span></code> attributes of
+<code class="docutils literal"><span class="pre">Episode</span></code> are a bit more complex than the others.  These are fields that
+cross-reference into the &#8220;people&#8221; table:  each <code class="docutils literal"><span class="pre">Episode</span></code> may have
+multiple writers and story developers <a class="footnote-reference" href="#f1" id="id1">[1]</a>, each of which is a <code class="docutils literal"><span class="pre">Person</span></code>.  Of
+course, a particular Person may also be associated with multiple Episodes, so a
+special &#8220;many-to-many&#8221; relationship exists between <code class="docutils literal"><span class="pre">Episode</span></code> and <code class="docutils literal"><span class="pre">Person</span></code>
+when it comes to the <code class="docutils literal"><span class="pre">teleplay</span></code>, <code class="docutils literal"><span class="pre">story</span></code>, and <code class="docutils literal"><span class="pre">director</span></code> columns.  These
+are expressed in the &#8220;association table&#8221; declarations appearing in lines 25, 29,
+and 33.  Such tables simply contain one row for each unique episode-person
+connection; they are referenced in the appropriate column declaration (lines
+46-48) to implement the many-to-many relation.</p>
+<p>The effect of these ORM classes is that when, e.g., an <code class="docutils literal"><span class="pre">Episode</span></code> object is
+queried from the database, its <code class="docutils literal"><span class="pre">teleplay</span></code> property will contain a list of the
+correct <code class="docutils literal"><span class="pre">Person</span></code> objects, having been reconstructed by examining the
+&#8220;episode_teleplays&#8221; table in the database.</p>
+</div>
+<div class="section" id="id2">
+<h3>Creating the Database<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Now it just remains to use the ORM infrastructure to drive the parsing of the
+raw data and creation of the actual database.  The file <a class="reference external" href="../_static/tng/build-db.py">build-db.py</a> contains a Python script to do just this.  Let&#8217;s
+examine this script, section by section.  First, as always, we need to import
+some standard modules:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+</pre></div>
+</td></tr></table></div>
+<p>Next, we need some stuff from <em>startrek.py</em>:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">startrek</span> <span class="kn">import</span> <span class="n">Base</span>
+<span class="kn">from</span> <span class="nn">startrek</span> <span class="kn">import</span> <span class="n">engine</span>
+<span class="kn">from</span> <span class="nn">startrek</span> <span class="kn">import</span> <span class="n">DBSession</span>
+<span class="kn">from</span> <span class="nn">startrek</span> <span class="kn">import</span> <span class="n">Episode</span>
+<span class="kn">from</span> <span class="nn">startrek</span> <span class="kn">import</span> <span class="n">Person</span>
+</pre></div>
+</td></tr></table></div>
+<p>Now, let&#8217;s go ahead and slurp in the raw data from the CSV files:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;episodes.csv&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">episodes_f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;people.csv&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">people_f</span><span class="p">:</span>
+            <span class="n">episodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">episodes_f</span><span class="p">))</span>
+            <span class="n">people</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">people_f</span><span class="p">))</span>
+<span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;error: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>We now have two lists, <code class="docutils literal"><span class="pre">episodes</span></code> and <code class="docutils literal"><span class="pre">people</span></code>, containing the row data.
+Before we continue, we need to &#8220;activate&#8221; the ORM classes, and connect to the
+database:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>22
+23</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">DBSession</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Now let&#8217;s add the rows from <em>people.csv</em> to the database:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>26
+27
+28
+29
+30
+31
+32
+33</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">people_rec</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">people</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">))</span>
+
+    <span class="n">people_rec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>This loop simply runs through the rows of the people data (excluding the first
+&#8220;row,&#8221; which is just the header descriptors), saving each in a table indexed by
+ID:  line 30 creates a <code class="docutils literal"><span class="pre">Person</span></code> object, while line 33 causes a row in the
+appropriate tables to be created in the database (using ORM magic).  We want the
+saved table so we can reference <code class="docutils literal"><span class="pre">Person</span></code> objects later.</p>
+<p>Now that we have all the people loaded up, we can put the episode data itself
+into the database:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">airdate</span><span class="p">,</span> <span class="n">teleplay</span><span class="p">,</span> <span class="n">story</span><span class="p">,</span> <span class="n">director</span><span class="p">,</span> <span class="n">stardate</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">episodes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="c"># Extract the fields that exist more or less as is.</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">season</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
+    <span class="n">ep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
+
+    <span class="c"># Parse the (American-style) dates from the airdate field, creating a Python</span>
+    <span class="c"># datetime object.</span>
+    <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="n">airdate</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">month</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%02d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">month</span><span class="p">))</span>
+    <span class="n">day</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%02d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">day</span><span class="p">))</span>
+    <span class="n">airdate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">year</span><span class="p">),</span> <span class="s">&quot;%m/</span><span class="si">%d</span><span class="s">/%Y&quot;</span><span class="p">)</span>
+
+    <span class="c"># Create lists of writers, story developers, and directors from the</span>
+    <span class="c"># comma-separated people ids in these fields.</span>
+    <span class="n">teleplay</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">writer</span><span class="p">:</span> <span class="n">people_rec</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">writer</span><span class="p">)],</span> <span class="n">teleplay</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">))</span>
+    <span class="n">story</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">writer</span><span class="p">:</span> <span class="n">people_rec</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">writer</span><span class="p">)],</span> <span class="n">story</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">))</span>
+    <span class="n">director</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">writer</span><span class="p">:</span> <span class="n">people_rec</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">writer</span><span class="p">)],</span> <span class="n">director</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">))</span>
+
+    <span class="c"># Construct an Episode object, and add it to the live session.</span>
+    <span class="n">ep</span> <span class="o">=</span> <span class="n">Episode</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span> <span class="n">episode</span><span class="o">=</span><span class="n">ep</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">airdate</span><span class="o">=</span><span class="n">airdate</span><span class="p">,</span> <span class="n">stardate</span><span class="o">=</span><span class="n">stardate</span><span class="p">,</span> <span class="n">teleplay</span><span class="o">=</span><span class="n">teleplay</span><span class="p">,</span> <span class="n">story</span><span class="o">=</span><span class="n">story</span><span class="p">,</span> <span class="n">director</span><span class="o">=</span><span class="n">director</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>This is a loop running through the rows of the episode data, pulling out the
+various fields, possibly converting them to appropriate Python types.  The
+<code class="docutils literal"><span class="pre">teleplay</span></code>, <code class="docutils literal"><span class="pre">story</span></code>, and <code class="docutils literal"><span class="pre">director</span></code> columns in particular are converted to
+lists of <code class="docutils literal"><span class="pre">Person</span></code> objects (by looking up the appropriate <code class="docutils literal"><span class="pre">Person</span></code> in the
+table we created earlier).  Line 58 adds the newly created <code class="docutils literal"><span class="pre">Person</span></code> to the
+database.  The many-to-many relationships we established earlier will be invoked
+here, updating the association tables according to the <code class="docutils literal"><span class="pre">Person</span></code> objects
+present in each <code class="docutils literal"><span class="pre">Episode</span></code> object&#8217;s fields.</p>
+<p>Finally, we must commit the accumulated database operations:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>61
+62</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>If you have downloaded the data files, <em>startrek.py</em>, and <em>build-db.py</em> all to
+the same directory, you should be able to build the database with this command:</p>
+<div class="highlight-python"><div class="highlight"><pre>python build-db.py
+</pre></div>
+</div>
+<p>Because we directed the database engine to echo its activity to the output, you
+should see SQL commands fly by as they are generated by the various calls to
+<code class="docutils literal"><span class="pre">session.add()</span></code>.  This should result in a new file being created, <em>tngeps.db</em>.
+This is an SQLite database file, and should contain all of the data and
+relationships established in the raw data files.</p>
+</div>
+</div>
+<div class="section" id="writing-data-services">
+<h2>Writing Data Services<a class="headerlink" href="#writing-data-services" title="Permalink to this headline">¶</a></h2>
+<p>Now we have a database and some ORM classes to query it.  The next step is to
+write a web service that can pull out some data that we need.  We are going to
+use <a class="reference external" href="http://trifacta.github.io/vega">Vega</a> to create some basic charts of the
+episode data, and Vega visualizations rely on data presented as a list of JSON
+objects, one per data point.  As a starting point for a visualization project on
+Star Trek episode data, let&#8217;s tally up the number of episodes written or
+developed by each person in the <em>people</em> table, and use Vega to render a bar
+chart.  To do so, we need to query the database and count how many episodes each
+person is associated to.  We can use the ORM classes to accomplish this.  Let&#8217;s
+analyze the file <a class="reference external" href="../_static/tng/writers.py">writers.py</a> to see how.  First,
+module imports:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">tangelo</span>
+
+<span class="kn">from</span> <span class="nn">startrek</span> <span class="kn">import</span> <span class="n">DBSession</span>
+<span class="kn">from</span> <span class="nn">startrek</span> <span class="kn">import</span> <span class="n">Episode</span>
+</pre></div>
+</td></tr></table></div>
+<p>Now, the meat of the service, the <code class="docutils literal"><span class="pre">run()</span></code> function:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>8
+9</pre></div></td><td class="code"><div class="highlight"><pre>@tangelo.types(sort=json.loads)
+def run(sort=False):
+</pre></div>
+</td></tr></table></div>
+<p>The function signature says that the sort parameter, if present, should be a
+query argument in JSON-form, defaulting to <code class="docutils literal"><span class="pre">False</span></code>.  We will use this
+parameter to sort the list of episode writers by the number of episodes worked
+on (since this may be an interesting thing to look into).  Next we need a
+connection to the database:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>10</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="n">session</span> <span class="o">=</span> <span class="n">DBSession</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>and some logic to aggregate writers&#8217; episode counts ():</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="n">count</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">episodes</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Episode</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="n">episodes</span><span class="p">:</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">writer</span> <span class="ow">in</span> <span class="n">ep</span><span class="o">.</span><span class="n">teleplay</span><span class="p">:</span>
+            <span class="n">count</span><span class="p">[</span><span class="n">writer</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">writer</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">writer</span> <span class="ow">in</span> <span class="n">ep</span><span class="o">.</span><span class="n">story</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">writer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="n">count</span><span class="p">[</span><span class="n">writer</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</td></tr></table></div>
+<p>This retrieves a list of <code class="docutils literal"><span class="pre">Episode</span></code> objects from the database (line 13), then
+loops through them, incrementing a count of writers in a dictionary (being
+careful not to double count writers listed under both <em>teleplay</em> and <em>story</em> for
+a given episode).</p>
+<p>Now we convert the dictionary of collected counts into a list of objects
+suitable for a Vega visualization:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="n">results</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;count&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">[</span><span class="n">r</span><span class="p">]}</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">count</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">sort</span><span class="p">:</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s">&quot;count&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+</pre></div>
+</td></tr></table></div>
+<p>This line converts each <code class="docutils literal"><span class="pre">Person</span></code> object into a Python dictionary after sorting
+by the numeric ID (which, because of how the data was collected, roughly
+corresponds to the order of first involvement in writing for <em>Star Trek: The
+Next Generation</em>).  If the <code class="docutils literal"><span class="pre">sort</span></code> parameter was <code class="docutils literal"><span class="pre">True</span></code>, then the results
+will be sorted by descending episode count (so that the most frequent writers
+will appear first, etc.).  And finally, of course, the function returns this
+list of results.</p>
+<p>With this file written we have the start of a web application.  To see how
+things stand, you can launch Tangelo to serve this directory to the web,</p>
+<div class="highlight-shell"><div class="highlight"><pre>tangelo --root .
+</pre></div>
+</div>
+<p>and then visit <a class="reference external" href="http://localhost:8080/writers?sort=false">http://localhost:8080/writers?sort=false</a> to see the list of JSON
+objects that results.</p>
+</div>
+<div class="section" id="designing-a-web-frontend">
+<h2>Designing a Web Frontend<a class="headerlink" href="#designing-a-web-frontend" title="Permalink to this headline">¶</a></h2>
+<p>The final piece of the application is a web frontend.  Ours will be relatively
+simple.  Here is the webpage itself, in <a class="reference external" href="../_static/tng/index.html">index.html</a>:</p>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;title&gt;</span>Star Trek: The Next Generation Episode Writers<span class="nt">&lt;/title&gt;</span>
+
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">http://trifacta.github.io/vega/lib/d3.v3.min.js</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">http://trifacta.github.io/vega/vega.js</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">index.js</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">chart</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>This is a very simple HTML file with a <code class="docutils literal"><span class="pre">div</span></code> element (line 9), in which we
+will place a Vega visualization.</p>
+<p>Next, we have some simple JavaScript to go along with this HTML file, in
+<a class="reference external" href="../_static/tng/index.js">index.js</a>:</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">window</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">d3</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="s2">&quot;barchart.json&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">spec</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">vg</span><span class="p">.</span><span class="nx">parse</span><span class="p">.</span><span class="nx">spec</span><span class="p">(</span><span class="nx">spec</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">chart</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">chart</span><span class="p">({</span>
+                <span class="nx">el</span><span class="o">:</span> <span class="s2">&quot;#chart&quot;</span>
+            <span class="p">}).</span><span class="nx">update</span><span class="p">();</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+<p>This simply parses a Vega visualization specification into a JavaScript object,
+which it then passes to <code class="docutils literal"><span class="pre">vg.parse.spec()</span></code>, which in turn renders it into the
+<code class="docutils literal"><span class="pre">#chart</span></code> element of the web page <a class="footnote-reference" href="#f2" id="id4">[2]</a>.</p>
+<p>The final piece of the puzzle is the Vega specification itself, in
+<a class="reference external" href="../_static/tng/barchart.json">barchart.json</a>.:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;barchart&quot;</span><span class="p">,</span>
+    <span class="s">&quot;width&quot;</span><span class="p">:</span> <span class="mi">4000</span><span class="p">,</span>
+    <span class="s">&quot;height&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="s">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;table&quot;</span><span class="p">,</span>
+            <span class="s">&quot;url&quot;</span><span class="p">:</span> <span class="s">&quot;writers?sort=true&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">&quot;scales&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;y&quot;</span><span class="p">,</span>
+            <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;linear&quot;</span><span class="p">,</span>
+            <span class="s">&quot;range&quot;</span><span class="p">:</span> <span class="s">&quot;height&quot;</span><span class="p">,</span>
+            <span class="s">&quot;domain&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;data&quot;</span><span class="p">:</span> <span class="s">&quot;table&quot;</span><span class="p">,</span>
+                <span class="s">&quot;field&quot;</span><span class="p">:</span> <span class="s">&quot;data.count&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;x&quot;</span><span class="p">,</span>
+            <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;ordinal&quot;</span><span class="p">,</span>
+            <span class="s">&quot;range&quot;</span><span class="p">:</span> <span class="s">&quot;width&quot;</span><span class="p">,</span>
+            <span class="s">&quot;domain&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;data&quot;</span><span class="p">:</span> <span class="s">&quot;table&quot;</span><span class="p">,</span>
+                <span class="s">&quot;field&quot;</span><span class="p">:</span> <span class="s">&quot;data.name&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">&quot;axes&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;x&quot;</span><span class="p">,</span>
+            <span class="s">&quot;scale&quot;</span><span class="p">:</span> <span class="s">&quot;x&quot;</span><span class="p">,</span>
+            <span class="s">&quot;values&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;y&quot;</span><span class="p">,</span>
+            <span class="s">&quot;scale&quot;</span><span class="p">:</span> <span class="s">&quot;y&quot;</span><span class="p">,</span>
+            <span class="s">&quot;grid&quot;</span><span class="p">:</span> <span class="n">false</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">&quot;marks&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;rect&quot;</span><span class="p">,</span>
+            <span class="s">&quot;from&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;data&quot;</span><span class="p">:</span> <span class="s">&quot;table&quot;</span>
+            <span class="p">},</span>
+            <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;enter&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&quot;x&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;scale&quot;</span><span class="p">:</span> <span class="s">&quot;x&quot;</span><span class="p">,</span>
+                        <span class="s">&quot;field&quot;</span><span class="p">:</span> <span class="s">&quot;data.name&quot;</span><span class="p">,</span>
+                        <span class="s">&quot;offset&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;width&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;scale&quot;</span><span class="p">:</span> <span class="s">&quot;x&quot;</span><span class="p">,</span>
+                        <span class="s">&quot;band&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+                        <span class="s">&quot;offset&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;y&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;scale&quot;</span><span class="p">:</span> <span class="s">&quot;y&quot;</span><span class="p">,</span>
+                        <span class="s">&quot;field&quot;</span><span class="p">:</span> <span class="s">&quot;data.count&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;y2&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;scale&quot;</span><span class="p">:</span> <span class="s">&quot;y&quot;</span><span class="p">,</span> 
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                    <span class="s">&quot;fill&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;steelblue&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s">&quot;update&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&quot;fill&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;steelblue&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s">&quot;hover&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&quot;fill&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;firebrick&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;text&quot;</span><span class="p">,</span>
+            <span class="s">&quot;from&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;data&quot;</span><span class="p">:</span> <span class="s">&quot;table&quot;</span>
+            <span class="p">},</span>
+            <span class="s">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&quot;enter&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&quot;x&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;scale&quot;</span><span class="p">:</span> <span class="s">&quot;x&quot;</span><span class="p">,</span>
+                        <span class="s">&quot;field&quot;</span><span class="p">:</span> <span class="s">&quot;data.name&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;dx&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="mi">5</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;y&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="mi">505</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;angle&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="mi">45</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;fill&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;black&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;field&quot;</span><span class="p">:</span> <span class="s">&quot;data.name&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;font&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;Helvetica Neue&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s">&quot;fontSize&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="mi">15</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>This specification describes a data-driven bar chart.  You may wish to
+experiment with this file (for example, changing the colors used, or the width
+and height of the visualization, or by setting the <code class="docutils literal"><span class="pre">sort</span></code> parameter in the
+<code class="docutils literal"><span class="pre">url</span></code> property to <code class="docutils literal"><span class="pre">false</span></code>), but as-is, the specification will deliver a bar
+chart of <em>Star Trek: The Next Generation</em> writers, ordered by most episodes
+worked on.</p>
+</div>
+<div class="section" id="putting-it-all-together">
+<h2>Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this headline">¶</a></h2>
+<p>Your web application is complete!  If Tangelo is not running, start it with</p>
+<div class="highlight-shell"><div class="highlight"><pre>tangelo --root .
+</pre></div>
+</div>
+<p>and then visit <a class="reference external" href="http://localhost:8080">http://localhost:8080</a>.  You should see a bar chart appear, in
+which the trekkies out there will surely recognize some of the names.</p>
+<p>In summary, we performed the following actions to write a Tangelo application
+driven by a database:</p>
+<ol class="arabic simple">
+<li>Got some data we wanted to visualize.</li>
+<li>Developed some ORM infrastructure to model the data, using SQLAlchemy.</li>
+<li>Imported the data into a new database, using the data and the ORM models.</li>
+<li>Developed a web service using SQLAlchemy to retrieve some of the data and
+then shape it into a form we needed for Vega.</li>
+<li>Developed a Vega specification that can take the web service results and
+render it as a bar chart.</li>
+<li>Developed a simple web application to give Vega a place to work and display
+its results.</li>
+</ol>
+<p>Of course, this is just a simple example of what you can do.  With Python&#8217;s
+power, flexibility, and interfaces to many kinds of databases and visualization
+systems, you can develop a Tangelo application that is suited to whatever
+problem you happen to be working on.</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="f1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>And even directors, though this only happened in one episode when the
+original director was fired and a replacement brought on.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>For more information on how Vega works, and what you can do with it,
+see the Vega website at <a class="reference external" href="http://trifacta.github.io/vega">http://trifacta.github.io/vega</a>.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Driving a Visualization with SQLAlchemy</a><ul>
+<li><a class="reference internal" href="#getting-the-data">Getting the Data</a></li>
+<li><a class="reference internal" href="#creating-the-database">Creating the Database</a><ul>
+<li><a class="reference internal" href="#establishing-orm-classes">Establishing ORM Classes</a></li>
+<li><a class="reference internal" href="#id2">Creating the Database</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writing-data-services">Writing Data Services</a></li>
+<li><a class="reference internal" href="#designing-a-web-frontend">Designing a Web Frontend</a></li>
+<li><a class="reference internal" href="#putting-it-all-together">Putting It All Together</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="building-an-app.html"
+                        title="previous chapter">Building a Tangelo Web Application from Scratch</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fiddling.html"
+                        title="next chapter">Fiddling with the Bundled Examples</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/db-vis.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="fiddling.html" title="Fiddling with the Bundled Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="building-an-app.html" title="Building a Tangelo Web Application from Scratch"
+             >previous</a> |</li>
+        <li><a href="../index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

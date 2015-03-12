@@ -1,0 +1,369 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Coding Style Guidelines &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Creating Tangelo Releases" href="releasing-tangelo.html" />
+    <link rel="prev" title="Fiddling with the Bundled Examples" href="tutorials/fiddling.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="releasing-tangelo.html" title="Creating Tangelo Releases"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorials/fiddling.html" title="Fiddling with the Bundled Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="coding-style-guidelines">
+<h1>Coding Style Guidelines<a class="headerlink" href="#coding-style-guidelines" title="Permalink to this headline">¶</a></h1>
+<p>This section concerns written code format in Tangelo, with the goal of clear,
+readable, and consistent code.  The build process uses <code class="docutils literal"><span class="pre">jshint</span></code> and <code class="docutils literal"><span class="pre">jscs</span></code>
+to catch possible code and style errors.  This document describes some of the
+coding practices employed to help make Tangelo more reliable.</p>
+<div class="section" id="code-style-rules">
+<h2>Code Style Rules<a class="headerlink" href="#code-style-rules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="indentation">
+<h3>Indentation<a class="headerlink" href="#indentation" title="Permalink to this headline">¶</a></h3>
+<p>Indentation is used to provide visual cues about the syntactic scope
+containing particular line of code. Good indentation practice
+dramaticaly improves code readability.</p>
+<p><strong>Four-space indentation.</strong> Each additional indentation level shall be
+exactly four spaces.</p>
+<p><strong>Indentation policy.</strong> The following structures shall require
+incrementing the indentation level:</p>
+<p><em>Statements belonging to any block.</em></p>
+<p><em>Chained function calls:</em></p>
+<div class="highlight-python"><div class="highlight"><pre>obj.call1()
+    .call2()
+    .call3();
+</pre></div>
+</div>
+<p><em>Properties in a literal object:</em></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">obj</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">prop1</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">prop2</span><span class="p">:</span> <span class="mi">3</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>Curly bracket placement.</strong> The left curly bracket that introduces a
+new indentation level shall appear at the end of the line that uses it;
+the right curly bracket that delimits the indented statements shall
+appear on the line following the last indented statement, at the
+decremented indentation:</p>
+<div class="highlight-python"><div class="highlight"><pre>[some statement...] {
+                    ^
+    .
+    .
+    .
+}
+^
+</pre></div>
+</div>
+</div>
+<div class="section" id="naming">
+<h3>Naming<a class="headerlink" href="#naming" title="Permalink to this headline">¶</a></h3>
+<p>Use <code class="docutils literal"><span class="pre">camelCase</span></code> for visualization, property, method, and local variable names.</p>
+</div>
+<div class="section" id="curly-brackets">
+<h3>Curly brackets<a class="headerlink" href="#curly-brackets" title="Permalink to this headline">¶</a></h3>
+<p>JavaScript uses curly brackets to delimit blocks. Blocks are required by
+the language when functions are defined. They are also required for
+executing more than one statement within control flow constructs such as
+<code class="docutils literal"><span class="pre">if</span></code> and <code class="docutils literal"><span class="pre">while</span></code>. While the option exists <em>not</em> to use curly
+brackets for a single statement in such cases, that practice can lead to
+errors (when, e.g., a new feature requires the single statement to be
+replaced by several statements).</p>
+<p><strong>Always use blocks in control flow statements.</strong> Every use of control
+flow operators (<code class="docutils literal"><span class="pre">if</span></code>, <code class="docutils literal"><span class="pre">while</span></code>, <code class="docutils literal"><span class="pre">do</span></code>) shall use curly brackets for
+its associated statement block, even if only a single statement appears
+therein.</p>
+</div>
+<div class="section" id="space-placement">
+<h3>Space placement<a class="headerlink" href="#space-placement" title="Permalink to this headline">¶</a></h3>
+<p>Parentheses are required in several places in JavaScript. Proper space
+placement can help make such constructs more readable.</p>
+<p><strong>Keyword-condition separation.</strong> A single space shall appear in the
+following situations.</p>
+<p><em>Between a control-flow operator and its parenthesized condition:</em></p>
+<div class="highlight-python"><div class="highlight"><pre>if (condition...) {
+  ^
+</pre></div>
+</div>
+<p><em>Between a parenthesized condition and its following curly bracket:</em></p>
+<div class="highlight-python"><div class="highlight"><pre>if (condition...) {
+                 ^
+</pre></div>
+</div>
+<p><em>Between a function argument list and its following curly bracket:</em></p>
+<div class="highlight-python"><div class="highlight"><pre>function foobar(x, y, z) {
+                        ^
+</pre></div>
+</div>
+<p><em>Between the</em> <code class="docutils literal"><span class="pre">function</span></code> <em>keyword and the argument list, in anonymous
+functions:</em></p>
+<div class="highlight-python"><div class="highlight"><pre>f = function (a, b) {
+            ^
+</pre></div>
+</div>
+<p><em>After every comma.</em></p>
+<p><em>On either side of a binary operator:</em></p>
+<div class="highlight-python"><div class="highlight"><pre>x = 3 + 4;
+     ^ ^
+</pre></div>
+</div>
+<p><strong>Extraneous spaces.</strong> The last character in any given line shall not be
+a space.</p>
+<p><strong>Blank lines.</strong> Blank lines should be used to set apart sequences of
+statements that logically belong together.</p>
+</div>
+<div class="section" id="chained-if-else-if-else-statements">
+<h3>Chained if/else-if/else statements<a class="headerlink" href="#chained-if-else-if-else-statements" title="Permalink to this headline">¶</a></h3>
+<p>A common programming pattern is to test a sequence of conditions,
+selecting a single action to take when one of them is satisfied. In
+JavaScript, this is accomplished with an <code class="docutils literal"><span class="pre">if</span></code> block followed by a
+number of <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code> blocks, followed by an <code class="docutils literal"><span class="pre">else</span></code> block.
+<code class="docutils literal"><span class="pre">try</span> <span class="pre">catch</span></code> blocks have a similar syntax.</p>
+<p><strong>Single line</strong> <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code>, <code class="docutils literal"><span class="pre">else</span></code>, <strong>and</strong> <code class="docutils literal"><span class="pre">catch</span></code>. The <code class="docutils literal"><span class="pre">else</span> <span class="pre">if</span></code>,
+<code class="docutils literal"><span class="pre">else</span></code>, and <code class="docutils literal"><span class="pre">catch</span></code> keyword phrases shall appear on a single line,
+with a right curly bracket on their left and a left curly bracket on
+their right:</p>
+<div class="highlight-python"><div class="highlight"><pre>if (condition) {
+    action();
+} else if {
+    other_action();
+} else {
+    default_action();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="new-array-and-new-object">
+<h3><code class="docutils literal"><span class="pre">new</span> <span class="pre">Array</span></code> and <code class="docutils literal"><span class="pre">new</span> <span class="pre">Object</span></code><a class="headerlink" href="#new-array-and-new-object" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal"><span class="pre">new</span></code> keyword is problematic in JavaScript. If it is omitted by
+mistake, the code will run without error, but will not do the right
+thing. Furthermore, built in constructors like <code class="docutils literal"><span class="pre">Array</span></code> and <code class="docutils literal"><span class="pre">Object</span></code>
+can be reimplemented by other code.</p>
+<p><strong>Use</strong> <code class="docutils literal"><span class="pre">[]</span></code> <strong>and</strong> <code class="docutils literal"><span class="pre">{}</span></code>. All construction of arrays and objects shall
+use the literal <code class="docutils literal"><span class="pre">[]</span></code> and <code class="docutils literal"><span class="pre">{}</span></code> syntax. The sequence of statements
+<code class="docutils literal"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">[];</span></code>, then <code class="docutils literal"><span class="pre">x.length</span> <span class="pre">=</span> <span class="pre">N;</span></code> shall replace <code class="docutils literal"><span class="pre">new</span> <span class="pre">Array(N)</span></code>.</p>
+</div>
+</div>
+<div class="section" id="code-structure">
+<h2>Code structure<a class="headerlink" href="#code-structure" title="Permalink to this headline">¶</a></h2>
+<p>This section concerns the structure of functions and modules, how
+constructs at a larger scale than individual statements and expressions
+should be handled.</p>
+<div class="section" id="jslint-directives">
+<h3>JSLint directives<a class="headerlink" href="#jslint-directives" title="Permalink to this headline">¶</a></h3>
+<p>JSLint reads two special comments appearing at the top of files it is
+working on. The first appears in the following form:</p>
+<div class="highlight-python"><div class="highlight"><pre>/*jslint browser: true */
+</pre></div>
+</div>
+<p>and specifies options to JSLint. Because Tangelo is a web project,
+every JavaScript file should have the comment that appears above as the
+first line. The other recognized directive in the global name list:</p>
+<div class="highlight-python"><div class="highlight"><pre>/*globals d3, $, FileReader */
+</pre></div>
+</div>
+<p>This directive prevents JSLint from complaining that the listed names
+are global variables, or undefined. It is meant for valid names, such as
+standard library objects or linked libraries used in the file.</p>
+</div>
+<div class="section" id="lexical-scopes">
+<h3>Lexical scopes<a class="headerlink" href="#lexical-scopes" title="Permalink to this headline">¶</a></h3>
+<p>JavaScript has only two scope levels: <em>global</em> and <em>function</em>. In
+particular, blocks following, e.g., <code class="docutils literal"><span class="pre">for</span></code> and <code class="docutils literal"><span class="pre">if</span></code> statements <em>do
+not introduce an inner scope</em>. Despite this fact, JavaScript allows for
+variables to be declared within such blocks, causing seasoned C and C++
+programmers to assume something false about the lifetime of such
+variables.</p>
+<p><strong>Single</strong> <code class="docutils literal"><span class="pre">var</span></code> <strong>declaration.</strong> Every function shall contain a single
+<code class="docutils literal"><span class="pre">var</span></code> declaration as its first statement, which shall list every local
+variable used by that function, listed one per line.</p>
+<div class="highlight-python"><div class="highlight"><pre>function foobar(){
+    var width,
+        height,
+        i;
+    .
+    .
+    .
+}
+</pre></div>
+</div>
+<p>This declaration statement shall <strong>not</strong> include any initializers (this
+promotes clearer coding, as the &#8220;initializers&#8221; can be moved below the
+declaration, and each one can retain its own comment to explain the
+initialization).</p>
+<p><strong>Global variables.</strong> Global variables shall <strong>not</strong> be used, unless as
+a namespace-like container for variables and names that would otherwise
+have to be global. When such namespace-like containers are used in a
+JavaScript file, they shall appear in the JSLint global name specifier.</p>
+</div>
+<div class="section" id="strict-mode">
+<h3>Strict Mode<a class="headerlink" href="#strict-mode" title="Permalink to this headline">¶</a></h3>
+<p>JavaScript has a &#8220;strict mode&#8221; that disallows certain actions
+technically allowed by the language. These are such things as using
+variables before they are defined, etc. It can be enabled by including
+<code class="docutils literal"><span class="pre">&quot;use</span> <span class="pre">strict&quot;;</span></code> as the first statement in any function:</p>
+<div class="highlight-python"><div class="highlight"><pre>function foobaz() {
+    &quot;use strict&quot;;
+
+    .
+    .
+    .
+}
+</pre></div>
+</div>
+<p><strong>Strict mode functions.</strong> All functions shall be written to use strict
+mode.</p>
+</div>
+</div>
+<div class="section" id="a-note-on-try-catch-blocks">
+<h2>A note on <code class="docutils literal"><span class="pre">try...catch</span></code> blocks<a class="headerlink" href="#a-note-on-try-catch-blocks" title="Permalink to this headline">¶</a></h2>
+<p>JSLint complains if the exception name bound to a <code class="docutils literal"><span class="pre">catch</span></code> block is the
+same as the exception name bound to a previous <code class="docutils literal"><span class="pre">catch</span></code> block. This is
+due to an ambiguity in the ECMAScript standard regarding the semantics
+of <code class="docutils literal"><span class="pre">try...catch</span></code> blocks. Because using a unique exception name in each
+<code class="docutils literal"><span class="pre">catch</span></code> block just to avoid errors from JSLint seems to introduce just
+as much confusion as it avoids, the current practice is <strong>not</strong> to use
+unique exception names for each <code class="docutils literal"><span class="pre">catch</span></code> block.</p>
+<p><strong>Use</strong> <code class="docutils literal"><span class="pre">e</span></code> <strong>for exception name.</strong> <code class="docutils literal"><span class="pre">catch</span></code> blocks may all use the name
+<code class="docutils literal"><span class="pre">e</span></code> for the bound exception, to aid in scanning over similar messages
+in the JSLint output. <strong>This rule is subject to change in the future.</strong></p>
+</div>
+<div class="section" id="a-note-on-eval-is-evil">
+<h2>A note on <em>&#8220;eval is evil&#8221;</em><a class="headerlink" href="#a-note-on-eval-is-evil" title="Permalink to this headline">¶</a></h2>
+<p>JSLint claims that <code class="docutils literal"><span class="pre">eval</span></code> is evil. However, it is actually
+<em>dangerous</em>, and not evil. Accordingly, <code class="docutils literal"><span class="pre">eval</span></code> should be kept away
+from most JavaScript code. However, to take one example, one of
+Tangelo&#8217;s main dependencies, Vega, makes use of compiler technology that generates
+JavaScript code. <code class="docutils literal"><span class="pre">eval</span></code>ing this code is reasonable and necessary in
+this instance.</p>
+<p><strong>eval is misunderstood.</strong> If a JavaScript file needs to make use of
+<code class="docutils literal"><span class="pre">eval</span></code>, it shall insert an <code class="docutils literal"><span class="pre">evil:</span> <span class="pre">true</span></code> directive into the JSLint
+options list. All other JavaScript files shall <strong>not</strong> make use of
+<code class="docutils literal"><span class="pre">eval</span></code>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Coding Style Guidelines</a><ul>
+<li><a class="reference internal" href="#code-style-rules">Code Style Rules</a><ul>
+<li><a class="reference internal" href="#indentation">Indentation</a></li>
+<li><a class="reference internal" href="#naming">Naming</a></li>
+<li><a class="reference internal" href="#curly-brackets">Curly brackets</a></li>
+<li><a class="reference internal" href="#space-placement">Space placement</a></li>
+<li><a class="reference internal" href="#chained-if-else-if-else-statements">Chained if/else-if/else statements</a></li>
+<li><a class="reference internal" href="#new-array-and-new-object"><code class="docutils literal"><span class="pre">new</span> <span class="pre">Array</span></code> and <code class="docutils literal"><span class="pre">new</span> <span class="pre">Object</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code-structure">Code structure</a><ul>
+<li><a class="reference internal" href="#jslint-directives">JSLint directives</a></li>
+<li><a class="reference internal" href="#lexical-scopes">Lexical scopes</a></li>
+<li><a class="reference internal" href="#strict-mode">Strict Mode</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a-note-on-try-catch-blocks">A note on <code class="docutils literal"><span class="pre">try...catch</span></code> blocks</a></li>
+<li><a class="reference internal" href="#a-note-on-eval-is-evil">A note on <em>&#8220;eval is evil&#8221;</em></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorials/fiddling.html"
+                        title="previous chapter">Fiddling with the Bundled Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="releasing-tangelo.html"
+                        title="next chapter">Creating Tangelo Releases</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/coding-style-guide.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="releasing-tangelo.html" title="Creating Tangelo Releases"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorials/fiddling.html" title="Fiddling with the Bundled Examples"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

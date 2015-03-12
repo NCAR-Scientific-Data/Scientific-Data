@@ -1,0 +1,1496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Bundled Plugins &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Building a Tangelo Web Application from Scratch" href="tutorials/building-an-app.html" />
+    <link rel="prev" title="Tangelo JavaScript Library" href="tangelo-js.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorials/building-an-app.html" title="Building a Tangelo Web Application from Scratch"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tangelo-js.html" title="Tangelo JavaScript Library"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bundled-plugins">
+<span id="bundled"></span><h1>Bundled Plugins<a class="headerlink" href="#bundled-plugins" title="Permalink to this headline">¶</a></h1>
+<p>Tangelo ships with several bundled plugins that implement useful and powerful
+functionality, as well as providing examples of various tasks that plugins can
+perform.  This page divides the set of bundled plugins into categories,
+demonstrating some of the styles of problems Tangelo can help solve.</p>
+<div class="section" id="core-plugins">
+<h2>Core Plugins<a class="headerlink" href="#core-plugins" title="Permalink to this headline">¶</a></h2>
+<p>Although these &#8220;core plugins&#8221; are built using the same plugin system
+architecture available to any Tangelo user, these deliver services vital to any
+working Tangelo instance, and can therefore be considered integral parts of the
+Tangelo platform.</p>
+<div class="section" id="tangelo">
+<h3>Tangelo<a class="headerlink" href="#tangelo" title="Permalink to this headline">¶</a></h3>
+<p>The Tangelo plugin simply serves the Tangelo clientside library files
+<code class="docutils literal"><span class="pre">tangelo.js</span></code> and <code class="docutils literal"><span class="pre">tangelo.min.js</span></code>.  It also includes a &#8220;version&#8221; web service
+that simply returns, as plain text, the running server&#8217;s version number.</p>
+<p>This is supplied as a plugin to avoid having to include the JavaScript files
+manually into every deployment of Tangelo.  Instead, the files can be easily
+served directly from the plugin, thus retaining stable URLs across deployments.</p>
+<p><strong>Manifest</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="56%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">File</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">/plugin/tangelo/tangelo.js</span></code></td>
+<td>Unminified Tangelo library</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">/plugin/tangelo/tangelo.min.js</span></code></td>
+<td>Minified Tangelo library</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">/plugin/tangelo/version</span></code></td>
+<td>Version reporting service</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="docs">
+<h3>Docs<a class="headerlink" href="#docs" title="Permalink to this headline">¶</a></h3>
+<p>The Docs plugin serves the Tangelo documentation (the very documentation you are
+reading right now!).  Again, this is to simplify deployments.  The index is
+served at <code class="docutils literal"><span class="pre">/plugin/docs</span></code> and from there the index page links to all pages of
+the documentation.</p>
+</div>
+<div class="section" id="stream">
+<h3>Stream<a class="headerlink" href="#stream" title="Permalink to this headline">¶</a></h3>
+<p>It may be necessary to return an immense (or even <a class="reference external" href="/examples/primes">infinite</a>) amount of data from a web service to the client.  However,
+this may take up so much time and memory that dealing with it becomes
+intractable.  In such situations, the Stream plugin may be able to help.</p>
+<div class="section" id="generators-in-python">
+<h4>Generators in Python<a class="headerlink" href="#generators-in-python" title="Permalink to this headline">¶</a></h4>
+<p>Essentially, the plugin works by exposing Python&#8217;s abstraction of <a class="reference external" href="http://docs.python.org/2/reference/expressions.html#yield-expressions">generators</a>.  If a
+web service module includes a <code class="docutils literal"><span class="pre">stream()</span></code> function that uses the <code class="docutils literal"><span class="pre">yield</span></code>
+keyword instead of <code class="docutils literal"><span class="pre">return</span></code>, thus marking it as a generator function, then the
+Stream plugin can use this module to launch a <em>streaming service</em>.  Here is an
+example of such a service, in a hypothetical file named <code class="docutils literal"><span class="pre">prime-factors.py</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">tangelo</span>
+
+<span class="k">def</span> <span class="nf">prime</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+<span class="nd">@tangelo.types</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">stream</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="n">prime</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)))):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="k">yield</span> <span class="n">i</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">stream()</span></code> function returns a <em>generator object</em> - an object that returns
+a prime divisor of its argument once for each call to its <code class="docutils literal"><span class="pre">next()</span></code> method.
+When the code reaches its &#8220;end&#8221; (i.e., there are no more values to <code class="docutils literal"><span class="pre">yield</span></code>),
+the <code class="docutils literal"><span class="pre">next()</span></code> method raises a <code class="docutils literal"><span class="pre">StopIteration</span></code> exception.</p>
+<p>In Python this object, and others that behave the same way, are known as
+<em>iterables</em>.  Generators are valuable in particular because they generate values
+as they are requested, unlike e.g. a list, which always retains all of its
+values and therefore has a larger memory footprint.  In essence, a generator
+trades space for time, then amortizes the time over multiple calls to
+<code class="docutils literal"><span class="pre">next()</span></code>.</p>
+<p>The Stream plugin leverages this idea to create <em>streaming services</em>.  When a
+service module returns a generator object from its <code class="docutils literal"><span class="pre">stream()</span></code> function, the
+plugin logs the generator object in a table, associates a key to it, and sends
+this key as the response.  For example, an ajax request to the streaming API,
+identifying the <code class="docutils literal"><span class="pre">prime-factors</span></code> service above, might yield the following
+response:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="o">:</span> <span class="s2">&quot;3dffee9e03cef2322a2961266ebff104&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>From this point on, values can be retrieved from the newly created generator
+object by further engaging the streaming API.</p>
+</div>
+<div class="section" id="the-stream-rest-api">
+<h4>The Stream REST API<a class="headerlink" href="#the-stream-rest-api" title="Permalink to this headline">¶</a></h4>
+<p>The streaming API can be found at <code class="docutils literal"><span class="pre">/plugin/stream/stream</span></code>.  The API is RESTful
+and uses the following verbs:</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/plugin/stream/stream</span></code> returns a list of all active stream keys.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/plugin/stream/stream/&lt;stream-key&gt;</span></code> returns some information about the
+named stream.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/plugin/stream/stream/start/&lt;path&gt;/&lt;to&gt;/&lt;streaming&gt;/&lt;service&gt;</span></code> runs
+the <code class="docutils literal"><span class="pre">stream()</span></code> function found in the service, generates a hexadecimal key,
+and logs it in a table of streaming services, finally returning the key.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/api/stream/next/&lt;stream-key&gt;</span></code>  calls <code class="docutils literal"><span class="pre">next()</span></code> on the associated
+generator and returns a JSON object with the following form:</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;finished&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="o">&lt;</span><span class="nx">value</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The <code class="docutils literal"><span class="pre">finished</span></code> field indicates whether <code class="docutils literal"><span class="pre">StopIteration</span></code> was thrown, while
+the <code class="docutils literal"><span class="pre">data</span></code> field contains the value <code class="docutils literal"><span class="pre">yield</span></code>ed from the generator object.
+If <code class="docutils literal"><span class="pre">finished</span></code> is <code class="docutils literal"><span class="pre">true</span></code>, there will be no <code class="docutils literal"><span class="pre">data</span></code> field, and the stream
+key for that stream will become invalid.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">DELETE</span> <span class="pre">/api/stream/&lt;stream-key&gt;</span></code> makes the stream key invalid, removes the
+generator object from the stream table, and returns a response showing which
+key was removed:</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="o">:</span> <span class="s2">&quot;3dffee9e03cef2322a2961266ebff104&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>This is meant to inform the client of which stream was deleted in the case
+where multiple deletions are in flight at once.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="javascript-support-for-streaming">
+<h4>JavaScript Support for Streaming<a class="headerlink" href="#javascript-support-for-streaming" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal"><span class="pre">/plugin/stream/stream.js</span></code> defines a clientside <code class="docutils literal"><span class="pre">stream</span></code> plugin that offers
+a clean, callback-based JavaScript API to the streaming REST service:</p>
+<dl class="function">
+<dt id="tangelo.plugin.stream.streams">
+<code class="descclassname">tangelo.plugin.stream.</code><code class="descname">streams</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.stream.streams" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>callback</strong> (<em>function(keys)</em>) &#8211; Callback invoked with the list of active
+stream keys</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Asynchronously retrieves a JSON-encoded list of all stream keys, then
+invokes <cite>callback</cite>, passing the keys in as a JavaScript list of strings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.stream.start">
+<code class="descclassname">tangelo.plugin.stream.</code><code class="descname">start</code><span class="sig-paren">(</span><em>webpath</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.stream.start" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>webpath</strong> (<em>string</em>) &#8211; A relative or absolute web path, naming a
+stream-initiating web service</li>
+<li><strong>callback</strong> (<em>function(key)</em>) &#8211; A function to call when the key for the new
+stream becomes available</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Asynchronously invokes the web service at <cite>webpath</cite> - which should initiate a
+stream by returning a Python iterable object from its <cite>run()</cite> method - then
+invokes <cite>callback</cite>, passing it the stream key associated with the new
+stream.</p>
+<p>This callback might, for example, log the key with the application so that
+it can be used later, possibly via calls to <a class="reference internal" href="#tangelo.plugin.stream.query" title="tangelo.plugin.stream.query"><code class="xref js js-func docutils literal"><span class="pre">tangelo.plugin.stream.query()</span></code></a>
+or <a class="reference internal" href="#tangelo.plugin.stream.run" title="tangelo.plugin.stream.run"><code class="xref js js-func docutils literal"><span class="pre">tangelo.plugin.stream.run()</span></code></a>:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">tangelo</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">stream</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="s2">&quot;myservice&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">key</span> <span class="o">=</span> <span class="nx">key</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.stream.query">
+<code class="descclassname">tangelo.plugin.stream.</code><code class="descname">query</code><span class="sig-paren">(</span><em>key</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.stream.query" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>string</em>) &#8211; The key for the desired stream</li>
+<li><strong>error) callback</strong> (<em>function(data,</em>) &#8211; The callback to invoke when results come
+back from the stream</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Runs the stream keyed by <cite>key</cite> for one step, then invokes <cite>callback</cite> with
+the result.  If there is an error, <cite>callback</cite> is instead invoked passing
+<code class="docutils literal"><span class="pre">undefined</span></code> as the first argument, and the error as the second.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.stream.run">
+<code class="descclassname">tangelo.plugin.stream.</code><code class="descname">run</code><span class="sig-paren">(</span><em>key</em>, <em>callback</em><span class="optional">[</span>, <em>delay=100</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.stream.run" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>string</em>) &#8211; The key for the stream to run</li>
+<li><strong>callback</strong> (<em>function(data)</em>) &#8211; The callback to pass stream data when it
+becomes available</li>
+<li><strong>delay</strong> (<em>number</em>) &#8211; The delay in milliseconds between the return from a
+callback invocation, and the next stream query</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Runs the stream keyed by <cite>key</cite> continuously until it runs out, or there is
+an error, invoking <cite>callback</cite> with the results each time.  The <cite>delay</cite>
+parameter expresses in milliseconds the interval between when a callback
+returns, and when the stream is queried again.</p>
+<p>The behavior of <cite>callback</cite> can influence the future behavior of this
+function.  If <cite>callback</cite> returns a value, and the value is a</p>
+<ul class="simple">
+<li><strong>function</strong>, it will replace <cite>callback</cite> for the remainder of the stream
+queries;</li>
+<li><strong>boolean</strong>, it will stop running the stream if <code class="docutils literal"><span class="pre">false</span></code>;</li>
+<li><strong>number</strong>, it will become the new delay, beginning with the very next
+stream query.</li>
+<li><strong>object</strong>, it will have the <strong>function</strong> effect above if there is a key
+<code class="docutils literal"><span class="pre">callback</span></code>; the <strong>boolean</strong> effect above if there is a key <code class="docutils literal"><span class="pre">continue</span></code>;
+the <strong>number</strong> effect above if there is a key <code class="docutils literal"><span class="pre">delay</span></code> (in other words,
+this allows for multiple effects to be declared at once).</li>
+</ul>
+<p>Other return types will simply be ignored.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.stream.delete">
+<code class="descclassname">tangelo.plugin.stream.</code><code class="descname">delete</code><span class="sig-paren">(</span><em>key</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.stream.delete" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>string</em>) &#8211; The key of the stream to delete</li>
+<li><strong>callback</strong> (<em>function(error)</em>) &#8211; A callback that is passed an error object
+if an error occurs during deletion.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Deletes the stream keyed by <cite>key</cite>.  The optional <cite>callback</cite> is a function
+that is invoked with an error object is something went wrong during the
+delete operation, or no arguments if the delete was successful.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="vtkweb">
+<h3>VTKWeb<a class="headerlink" href="#vtkweb" title="Permalink to this headline">¶</a></h3>
+<p>The VTKWeb plugin is able to run VTK Web programs and display the result in real
+time on a webpage.  The interface is somewhat experimental at the moment and
+only supports running the program and interacting with it via the mouse.  In a
+later version, the ability to call functions and otherwise interact with VTK Web
+in a programmatic way will be added.</p>
+<p>In order to enable this funcationality, the plugin must be configured with a
+<code class="docutils literal"><span class="pre">vtkpython</span></code> option set to the full path to a <code class="docutils literal"><span class="pre">vtkpython</span></code> executable in a
+build of VTK.</p>
+<div class="section" id="the-vtk-web-rest-api">
+<h4>The VTK Web REST API<a class="headerlink" href="#the-vtk-web-rest-api" title="Permalink to this headline">¶</a></h4>
+<p>The VTK Web API is found at <cite>/plugin/vtkweb/vtkweb</cite>.  The API is RESTful and
+uses the following verbs:</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">POST</span> <span class="pre">/plugin/vtkweb/vtkweb/full/path/to/vtkweb/script.py</span></code> launches the
+named script (which must be given as an absolute path) and returns a JSON
+object similar to the following:</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;complete&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;ws://localhost:8080/ws/d74a945ca7e3fe39629aa623149126bf/ws&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;key&quot;</span><span class="o">:</span> <span class="s2">&quot;d74a945ca7e3fe39629aa623149126bf&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The <code class="docutils literal"><span class="pre">url</span></code> field contains a websocket endpoint that can be used to
+communicate with the VTK web process.  There is a <em>vtkweb.js</em> file (included
+in the Tangelo installation) that can use this information to hook up an HTML
+viewport to interact with the program, though for use with Tangelo, it is much
+simpler to use the JavaScript VTK Web library functions to abstract these
+details away.  The <code class="docutils literal"><span class="pre">key</span></code> field is, similarly to the streaming API, a
+hexadecimal string that identifies the process within Tangelo.</p>
+<p>In any case, receiving a response with a <code class="docutils literal"><span class="pre">status</span></code> field reading &#8220;complete&#8221;
+means that the process has started successfully.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/plugin/vtkweb/vtkweb</span></code> returns a list of keys for all active VTK Web
+processes.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/plugin/vtkweb/vtkweb/&lt;key&gt;</span></code> returns information about a particular VTK
+Web process.  For example:</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;complete&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;process&quot;</span><span class="o">:</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">52446</span><span class="p">,</span>
+    <span class="s2">&quot;stderr&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;stdout&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;2014-02-26 10:00:34-0500 [-] Starting factory &lt;vtk.web.wamp.ReapingWampServerFactory instance at 0x272b2d8&gt;\n&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;2014-02-26 10:00:34-0500 [-] ReapingWampServerFactory starting on 52446\n&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;2014-02-26 10:00:34-0500 [-] Log opened.\n&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;2014-02-26 10:00:34-0500 [VTKWebApp,0,127.0.0.1] Client has reconnected, cancelling reaper\n&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;2014-02-26 10:00:34-0500 [VTKWebApp,0,127.0.0.1] on_connect: connection count = 1\n&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The <code class="docutils literal"><span class="pre">status</span></code> field indicates that the request for information was
+successful, while the remaining fields give information about the running
+process.  In particular, the <code class="docutils literal"><span class="pre">stderr</span></code> and <code class="docutils literal"><span class="pre">stdout</span></code> streams are queried for
+any lines of text they contain, and these are delivered as well.  These can be
+useful for debugging purposes.</p>
+<p>If a process has ended, the <code class="docutils literal"><span class="pre">process</span></code> field will read <code class="docutils literal"><span class="pre">terminated</span></code> and
+there will be an additional field <code class="docutils literal"><span class="pre">returncode</span></code> containing the exit code of
+the process.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">DELETE</span> <span class="pre">/plugin/vtkweb/vtkweb/&lt;key&gt;</span></code> terminates the associated VTK process
+and returns a response containing the key:</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;complete&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;key&quot;</span><span class="o">:</span> <span class="s2">&quot;d74a945ca7e3fe39629aa623149126bf&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>As with the streaming <code class="docutils literal"><span class="pre">DELETE</span></code> action, the key is returned to help
+differentiate which deletion has completed, in case multiple <code class="docutils literal"><span class="pre">DELETE</span></code>
+requests are in flight at the same time.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="javascript-support-for-vtk-web">
+<h4>JavaScript Support for VTK Web<a class="headerlink" href="#javascript-support-for-vtk-web" title="Permalink to this headline">¶</a></h4>
+<p>As with the Stream plugin&#8217;s JavaScript functions, <code class="docutils literal"><span class="pre">/plugin/vtkweb/vtkweb.js</span></code>
+defines a clientside plugin providing a clean, callback-based interface to the
+low-level REST API:</p>
+<dl class="function">
+<dt id="tangelo.plugin.vtkweb.processes">
+<code class="descclassname">tangelo.plugin.vtkweb.</code><code class="descname">processes</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.vtkweb.processes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>callback</strong> (<em>function(keys)</em>) &#8211; The callback to invoke when the list of keys
+becomes available</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Asynchronously retrieves a list of VTK Web process keys, and invokes
+<cite>callback</cite> with the list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.vtkweb.info">
+<code class="descclassname">tangelo.plugin.vtkweb.</code><code class="descname">info</code><span class="sig-paren">(</span><em>key</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.vtkweb.info" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>string</em>) &#8211; The key for the requested VTK Web process</li>
+<li><strong>callback</strong> (<em>function(object)</em>) &#8211; The callback to invoke when the info
+report becomes available</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Retrieves a status report about the VTK Web process keyed by <cite>key</cite>, then
+invokes <cite>callback</cite> with it when it becomes available.</p>
+<p>The report is a JavaScript object containing a <code class="docutils literal"><span class="pre">status</span></code> field indicating
+whether the request succeeded (&#8220;complete&#8221;) or not (&#8220;failed&#8221;).  If the status
+is &#8220;failed&#8221;, the <code class="docutils literal"><span class="pre">reason</span></code> field will explain why.</p>
+<p>A successful report will contain a <code class="docutils literal"><span class="pre">process</span></code> field that reads either
+&#8220;running&#8221; or &#8220;terminated&#8221;.  For a terminated process, the <code class="docutils literal"><span class="pre">returncode</span></code>
+field will contain the exit code of the process.</p>
+<p>For running processes, there are additional fields: <code class="docutils literal"><span class="pre">port</span></code>, reporting the
+port number the process is running on, and <code class="docutils literal"><span class="pre">stdout</span></code> and <code class="docutils literal"><span class="pre">stderr</span></code>, which
+contain a list of lines coming from those two output streams.</p>
+<p>This function may be useful for debugging an errant VTK Web script.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.vtkweb.launch">
+<code class="descclassname">tangelo.plugin.vtkweb.</code><code class="descname">launch</code><span class="sig-paren">(</span><em>cfg</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.vtkweb.launch" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cfg.url</strong> (<em>string</em>) &#8211; A relative or absolute web path referring to a VTK
+Web script</li>
+<li><strong>cfg.argstring</strong> (<em>string</em>) &#8211; A string containing command line arguments to
+pass to the launcher script</li>
+<li><strong>cfg.viewport</strong> (<em>string</em>) &#8211; A CSS selector for the <code class="docutils literal"><span class="pre">div</span></code> element to serve
+as the graphics viewport for the running process</li>
+<li><strong>cfg.callback</strong> (<em>function(key,error)</em>) &#8211; A callback that reports the key of
+the new process, or the error that occured</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Attempts to launch a new VTK Web process by running a Python script found at
+<cite>cfg.url</cite>, passing <cite>cfg.argstring</cite> as commandline arguments to the launcher
+script.  If successful, the streaming image output will be sent to the first
+DOM element matching the CSS selector given in <cite>cfg.viewport</cite>, which should
+generally be a <code class="docutils literal"><span class="pre">div</span></code> element.</p>
+<p>After the launch attempt succeeds or fails, <cite>callback</cite> is invoked, passing
+the process key as the first argument, and the error object describing any
+errors that occurred as the second (or <code class="docutils literal"><span class="pre">undefined</span></code> if there was no error).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.vtkweb.terminate">
+<code class="descclassname">tangelo.plugin.vtkweb.</code><code class="descname">terminate</code><span class="sig-paren">(</span><em>key</em><span class="optional">[</span>, <em>callback</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.vtkweb.terminate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>string</em>) &#8211; The key of the process to terminate</li>
+<li><strong>callback</strong> (<em>function(key,viewport,error)</em>) &#8211; A callback that will be
+invoked upon completion of the termination attempt</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Attempts to terminate the VTK Web process keyed by <cite>key</cite>.  If there is a
+<cite>callback</cite>, it will be invoked with the key of the terminated process, the
+DOM element that was the viewport for that process, and an error (if any).
+The key is passed to the callback in case this function is called several
+times at once, and you wish to distinguish between the termination of
+different processes.  The DOM element is passed in case you wish to change
+something about the appearance of the element upon termination.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="girder">
+<h3>Girder<a class="headerlink" href="#girder" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://girder.readthedocs.org/en/latest/">Girder</a> is an open-source,
+high-performance data management platform.  The Girder plugin mounts a working
+instance of Girder in the plugin namespace so that its web client and REST API
+become available for use with Tangelo web applications.</p>
+<p>When the plugin is loaded, <code class="docutils literal"><span class="pre">/plugin/girder/girder</span></code> will serve out the web
+frontend to Girder, while <code class="docutils literal"><span class="pre">/plugin/girder/girder/api/v1</span></code> will point to the
+REST API documentation, as well as serving as the base URL for all API calls to
+Girder.</p>
+<p>For more information about how to use Girder, see its <a class="reference external" href="http://girder.readthedocs.org/en/latest/">documentation</a>.</p>
+</div>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>These plugins do not represent core, substantive functionality, but rather
+utility functions that significantly ease the process of creating web
+applications.</p>
+<div class="section" id="config">
+<h3>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h3>
+<p>Many web applications need to change their behavior depending on external
+resources or other factors.  For instance, if an application makes use of a
+Mongo database, a particular deployment of that application may wish to specify
+just which database to use.  To this end, the Config plugin works to provide a
+simple way to configure the runtime behavior of applications, by using a file
+containing a JSON object as a key-value store representing the configuration.</p>
+<p>The plugin provides a web service at <code class="docutils literal"><span class="pre">/plugin/config/config</span></code> that simply
+parses a JSON file and returns a JSON object representing the contents of the
+file.  The API is as follows:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/plugin/config/config/&lt;absolute&gt;/&lt;webpath&gt;/&lt;to&gt;/&lt;json&gt;/&lt;file&gt;[?required]</span></code></li>
+</ul>
+<p>If the path specified does not point to a static file, or does not contain a
+valid JSON object, the call will result in an HTTP 4xx error, with the body
+expressing the particular reason for the error in a JSON response.  Otherwise,
+the service will parse the file and return the configuration object in the
+&#8220;result&#8221; field of the response.</p>
+<p>If the file does not exist, then the behavior of the service depends on the
+presence of absence of the <code class="docutils literal"><span class="pre">required</span></code> parameter:  when the call is made <em>with</em>
+the parameter, this results in a 404 error; otherwise, the service returns an
+empty object.  This is meant to express the use case where an application <em>can</em>
+use a configuration file if specified, falling back on defaults if there is
+none.</p>
+<p>The plugin also supplies a JavaScript plugin via <code class="docutils literal"><span class="pre">/plugin/config/config.js</span></code>;
+like other JavaScript plugin components, it provides a callback-based function
+that engages the service on the user&#8217;s behalf:</p>
+<dl class="function">
+<dt id="tangelo.plugin.config.config">
+<code class="descclassname">tangelo.plugin.config.</code><code class="descname">config</code><span class="sig-paren">(</span><em>url</em>, <span class="optional">[</span><em>required</em>, <span class="optional">]</span><em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.config.config" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>string</strong> (<em>url</em>) &#8211; An absolute or relative URL to the configuration file</li>
+<li><strong>boolean</strong> (<em>required</em>) &#8211; A flag indicating whether the configuration file is
+required or not (default: <code class="docutils literal"><span class="pre">false</span></code>)</li>
+<li><strong>function</strong> (<em>callback(config)</em>) &#8211; Callback invoked with configuration data
+when it becomes available</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Engages the config service using the file specified by <cite>url</cite>, invoking
+<cite>callback</cite> with the configuration when it becomes available.  The optional
+<cite>required</cite> flag, if set to <code class="docutils literal"><span class="pre">true</span></code>, causes <cite>callback</cite> to be invoked with
+<code class="docutils literal"><span class="pre">undefined</span></code> when the configuration file doesn&#8217;t exist; when set to
+<code class="docutils literal"><span class="pre">false</span></code> or not supplied, a non-existent configuration file results in
+<cite>callback</cite> being invoked with <code class="docutils literal"><span class="pre">{}</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="ui">
+<h3>UI<a class="headerlink" href="#ui" title="Permalink to this headline">¶</a></h3>
+<p>The UI plugin contains some JQuery plugins useful for building a user interface
+as part of a web application.</p>
+<dl class="function">
+<dt id="_S_.controlPanel">
+<code class="descclassname">$.</code><code class="descname">controlPanel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_S_.controlPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a control panel drawer from a <code class="docutils literal"><span class="pre">&lt;div&gt;</span></code> element.  The div can
+contain any standard HTML content; when this plugin is invoked on it, it
+becomes a sliding drawer with a clickable handle that will disappear into
+the bottom of the window when closed.</p>
+<p>This plugin can be used to maintain, e.g., visualization settings that
+affect what is seen in the main window.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_S_.svgColorLegend">
+<code class="descclassname">$.</code><code class="descname">svgColorLegend</code><span class="sig-paren">(</span><em>cfg</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.svgColorLegend" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cfg.legend</strong> (<em>string</em>) &#8211; CSS selector for SVG group element that will
+contain the legend</li>
+<li><strong>cfg.cmap_func</strong> (<em>function</em>) &#8211; A colormapping function to create color
+patches for the legend entries</li>
+<li><strong>cfg.xoffset</strong> (<em>integer</em>) &#8211; How far, in pixels, to set the legend from the
+left edge of the parent SVG element.</li>
+<li><strong>cfg.yoffset</strong> (<em>integer</em>) &#8211; How far, in pixels, to set the legend from the
+top edge of the parent SVG element.</li>
+<li><strong>cfg.categories</strong> (<em>string[]</em>) &#8211; A list of strings naming the categories
+represented in the legend.</li>
+<li><strong>cfg.height_padding</strong> (<em>integer</em>) &#8211; How much space, in pixels, to place
+between legend entries.</li>
+<li><strong>cfg.width_padding</strong> (<em>integer</em>) &#8211; How much space, in pixels, to place
+between a color patch and its associated label</li>
+<li><strong>cfg.text_spacing</strong> (<em>integer</em>) &#8211; How far, in pixels, to raise text labels
+(used to vertically center text within the vertical space occupied by a
+color patch).</li>
+<li><strong>cfg.legend_margins</strong> (<em>object</em>) &#8211; An object with (optional) fields <cite>top</cite>,
+<cite>bottom</cite>, <cite>left</cite>, and <cite>right</cite>, specifying how much space, in pixels, to
+leave between the edge of the legend and the entries.</li>
+<li><strong>cfg.clear</strong> (<em>bool</em>) &#8211; Whether to clear out the previous contents of the
+element selected by <cite>cfg.legend</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Constructs an SVG color legend in the <code class="docutils literal"><span class="pre">g</span></code> element specified by
+<cite>cfg.legend</cite>, mapping colors from the elements of <cite>cfg.categories</cite> through
+the function <cite>cfg.cmap_func</cite>.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="data-management-and-processing">
+<h2>Data Management and Processing<a class="headerlink" href="#data-management-and-processing" title="Permalink to this headline">¶</a></h2>
+<p>To perform visualization, at some point it is necessary to deal with raw data.
+These plugins provide ways of storing, accessing, and tranforming data for use
+in your application.</p>
+<div class="section" id="data">
+<h3>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h3>
+<p>These functions provide transformations of common data formats into a common
+format usable by Tangelo plugins.</p>
+<dl class="function">
+<dt id="tangelo.plugin.data.tree">
+<code class="descclassname">tangelo.plugin.data.</code><code class="descname">tree</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.data.tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts an array of nodes with ids and child lists into a nested tree structure.
+The nested tree format with a standard <cite>children</cite> attribute is the required format for other Tangelo
+functions such as <a class="reference internal" href="#_S_.dendrogram" title="$.dendrogram"><code class="xref js js-func docutils literal"><span class="pre">$.dendrogram()</span></code></a>.</p>
+<p>As an example, evaluating:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">tree</span> <span class="o">=</span> <span class="nx">tangelo</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">tree</span><span class="p">({</span>
+    <span class="nx">data</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="nx">childNodes</span><span class="o">:</span> <span class="p">[{</span><span class="nx">child</span><span class="o">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="nx">child</span><span class="o">:</span> <span class="s2">&quot;c&quot;</span><span class="p">}]},</span>
+        <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="nx">childNodes</span><span class="o">:</span> <span class="p">[{</span><span class="nx">child</span><span class="o">:</span> <span class="s2">&quot;d&quot;</span><span class="p">}]},</span>
+        <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;c&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;d&quot;</span><span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="p">{</span><span class="nx">field</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">},</span>
+    <span class="nx">idChild</span><span class="o">:</span> <span class="p">{</span><span class="nx">field</span><span class="o">:</span> <span class="s2">&quot;child&quot;</span><span class="p">},</span>
+    <span class="nx">children</span><span class="o">:</span> <span class="p">{</span><span class="nx">field</span><span class="o">:</span> <span class="s2">&quot;childNodes&quot;</span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>will return the following nested tree (note that the original <cite>childNodes</cite> attributes will also remain intact):</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+    <span class="nx">children</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+            <span class="nx">children</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;d&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;c&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object</em>) &#8211; The array of nodes.</li>
+<li><strong>spec.id</strong> (<em>Accessor</em>) &#8211; An accessor for the ID of each node in the tree.</li>
+<li><strong>spec.idChild</strong> (<em>Accessor</em>) &#8211; An accessor for the ID of the elements of the children array.</li>
+<li><strong>spec.children</strong> (<em>Accessor</em>) &#8211; An accessor to retrieve the array of children for a node.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.data.distanceCluster">
+<code class="descclassname">tangelo.plugin.data.</code><code class="descname">distanceCluster</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.data.distanceCluster" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object</em>) &#8211; The array of nodes.</li>
+<li><strong>spec.clusterDistance</strong> (<em>number</em>) &#8211; The radius of each cluster.</li>
+<li><strong>spec.x</strong> (<em>Accessor</em>) &#8211; An accessor to the <span class="math">\(x\)</span>-coordinate of a node.</li>
+<li><strong>spec.y</strong> (<em>Accessor</em>) &#8211; An accessor to the <span class="math">\(y\)</span>-coordinate of a node.</li>
+<li><strong>spec.metric</strong> (<em>function</em>) &#8211; A function that returns the distance between two nodes provided
+as arguments.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Groups an array of nodes together into clusters based on distance according to some metric.  By
+default, the 2D Euclidean distance,
+<span class="math">\(d(a, b) = \sqrt{(a\mathord{.}x - b\mathord{.}x)^2 + (a\mathord{.}y - b\mathord{.}y)^2}\)</span>,
+will be used.  One can override the accessors to the <span class="math">\(x\)</span> and <span class="math">\(y\)</span>-coordinates of the nodes
+via the <cite>spec</cite> object.  The algorithm supports arbitrary topologies with the presence of a
+custom metric.  If a custom metric is provided, the <cite>x</cite>/<cite>y</cite> accessors are ignored.</p>
+<p>For each node, the algorithm searches for a cluster with a distance <cite>spec.clusterDistance</cite>.  If such a
+cluster exists, the node is added otherwise a new cluster is created centered at the node.  As implemented,
+it runs in <span class="math">\(\mathcal{O}(nN)\)</span> time for <span class="math">\(n\)</span> nodes and <span class="math">\(N\)</span> clusters.  If the cluster distance
+provided is negative, then the algorithm will be skipped and all nodes will be placed in their own cluster group.</p>
+<p>The data array itself is mutated so that each node will contain a <cite>cluster</cite> property set to an array containing
+all nodes in the local cluster.  For example, with clustering distance 5 the following data array</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">[</span>
+<span class="go">    { x: 0, y: 0 },</span>
+<span class="go">    { x: 1, y: 0 },</span>
+<span class="go">    { x: 10, y: 0 }</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<p>will become</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">[</span>
+<span class="go">    { x: 0, y: 0, cluster: c1 },</span>
+<span class="go">    { x: 1, y: 0, cluster: c1 },</span>
+<span class="go">    { x: 10, y: 0, cluster: c2 }</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<p>with</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span>
+<span class="go">[ data[0], data[1] ]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c2</span>
+<span class="go">[ data[2] ]</span>
+</pre></div>
+</div>
+<p>In addition, the function returns an object with properties <cite>singlets</cite> and <cite>clusters</cite> containing an array of nodes
+in their own cluster and an array of all cluster with more than one node, respectively.  As in the previous example,</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tangelo</span><span class="o">.</span><span class="n">plugin</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">distanceCluster</span><span class="p">(</span> <span class="p">{</span> <span class="n">data</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="n">clusterDistance</span><span class="p">:</span> <span class="mi">5</span> <span class="p">}</span> <span class="p">)</span>
+<span class="go">{</span>
+<span class="go">    singlets: [ data[2] ],</span>
+<span class="go">    clusters: [ [ data[0], data[1] ] ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.data.smooth">
+<code class="descclassname">tangelo.plugin.data.</code><code class="descname">smooth</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.data.smooth" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object</em>) &#8211; An array of data objects.</li>
+<li><strong>spec.x</strong> (<em>Accessor</em>) &#8211; An accessor to the independent variable.</li>
+<li><strong>spec.y</strong> (<em>Accessor</em>) &#8211; An accessor to the dependent variable.</li>
+<li><strong>spec.set</strong> (<em>function</em>) &#8211; A function to set the dependent variable of a data object.</li>
+<li><strong>spec.kernel</strong> (<em>string</em>) &#8211; A string denoting a predefined kernel or a function computing a custom kernel.</li>
+<li><strong>spec.radius</strong> (<em>number</em>) &#8211; The radius of the convolution.</li>
+<li><strong>spec.absolute</strong> (<em>bool</em>) &#8211; Whether the radius is given in absolute coordinates or relative to the data extent.</li>
+<li><strong>spec.sorted</strong> (<em>bool</em>) &#8211; Whether the data is presorted by independent variable, if not the data will be sorted internally.</li>
+<li><strong>spec.normalize</strong> (<em>bool</em>) &#8211; Whether or not to normalize the kernel to 1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Performs 1-D smoothing on a dataset by convolution with a kernel function.  The mathematical operation performed is as
+follows:</p>
+<div class="math">
+\[\begin{split}y_i \leftarrow \sum_{\left|x_i - x_j\right|&lt;R} K\left(x_i,x_j\right)y_j\end{split}\]</div>
+<p>for <span class="math">\(R=\)</span> <strong>spec.radius</strong> and <span class="math">\(K=\)</span> <strong>spec.kernel</strong>.  Predefined kernels can be specified as strings,
+these include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><em>box</em>: simple moving average (default),</li>
+<li><em>gaussian</em>: gaussian with standard deviation <strong>spec.radius</strong>/3.</li>
+</ul>
+</div></blockquote>
+<p>The function returns an array of numbers representing the smoothed dependent variables.  In addition
+if <strong>spec.set</strong> was given, the input data object is modified as well.  The set method is called after
+smoothing as follows:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">set</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">y</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">]),</span> <span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">i</span><span class="p">),</span>
+</pre></div>
+</div>
+<p>and the kernel is called as:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">kernel</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">x</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">]),</span> <span class="nx">x</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">j</span><span class="p">]),</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>The default options called by</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">smooth</span><span class="p">({</span> <span class="nx">data</span><span class="o">:</span> <span class="nx">data</span> <span class="p">})</span>
+</pre></div>
+</div>
+<p>will perform a simple moving average of the data over a window that
+is of radius <span class="math">\(0.05\)</span> times the data extent.  A more advanced example</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">smooth</span><span class="p">({</span>
+    <span class="nx">data</span><span class="o">:</span> <span class="nx">data</span><span class="p">,</span>
+    <span class="nx">kernel</span><span class="o">:</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+    <span class="nx">radius</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">absolute</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">sorted</span><span class="o">:</span> <span class="kc">false</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>will sort the input data and perform a gaussian smooth with standard deviation equal to <span class="math">\(1\)</span>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.plugin.data.bin">
+<code class="descclassname">tangelo.plugin.data.</code><code class="descname">bin</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.data.bin" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object</em>) &#8211; An array of data objects.</li>
+<li><strong>spec.value</strong> (<em>Accessor</em>) &#8211; An accessor to the value of a data object.</li>
+<li><strong>spec.nBins</strong> (<em>integer</em>) &#8211; The number of bins to create (default 25).</li>
+<li><strong>spec.min</strong> (<em>number</em>) &#8211; The minimum bin value (default data minimum).</li>
+<li><strong>spec.max</strong> (<em>number</em>) &#8211; The maximum bin value (default data maximum).</li>
+<li><strong>spec.bins</strong> (<em>object</em>) &#8211; User defined bins to aggregate the data into.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Aggregates an array of data objects into a set of bins that can be used to draw a histogram.
+The bin objects returned by this method look as follows:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">5</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A data object is counted as inside the bin if its value is in the half open interval
+<code class="docutils literal"><span class="pre">[</span> <span class="pre">min,</span> <span class="pre">max</span> <span class="pre">)</span></code>; however for the right most bin, values equal to the maximum
+are also included.  The default behavior of this method is two construct a new array of
+equally spaced bins between data&#8217;s minimum value and the data&#8217;s maximum value.  If
+<code class="docutils literal"><span class="pre">spec.bins</span></code> is given, then the data is aggregated into these bins rather
+than a new set being generated.  In this case, the bin objects are mutated rather
+a new array being created.  In addition, the counters are <strong>not</strong> reset to 0, so the user must
+do so manually if the bins are reused over multiple calls.</p>
+<p>Examples:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nx">tangelo</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">bin</span><span class="p">({</span>
+        <span class="nx">data</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">}],</span>
+        <span class="nx">nBins</span><span class="o">:</span> <span class="mi">2</span>
+    <span class="p">})</span>
+<span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">tangelo</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">bin</span><span class="p">({</span>
+        <span class="nx">data</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">}],</span>
+        <span class="nx">nBins</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">min</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">max</span><span class="o">:</span> <span class="mi">4</span>
+    <span class="p">})</span>
+<span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">tangelo</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">bin</span><span class="p">({</span>
+        <span class="nx">data</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">}],</span>
+        <span class="nx">bins</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">}]</span>
+    <span class="p">})</span>
+<span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;min&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="mongo">
+<h3>Mongo<a class="headerlink" href="#mongo" title="Permalink to this headline">¶</a></h3>
+<p>This plugin provides a service that connects to a Mongo database and retrieves
+results based on the requested query.  The API looks as follows:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">GET</span> <span class="pre">/plugin/mongo/mongo/&lt;hostname&gt;/&lt;database&gt;/&lt;collection&gt;?query=&lt;query-string&gt;&amp;limit=&lt;N&gt;&amp;fields=&lt;fields-string&gt;</span></code></li>
+</ul>
+<p><cite>query-string</cite> should be a JSON string describing a query object, while
+<cite>field-string</cite> should be a JSON string describing a list of fields to include in
+the results.</p>
+<p>The service returns a JSON-encoded list of results from the database.</p>
+<p>This plugin is under development, so the interface may change in the future in
+order to provide a more complete API.</p>
+</div>
+</div>
+<div class="section" id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
+<p>In order to help create vibrant visualization applications, the following
+plugins provide various services and widgets to visualize different kinds of
+data.  These are meant to also offer a guideline on creating new visualization
+plugins as new data types and applications arise.</p>
+<div class="section" id="vis">
+<h3>Vis<a class="headerlink" href="#vis" title="Permalink to this headline">¶</a></h3>
+<p>The Vis plugin provides several JQuery widgets for visualization particular
+types of data using basic chart types.</p>
+<p><strong>Dendrogram.</strong> <code class="docutils literal"><span class="pre">/plugin/vis/dendrogram.js</span></code> provides the following JQuery
+widget:</p>
+<dl class="function">
+<dt id="_S_.dendrogram">
+<code class="descclassname">$.</code><code class="descname">dendrogram</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.dendrogram" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object</em>) &#8211; A nested tree object where child nodes are stored in the <cite>children</cite> attribute.</li>
+<li><strong>spec.label</strong> (<em>accessor</em>) &#8211; The accessor for displaying tree node labels.</li>
+<li><strong>spec.id</strong> (<em>accessor</em>) &#8211; The accessor for the node ID.</li>
+<li><strong>spec.nodeColor</strong> (<em>accessor</em>) &#8211; The accessor for the color of the nodes.</li>
+<li><strong>spec.labelSize</strong> (<em>accessor</em>) &#8211; The accessor for the font size of the labels.</li>
+<li><strong>spec.lineWidth</strong> (<em>accessor</em>) &#8211; The accessor for the stroke width of the node links.</li>
+<li><strong>spec.lineColor</strong> (<em>accessor</em>) &#8211; The accessor for the stroke color of the node links.</li>
+<li><strong>spec.nodeSize</strong> (<em>accessor</em>) &#8211; The accessor for the radius of the nodes.</li>
+<li><strong>spec.labelPosition</strong> (<em>accessor</em>) &#8211; The accessor for the label position relative to
+the node.  Valid return values are <cite>&#8216;above&#8217;</cite> and <cite>&#8216;below&#8217;</cite>.</li>
+<li><strong>spec.expanded</strong> (<em>accessor</em>) &#8211; The accessor to a boolean value that determines whether
+the given node is expanded or not.</li>
+<li><strong>spec.lineStyle</strong> (<em>string</em>) &#8211; The node link style: <cite>&#8216;curved&#8217;</cite> or <cite>&#8216;axisAligned&#8217;</cite>.</li>
+<li><strong>spec.orientation</strong> (<em>string</em>) &#8211; The graph orientation: <cite>&#8216;vertical&#8217;</cite> or <cite>&#8216;horizontal&#8217;</cite>.</li>
+<li><strong>spec.duration</strong> (<em>number</em>) &#8211; The transition animation duration.</li>
+<li><strong>spec.on</strong> (<em>object</em>) &#8211; An object of event handlers.  The handler receives the data
+element as an argument and the dom node as <cite>this</cite>.  If the function returns
+<cite>true</cite>, the default action is perfomed after the handler, otherwise it is
+prevented.  Currently, only the <cite>&#8216;click&#8217;</cite> event handler is exposed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Constructs an interactive dendrogram.</p>
+<dl class="function">
+<dt id="resize">
+<code class="descname">resize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temporarily turns transitions off and resizes the dendrogram.  Should be
+called whenever the containing dom element changes size.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Correlation Plot.</strong> <code class="docutils literal"><span class="pre">/plugin/vis/correlationPlot.js</span></code> provides this widget:</p>
+<dl class="function">
+<dt id="_S_.correlationPlot">
+<code class="descclassname">$.</code><code class="descname">correlationPlot</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.correlationPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a grid of scatter plots that are designed to show the relationship
+between different variables or properties in a dataset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.variables</strong> (<em>object[]</em>) &#8211; An array of functions representing variables or properties
+of the dataset.  Each of these functions takes a data element as
+an argument and returns a number between 0 and 1.  In addition, the functions
+should have a <cite>label</cite> attribute whose value is the string used for the
+axis labels.</li>
+<li><strong>spec.data</strong> (<em>object[]</em>) &#8211; An array of data elements that will be plotted.</li>
+<li><strong>spec.color</strong> (<em>accessor</em>) &#8211; An accessor for the color of each marker.</li>
+<li><strong>spec.full</strong> (<em>bool</em>) &#8211; Whether to show a full plot layout or not.  See the
+images below for an example.  This value cannot currently be changed after the
+creation of the plot.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure align-center" id="id4">
+<img alt="Full correlation plot layout" src="_images/correlationPlotFull.png" />
+<p class="caption"><span class="caption-text">An example of a full correlation plot layout.  All variables are shown on the
+horizontal and vertical axes.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id5">
+<img alt="Half correlation plot layout" src="_images/correlationPlotHalf.png" />
+<p class="caption"><span class="caption-text">An example of a half correlation plot layout.  Only the upper left corner of the
+full layout are displayed.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</dd></dl>
+
+<p><strong>Timeline.</strong> <code class="docutils literal"><span class="pre">/plugin/vis/timeline.js</span></code> provides this widget:</p>
+<dl class="function">
+<dt id="_S_.timeline">
+<code class="descclassname">$.</code><code class="descname">timeline</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.timeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a line plot with time on the x-axis and an arbitrary numerical value on the
+y-axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object[]</em>) &#8211; An array of data objects from which the timeline will be derived.</li>
+<li><strong>spec.x</strong> (<em>accessor</em>) &#8211; An accessor for the time of the data.</li>
+<li><strong>spec.y</strong> (<em>accessor</em>) &#8211; An accessor for the value of the data.</li>
+<li><strong>spec.transition</strong> (<em>number</em>) &#8211; The duration of the transition animation in milliseconds, or
+false to turn off transitions.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="xScale">
+<code class="descname">xScale</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xScale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="yScale">
+<code class="descname">yScale</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yScale" title="Permalink to this definition">¶</a></dt>
+<dd><p>These return a d3 linear scale representing the transformation from plot coordinates to
+screen pixel coordinates.  They make it possible to add custom annotations to
+the plot by appending an svg element to the <cite>d3.select(&#8216;.plot&#8217;)</cite> selection at the coordinates
+returned by the scales.</p>
+</dd></dl>
+
+<img alt="An example timeline plot" class="align-center" src="_images/timeline.png" />
+</dd></dl>
+
+<p><strong>Node-link diagram.</strong> <code class="docutils literal"><span class="pre">/plugin/vis/nodelink.js</span></code> provides this widget:</p>
+<dl class="function">
+<dt id="_S_.nodelink">
+<code class="descclassname">$.</code><code class="descname">nodelink</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.nodelink" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object</em>) &#8211; The node-link diagram data</li>
+<li><strong>spec.nodeSize</strong> (<em>accessor</em>) &#8211; An accessor for the size of each node</li>
+<li><strong>spec.nodeColor</strong> (<em>accessor</em>) &#8211; An accessor for the colormap category for
+each node</li>
+<li><strong>spec.nodeLabel</strong> (<em>accessor</em>) &#8211; An accessor for each node&#8217;s text label</li>
+<li><strong>spec.nodeCharge</strong> (<em>accessor</em>) &#8211; An access for each node&#8217;s simulated
+electrostatic charge</li>
+<li><strong>spec.linkSource</strong> (<em>accessor</em>) &#8211; An accessor to derive the source node of
+each link</li>
+<li><strong>spec.linkTarget</strong> (<em>accessor</em>) &#8211; An accessor to derive the target node of
+each link</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Constructs an interactive node-link diagram.  <cite>spec.data</cite> is an object with
+<code class="docutils literal"><span class="pre">nodes</span></code> and <code class="docutils literal"><span class="pre">links</span></code> fields, each of which is a list of objects.  The
+<code class="docutils literal"><span class="pre">nodes</span></code> list objects specify the nodes&#8217; visual properties, while the
+<code class="docutils literal"><span class="pre">links</span></code> list simply specifies the nodes at the end of each link, as
+indices into the <code class="docutils literal"><span class="pre">nodes</span></code> list.</p>
+<p>The accessors <cite>spec.linkSource</cite> and <cite>spec.linkTarget</cite> specify how to extract
+the source and target information from each link object, while
+<cite>spec.nodeSize</cite> and <cite>spec.nodeColor</cite> specify how to extract these visual
+properties from the node objects, much as in the <a class="reference internal" href="#_S_.geonodelink" title="$.geonodelink"><code class="xref js js-func docutils literal"><span class="pre">$.geonodelink()</span></code></a>
+plugin.  <cite>spec.nodeCharge</cite> specifies the simulated electrostatic
+charge on the nodes, for purposes of running the interactive node placement
+algorithm (see the <a class="reference external" href="https://github.com/mbostock/d3/wiki/Force-Layout#wiki-charge">D3 documentation</a> for more
+information).  Finally, <cite>spec.nodeLabel</cite> is an accessor describing what, if
+any, text label should be attached to each node.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="mapping">
+<h3>Mapping<a class="headerlink" href="#mapping" title="Permalink to this headline">¶</a></h3>
+<p>In many cases, data has a geospatial component, for which some kind of map is a
+useful mode of visualization.  The mapping plugin provides several options for
+visualization geolocation data, via the following JQuery widgets.</p>
+<p><strong>Geo dots.</strong> To plot location dots on a <a class="reference external" href="http://geojson.org/">GeoJSON</a> map,
+<code class="docutils literal"><span class="pre">/plugin/mapping/geodots.js</span></code> provides:</p>
+<dl class="function">
+<dt id="_S_.geodots">
+<code class="descclassname">$.</code><code class="descname">geodots</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.geodots" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.worldGeometry</strong> (<em>string</em>) &#8211; A web path to a GeoJSON file</li>
+<li><strong>spec.latitude</strong> (<em>accessor</em>) &#8211; An accessor for the latitude component</li>
+<li><strong>spec.longitude</strong> (<em>accessor</em>) &#8211; An accessor for the longitude component</li>
+<li><strong>spec.size</strong> (<em>accessor</em>) &#8211; An accessor for the size of each plotted circle</li>
+<li><strong>spec.color</strong> (<em>accessor</em>) &#8211; An accessor for the colormap category for each
+plotted circle</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Constructs a map from a GeoJSON specification, and
+plots colored SVG dots on it according to <cite>spec.data</cite>.</p>
+<p><cite>spec.worldGeometry</cite> is a web path referencing a GeoJSON file.  <cite>spec.data</cite>
+is an array of JavaScript objects which may encode geodata attributes such
+as longitude and latitude, and visualization parameters such as size and
+color, while <cite>spec.latitude</cite>, <cite>spec.longitude</cite>, and <cite>spec.size</cite> are accessor
+specifications describing how to derive the respective values from the data
+objects.  <cite>spec.color</cite> is an accessor deriving categorical values to put
+through a color mapping function.</p>
+<img alt="_images/geodots-small.png" class="align-center" src="_images/geodots-small.png" />
+<p>For a demonstration of this plugin, see the <a class="reference external" href="/examples/geodots">geodots example</a>.</p>
+</dd></dl>
+
+<p><strong>Geo node-link diagram.</strong>  To plot a node-link diagram on a GeoJSON map,
+<code class="docutils literal"><span class="pre">/plugin/mapping/geonodelink.js</span></code> provides:</p>
+<dl class="function">
+<dt id="_S_.geonodelink">
+<code class="descclassname">$.</code><code class="descname">geonodelink</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.geonodelink" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object</em>) &#8211; The encoded node-link diagram to plot</li>
+<li><strong>spec.worldGeometry</strong> (<em>string</em>) &#8211; A web path to a GeoJSON file</li>
+<li><strong>spec.nodeLatitude</strong> (<em>accessor</em>) &#8211; An accessor for the latitude component of
+the nodes</li>
+<li><strong>spec.nodeLongitude</strong> (<em>accessor</em>) &#8211; An accessor for the longitude component
+of the nodes</li>
+<li><strong>spec.nodeSize</strong> (<em>accessor</em>) &#8211; An accessor for the size of each plotted circle</li>
+<li><strong>spec.nodeColor</strong> (<em>accessor</em>) &#8211; An accessor for the colormap category for each
+plotted circle</li>
+<li><strong>spec.linkSource</strong> (<em>accessor</em>) &#8211; An accessor to derive the source node of
+each link</li>
+<li><strong>spec.linkTarget</strong> (<em>accessor</em>) &#8211; An accessor to derive the target node of
+each link</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Constructs a map from a <a class="reference external" href="http://geojson.org/">GeoJSON</a> specification, and
+plots a node-link diagram on it according to <cite>spec.data</cite>.  This plugin
+produces similar images as <a class="reference internal" href="#_S_.geodots" title="$.geodots"><code class="xref js js-func docutils literal"><span class="pre">$.geodots()</span></code></a> does.</p>
+<p><cite>spec.worldGeometry</cite> is a web path referencing a GeoJSON file.</p>
+<p><cite>spec.data</cite> is an object containing two fields: <code class="docutils literal"><span class="pre">nodes</span></code> and <code class="docutils literal"><span class="pre">links</span></code>.
+The <code class="docutils literal"><span class="pre">nodes</span></code> field contains an array of JavaScript objects of the exact
+same structure as the <cite>spec.data</cite> array passed to <a class="reference internal" href="#_S_.geodots" title="$.geodots"><code class="xref js js-func docutils literal"><span class="pre">$.geodots()</span></code></a>,
+encoding each node&#8217;s location and visual properties.</p>
+<p>The <code class="docutils literal"><span class="pre">links</span></code> field contains a list of objects, each encoding a single link
+by specifying its source and target node as an index into the <code class="docutils literal"><span class="pre">nodes</span></code>
+array.  <cite>spec.linkSource</cite> and <cite>spec.linkTarget</cite> are accessors describing how
+to derive the source and target values from each of these objects.</p>
+<p>The plugin draws a map with nodes plotted at their specified locations, with
+the specified links drawn as black lines between the appropriate nodes.</p>
+<img alt="_images/geonodelink-small.png" class="align-center" src="_images/geonodelink-small.png" />
+<p>For a demonstration of this plugin, see the <a class="reference external" href="/examples/geonodelink">geonodelink example</a>.</p>
+</dd></dl>
+
+<p><strong>Map dots.</strong> To plot dots on a Google Map, <code class="docutils literal"><span class="pre">/plugin/mapping/mapdots.js</span></code>
+provides:</p>
+<dl class="function">
+<dt id="_S_.mapdots">
+<code class="descclassname">$.</code><code class="descname">mapdots</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.mapdots" title="Permalink to this definition">¶</a></dt>
+<dd><p>This plugin performs the same job as <a class="reference internal" href="#_S_.geodots" title="$.geodots"><code class="xref js js-func docutils literal"><span class="pre">$.geodots()</span></code></a>, but plots the dots
+on an interactive Google Map rather than a GeoJSON map.  To this end, there
+is no need for a &#8220;worldGeometry&#8221; argument, but the data format and other
+arguments remain the same.</p>
+<img alt="_images/mapdots-small.png" class="align-center" src="_images/mapdots-small.png" />
+<p>For a demonstration of this plugin, see the <a class="reference external" href="/examples/mapdots">mapdots example</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object[]</em>) &#8211; The list of dots to plot</li>
+<li><strong>spec.latitude</strong> (<em>accessor</em>) &#8211; An accessor for the latitude component</li>
+<li><strong>spec.longitude</strong> (<em>accessor</em>) &#8211; An accessor for the longitude component</li>
+<li><strong>spec.size</strong> (<em>accessor</em>) &#8211; An accessor for the size of each plotted circle</li>
+<li><strong>spec.color</strong> (<em>accessor</em>) &#8211; An accessor for the colormap category for each
+plotted circle</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p><strong>GeoJS Map.</strong> <a class="reference external" href="https://github.com/OpenGeoscience/geojs">GeoJS</a> is an
+open-source visualization-centric mapping library.  Tangelo provides some JQuery
+plugins to replicate the above mapping use cases with GeoJS.</p>
+<p><strong>GeoJS map.</strong> To use a GeoJS map instance as a plugin,
+<code class="docutils literal"><span class="pre">/plugin/mapping/geojsMap.js</span></code> provides:</p>
+<dl class="function">
+<dt id="_S_.geojsMap">
+<code class="descclassname">$.</code><code class="descname">geojsMap</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.geojsMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>This plugin provides a low level interface to the GeoJS mapping library.
+For a simple example of using this plugin, see the <a class="reference external" href="/examples/geojsMap">geojsMap example</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.zoom</strong> (<em>integer</em>) &#8211; The initial zoom level of the map.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The widget also contains the following public methods for drawing on the
+map.</p>
+<dl class="function">
+<dt id="latlng2display">
+<code class="descname">latlng2display</code><span class="sig-paren">(</span><em>points</em><span class="sig-paren">)</span><a class="headerlink" href="#latlng2display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a point or points in latitude/longitude coordinates into screen pixel
+coordinates.  This function takes in either a <cite>geo.latlng</cite> object or
+an array of such objects.  It always returns an array of objects with
+properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><cite>x</cite> the horizontal pixel coordinate</li>
+<li><cite>y</cite> the vertical pixel coordinate</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>point</strong> (<em>geo.latlng</em>) &#8211; The world coordinate(s) to be converted</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="display2latlng">
+<code class="descname">display2latlng</code><span class="sig-paren">(</span><em>points</em><span class="sig-paren">)</span><a class="headerlink" href="#display2latlng" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the inverse of <cite>latlng2display</cite> returning an array of
+<cite>geo.latlng</cite> objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>point</strong> (<em>object</em>) &#8211; The world coordinate(s) to be converted</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="svg">
+<code class="descname">svg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#svg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an svg DOM element contained in the geojs map.  This
+element directly receives mouse events from the browser, so
+you can attach event handlers to svg elements as if the map
+were not present.  You can call stopPropagation to customize
+user intaraction and to prevent mouse events from reaching the map.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="map">
+<code class="descname">map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the geojs <cite>map</cite> object for advanced customization.</p>
+</dd></dl>
+
+<p>Users of this plugin should attach a handler to the <cite>draw</cite> event that
+recomputes the pixel coordinates and redraws the svg elements.  The
+plugin will trigger this event whenever the map is panned, zoomed, or
+resized.</p>
+</dd></dl>
+
+<p><strong>GeoJS dots.</strong>  To plot dots on a GeoJS map, <code class="docutils literal"><span class="pre">/plugin/mapping/geojsdots.js</span></code>
+provides:</p>
+<dl class="function">
+<dt id="_S_.geojsdots">
+<code class="descclassname">$.</code><code class="descname">geojsdots</code><span class="sig-paren">(</span><em>spec</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.geojsdots" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>spec.data</strong> (<em>object[]</em>) &#8211; The list of dots to plot</li>
+<li><strong>spec.latitude</strong> (<em>accessor</em>) &#8211; An accessor for the latitude component</li>
+<li><strong>spec.longitude</strong> (<em>accessor</em>) &#8211; An accessor for the longitude component</li>
+<li><strong>spec.size</strong> (<em>accessor</em>) &#8211; An accessor for the size of each plotted circle</li>
+<li><strong>spec.color</strong> (<em>accessor</em>) &#8211; An accessor for the colormap category for each
+plotted circle</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This plugin is similar to <a class="reference internal" href="#_S_.mapdots" title="$.mapdots"><code class="xref js js-func docutils literal"><span class="pre">$.mapdots()</span></code></a>, but plots the dots
+using the geojsMap plugin.</p>
+<p>For a demonstration of this plugin, see the <a class="reference external" href="/examples/geojsdots">geojsdots example</a>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="bokeh">
+<h3>Bokeh<a class="headerlink" href="#bokeh" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://bokeh.pydata.org/">Bokeh</a> is a Python plotting library that can
+display interactive graphics on the web.  Tangelo provides seamless integration
+with Bokeh via the Bokeh plugin.  This plugin provides a Python decorator for
+use with web service functions that invoke the Bokeh module to construct a
+visualization, and a JavaScript function to smoothly transition the results of
+such a service into a web application.</p>
+<dl class="function">
+<dt id="tangelo.plugin.bokeh.bokeh">
+<code class="descclassname">&#64;</code><code class="descclassname">tangelo.plugin.bokeh.</code><code class="descname">bokeh</code><span class="sig-paren">(</span><em>plot_object</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.plugin.bokeh.bokeh" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>plot_object</strong> (<em>PlotObject</em>) &#8211; A Bokeh <code class="docutils literal"><span class="pre">PlotObject</span></code> instance representing
+the plot to be displayed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict &#8211; A Python <code class="docutils literal"><span class="pre">dict</span></code> containing a div and a script for embedded
+the plot in a webpage</td>
+</tr>
+</tbody>
+</table>
+<p>This decorator transforms the output of a web service that computes a Bokeh
+plot to a form that can be handled by the browser.  It works by converting
+the plot object into the web components necessary to render it.  When the
+decorator is used, an ajax call to the service results in a <code class="docutils literal"><span class="pre">dict</span></code> of two
+fields: <code class="docutils literal"><span class="pre">script</span></code> and <code class="docutils literal"><span class="pre">div</span></code>.  If the div is embedded in the DOM, and the
+script after it so that it executes, the plot will appear in the page.</p>
+</dd></dl>
+
+<p>Rather than perform the task of setting up the div and script manually, the
+following JQuery widget, found in <code class="docutils literal"><span class="pre">/plugin/bokeh/bokeh.js</span></code>, can help:</p>
+<dl class="function">
+<dt id="_S_.bokeh">
+<code class="descclassname">$.</code><code class="descname">bokeh</code><span class="sig-paren">(</span><em>cfg</em><span class="sig-paren">)</span><a class="headerlink" href="#_S_.bokeh" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>string</strong> (<em>cfg.url</em>) &#8211; The URL of a web service returning a PlotObject</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>When invoked on a DOM element, the URL is retrieved; the expected data
+should be in the format described by
+<a class="reference internal" href="#tangelo.plugin.bokeh.bokeh" title="tangelo.plugin.bokeh.bokeh"><code class="xref py py-func docutils literal"><span class="pre">tangelo.plugin.bokeh.bokeh()</span></code></a> above.  The DOM element then
+receives both the div and script content returned by the service, causing
+the interactive Bokeh plot to begin running in the target DOM element.</p>
+</dd></dl>
+
+<p>An example application can be found at
+<code class="docutils literal"><span class="pre">/plugin/bokeh/examples/scatter/index.html</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Bundled Plugins</a><ul>
+<li><a class="reference internal" href="#core-plugins">Core Plugins</a><ul>
+<li><a class="reference internal" href="#tangelo">Tangelo</a></li>
+<li><a class="reference internal" href="#docs">Docs</a></li>
+<li><a class="reference internal" href="#stream">Stream</a><ul>
+<li><a class="reference internal" href="#generators-in-python">Generators in Python</a></li>
+<li><a class="reference internal" href="#the-stream-rest-api">The Stream REST API</a></li>
+<li><a class="reference internal" href="#javascript-support-for-streaming">JavaScript Support for Streaming</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#vtkweb">VTKWeb</a><ul>
+<li><a class="reference internal" href="#the-vtk-web-rest-api">The VTK Web REST API</a></li>
+<li><a class="reference internal" href="#javascript-support-for-vtk-web">JavaScript Support for VTK Web</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#girder">Girder</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#utilities">Utilities</a><ul>
+<li><a class="reference internal" href="#config">Config</a></li>
+<li><a class="reference internal" href="#ui">UI</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-management-and-processing">Data Management and Processing</a><ul>
+<li><a class="reference internal" href="#data">Data</a></li>
+<li><a class="reference internal" href="#mongo">Mongo</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#visualization">Visualization</a><ul>
+<li><a class="reference internal" href="#vis">Vis</a></li>
+<li><a class="reference internal" href="#mapping">Mapping</a></li>
+<li><a class="reference internal" href="#bokeh">Bokeh</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tangelo-js.html"
+                        title="previous chapter">Tangelo JavaScript Library</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorials/building-an-app.html"
+                        title="next chapter">Building a Tangelo Web Application from Scratch</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/bundled-plugins.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorials/building-an-app.html" title="Building a Tangelo Web Application from Scratch"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tangelo-js.html" title="Tangelo JavaScript Library"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>
