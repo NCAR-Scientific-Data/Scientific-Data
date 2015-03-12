@@ -54,6 +54,10 @@ class Port(object):
 
     def reset(self):
         self._ready = False
+        self.value = None        
+
+    def reset_all(self):
+        self._ready = False
         self.value = None
         self.input_connections = []
         self.output_connections = []
