@@ -69,7 +69,7 @@ class TaskG(pyutilib.workflow.Task):
 		"""Compute the sum of the inputs."""
 		self.m = self.j+self.k+self.l
 
-def createWorkflow():
+def run():
 	A = TaskA()
 	B = TaskB()
 	C = TaskC()
@@ -98,7 +98,5 @@ def createWorkflow():
 	w.add(E)
 	w.add(G)
 
-	print(w.__list__())
-
-
-createWorkflow()
+	l = w.__list__()
+	return { "workflow": l}

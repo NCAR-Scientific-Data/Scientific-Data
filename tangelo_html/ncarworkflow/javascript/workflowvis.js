@@ -1,76 +1,112 @@
 window.onload = function () {
+    var url= "python/workflowTwo";
+    
+    $.getJSON(url, function (results) {
+        if(results.workflow) {
+            var workflow = results.workflow;
+        
+            var indexMap = {};
+            var i = 0;
+            workflow.forEach( function(list) {
+                var oldIndex = list[1]
+                indexMap[oldIndex] = i;
+                i++;
+            });
 
-    var url= "python/workflowOne";
+            var data = { nodes: [], links: []};
+            workflow.forEach( function(list) {
+                data.nodes.push({type: list[0], name: list[0]+list[1]});
+                list[2].forEach(function(index) {
+                    var sourceIndex = list[1];
+                    if(indexMap[index])
+                    {
+                        data.links.push({source: indexMap[sourceIndex], target: indexMap[index]});
+                    }
+                });
+            });
 
-    $.getJSON(url, function (data) {
-        alert(data);
-    });
+            var width = $("#content").width();
+            var height = $("#content").height();
 
-    var bobbiesReturn = {
-        returned: [
-            ["subset", [1, 2, 3]],
-            ["aggregate", []],
-            ["unit conversion", [4]],
-            ["unit conversion", [5]],
-            ["aggregate", [5]],
-            ["range", [6]],
-            ["plot", []]
-        ]
-    }
+            var targetParents = {};
 
-    var data = { nodes: [], links: []};
-    var i = 0;
-    bobbiesReturn.returned.forEach( function(list) {
-        data.nodes.push({type: list[0], name: list[0]+i});
-        list[1].forEach(function(index) {
-            data.links.push({source: i, target: index});
-        });
-        i++;
-    });
+            data.links.forEach( function(dict) {
+                var source = dict.source;
+                var target = dict.target;
 
-    var x= 100;
+                if (targetParents[target]) {
+                    targetParents[target].push(source);
+                }
+                else
+                {
+                    targetParents[target] = [source];
+                }
 
-    data.nodes[0].x = x;
-    data.nodes[0].y = 300;
-    data.nodes[0].fixed = true;
+            });
 
-    x += 100;
+            var numberOfColumns = Object.keys(targetParents).length + 1;
+            var columnSize = width/numberOfColumns;
+            var x = columnSize/2;
 
-    bobbiesReturn.returned.forEach( function(list) {
-        list[1].forEach(function(index) {
-            data.nodes[index].x = x;
-        });
-        x += 100;
-    });
+            for (target in targetParents) {
+                targetParents[target].forEach( function(index) {
+                    data.nodes[index].x = x;
+                });
+                x += columnSize;
+            }
 
-    // var data = {
-    //     nodes: [
-    //         {value: 60, group: 'a', name: 'subset', x: 0, y: 0, fixed: true},
-    //         {value: 60, group: 'b', name: 'aggregate'},
-    //         {value: 60, group: 'b', name: 'unit conversion'},
-    //         {value: 60, group: 'b', name: 'unit conversion'},
-    //         {value: 60, group: 'b', name: 'aggregate'},
-    //         {value: 60, group: 'b', name: 'range'},
-    //         {value: 60, group: 'c', name: 'plot'}
-    //     ],
-    //     links: [
-    //         {s: 0, t: 1},
-    //         {s: 0, t: 2},
-    //         {s: 0, t: 3},
-    //         {s: 2, t: 4},
-    //         {s: 4, t: 5},
-    //         {s: 3, t: 5},
-    //         {s: 5, t: 6},
-    //     ]
-    // };
+            data.nodes[data.nodes.length - 1].x = x;
 
-    $("#content").nodelink({
-        data: data,
-        nodeCharge: tangelo.accessor({value: -5000}),
-        linkSource: tangelo.accessor({field: "source"}),
-        linkTarget: tangelo.accessor({field: "target"}),
-        //nodeSize: tangelo.accessor({field: "value"}),
-        nodeColor: tangelo.accessor({field: "type"}),
-        nodeLabel: tangelo.accessor({field: "name"}),
+            var currentColumns = [];
+            data.nodes.forEach( function(node) {
+                if(currentColumns.indexOf(node.x) < 0)
+                {
+                    currentColumns.push(node.x);
+                }
+            });
+
+            currentColumns.sort(function (a, b) {
+                return a-b;
+            });
+
+            var numberOfActualColumns = currentColumns.length;
+            
+            if (numberOfColumns != numberOfActualColumns) {
+
+                var actualColumnSize = width/numberOfActualColumns;
+                var actualX = actualColumnSize/2;
+
+                var actualColumns = currentColumns.map( function(value, index) {
+                    if( index == 0) {
+                        return actualX;
+                    }
+                    actualX += actualColumnSize;
+                    return actualX;
+                });
+
+                var columnMap = {};
+                for(i = 0, len=actualColumnSize; i < actualColumnSize; i++)
+                {
+                    var oldx = currentColumns[i];
+                    var newx = actualColumns[i];
+                    columnMap[oldx] = newx;
+                }
+
+                data.nodes.forEach( function(node) {
+                        node.x = columnMap[node.x];
+                });
+            }   
+
+
+
+            $("#content").nodelink({
+                data: data,
+                nodeCharge: tangelo.accessor({value: -10000}),
+                linkSource: tangelo.accessor({field: "source"}),
+                linkTarget: tangelo.accessor({field: "target"}),
+                nodeColor: tangelo.accessor({field: "type"}),
+                nodeLabel: tangelo.accessor({field: "name"}),
+            });
+        }
     });
 };

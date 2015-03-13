@@ -1,4 +1,6 @@
 import pyutilib.workflow
+import json
+from StringIO import StringIO
 
 class TaskA(pyutilib.workflow.Task):
 	def __init__(self, *args, **kwds):
@@ -85,5 +87,5 @@ def run():
 	w.add(D)
 	w.add(E)
 
-	print w.__list__()
-	return w.__list__()
+	l = w.__list__()
+	return { "workflow": l}

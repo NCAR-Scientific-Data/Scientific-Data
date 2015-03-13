@@ -145,7 +145,10 @@
                     .data(this.options.data.nodes);
 
                 this.label.enter().append("text")
-                    .text(this.options.nodeLabel);
+                    .text(this.options.nodeLabel)
+                    .attr("x", function (d, i) {
+                        return d.x - that.options.nodeSize(d, i);
+                    });
             }
 
             this.force.on("tick", function () {
@@ -164,6 +167,7 @@
             //         d.x = that.xScale(that.options.nodeX(d, i));
             //     });
             // }
+            
 
             if (this.options.nodeY && !that.options.nodeY.undefined) {
                 that.options.data.nodes.forEach(function (d, i) {
@@ -311,6 +315,6 @@
             }
 
             return label;
-        }
+        },
     });
 }(window.tangelo, window.jQuery, window.d3));
