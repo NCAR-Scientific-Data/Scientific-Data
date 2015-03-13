@@ -232,7 +232,7 @@ class Task(object):
 
     # Robert Crimi
     def __list__(self):
-        return [self.__class__.__name__, sorted(list(self.next_task_indices()))] 
+        return [self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices()))] 
 
     def reset(self):
         #print "RESETING "+self.name
@@ -244,16 +244,16 @@ class Task(object):
     # Robert Crimi
     def reset_all(self):
         for i in self.outputs:
-            self.outputs[i].reset()
+            self.outputs[i].reset_all()
             self.outputs[i].set_ready()
         for i in self.output_controls:
-            self.output_controls[i].reset()
+            self.output_controls[i].reset_all()
             self.output_controls[i].set_ready()
         for i in self.inputs:
-            self.inputs[i].reset()
+            self.inputs[i].reset_all()
             self.inputs[i].set_ready()
         for i in self.input_controls:
-            self.input_controls[i].reset()
+            self.input_controls[i].reset_all()
             self.input_controls[i].set_ready()        
 
     def set_ready(self):
