@@ -6,7 +6,7 @@ pyutilib.component.executables==3.5
 pyutilib.misc==5.9.1
 pyutilib.services==3.4
 pyutilib.subprocess==3.6.2
-pyutilib.workflow==3.5.1
+pyutilib.workflow==3.5.2
 PyYAML==3.11
 six==1.9.0
 tangelo==0.9.0
