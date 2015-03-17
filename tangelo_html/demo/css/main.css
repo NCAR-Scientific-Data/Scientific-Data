@@ -131,7 +131,11 @@ button {
 }
 
 #main-wrapper {
-	margin-left:310px;
+	/*margin-left:310px;*/
+}
+
+#workflow-wrapper {
+	padding:200px;
 }
 
 button.choose {
@@ -241,5 +245,5 @@ div.form-inline {
 }
 
 #qunit {
-	margin-left: 310px;
+	/*margin-left: 310px;*/
 }
