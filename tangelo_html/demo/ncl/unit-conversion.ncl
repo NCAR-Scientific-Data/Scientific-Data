@@ -30,7 +30,7 @@ begin
     if (vunits.ne.outunit) then
         if (vunits.eq."degC") then
             if (outunit.eq."degF") then
-                var = var * 9 / 5 + 32
+                var = (var * (9./5.)) + 32
                 var@units = "degF"
             else
                 var = var + 273.15
@@ -38,10 +38,10 @@ begin
             end if
         else if (vunits.eq."degF")then
             if (outunit.eq."degC") then
-                var = var - 32 * 5 / 9
+                var = ((var - 32) * (5./9.))
                 var@units = "degC"
             else
-                var = var - 32 * 5 / 9 + 273.15
+                var = ((var - 32) * (5./9.)) + 273.15
                 var@units = "degK"
             end if
         else
@@ -49,7 +49,7 @@ begin
                 var = var - 273.15
                 var@units = "degC"
             else
-                var = var - 273.15 * 9 / 5 + 32
+                var = ((var - 273.15) * (9./5.)) + 32
                 var@units = "degF"
             end if
         end if
