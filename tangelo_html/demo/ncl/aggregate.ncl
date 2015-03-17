@@ -42,9 +42,9 @@ format = "%Y-%N-%D %H:%M:%S"
 
 
 ;; Command-line inputs:
-;; infile
+;; filename
 ;; outfile
-;; varname
+;; variable
 ;; interval: day, month, season, or year (no default)
 ;; method:  mean, min, max (defaults to mean)
 ;; outtime: start, mid, end  (defaults to end)
@@ -125,9 +125,9 @@ if(cyclic .and. interval .eq. "day") then
   exit
 end if
 
-if (verbose) then print("Opening "+infile) end if
+if (verbose) then print("Opening "+filename) end if
 
-fin = addfile(infile, "r")
+fin = addfile(filename, "r")
 
 
 if (verbose) then print("Reading time coordinate") end if
@@ -235,7 +235,7 @@ end if
 if (verbose) then print("Setting up result array") end if
 
 ;; This is a cheap way to get metadata from a non-copied var
-outdata = fin->$varname$(0:nout-1,:,:)
+outdata = fin->$variable$(0:nout-1,:,:)
 outdata(:,:,:) = outdata@_FillValue
 odim = dimsizes(outdata)
 
@@ -249,7 +249,7 @@ date = new (nout, "string")                          ;; plain-text version of ou
 map  = 0
 slab = 0 
 
-;; Note that we dodge around reading in fin->$varname$ so that we
+;; Note that we dodge around reading in fin->$variable$ so that we
 ;; don't crash in cases where it's too big to fit into memory.
 
 if (verbose) then print("Aggregating") end if
@@ -266,7 +266,7 @@ do i=0, nout-1
     ;; simple yes-no tainting by missing value...
 
     if(.not. taint) then
-      outdata(i,:,:) = fin->$varname$(map(0):map(0),:,:)
+      outdata(i,:,:) = fin->$variable$(map(0):map(0),:,:)
     end if
     misscount(i) = num(ismissing(outdata(i,:,:)))
     stepcount(i) = 1
@@ -276,7 +276,7 @@ do i=0, nout-1
   else 
 
     delete(slab)
-    slab = fin->$varname$(map,:,:)
+    slab = fin->$variable$(map,:,:)
   
     if(method.eq."mean") then
       outdata(i,:,:) = dim_avg_n(slab,0)
@@ -398,6 +398,8 @@ outdata@cell_methods = cmstring
 
 if (verbose) then print("Creating output file") end if
 
+outfile = "tmin_aggregate_monthly.nc"
+
 if(isfilepresent(outfile)) then
   system("rm -rf "+outfile)
 end if
@@ -417,13 +419,13 @@ end do
 
 ;; copy over other variables
 
-var_names = getfilevarnames (fin) ;
+var_names = getfilevariables (fin) ;
 
 do i = 0,dimsizes(var_names)-1      
 
   if (var_names(i) .eq. "time")      then continue end if
   if (var_names(i) .eq. "time_bnds") then continue end if
-  if (var_names(i) .eq. varname)     then continue end if
+  if (var_names(i) .eq. variable)     then continue end if
   if (var_names(i) .eq. "date")      then continue end if
   if (var_names(i) .eq. "date_bnds") then continue end if
 
@@ -436,7 +438,7 @@ if (verbose) then print("Writing results to output") end if
 ;; add our data
 
 fout->time_bnds = time_bnds
-fout->$varname$ = outdata
+fout->$variable$ = outdata
 fout->time      = time
 ; For some reason, time needs to come *last* or it gets values from fin instead
 delete(fout->time@_FillValue)  ;; coming from filedimdf call to make it unlimited, I think
@@ -445,7 +447,7 @@ delete(fout->time@_FillValue)  ;; coming from filedimdf call to make it unlimite
 ;; append history entry
 
 hstring = systemfunc("date")
-hstring = hstring + ": ncl aggregate.ncl infile="+infile+" outfile="+outfile+" varname="+varname+" interval="+interval
+hstring = hstring + ": ncl aggregate.ncl filename="+filename+" outfile="+outfile+" variable="+variable+" interval="+interval
 if (cyclic) then
   hstring = hstring + " cyclic=True"
 end if 
