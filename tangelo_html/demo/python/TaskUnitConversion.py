@@ -17,6 +17,7 @@ class TaskUnitConversion(pyutilib.workflow.Task):
         self.inputs.declare('filename')
         self.inputs.declare('variable')
         self.inputs.declare('outunit')
+        self.outputs.declare('result')
 
     def execute(self):
             sFilename = "filename=\"{0}\"".format(self.filename)
