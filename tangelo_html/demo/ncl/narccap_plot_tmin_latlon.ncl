@@ -7,8 +7,6 @@
 ;----------------------------------------------------------------------
 
 begin
- ; dir      = "/glade/p/image/narccap/summaries/daily/"
- ; filename = "tmin.CRCM.ncep.dayavg.native.nc"
   f        = addfile(filename,"r")
 
 ;---Read some data off the file, including map projection information.
@@ -23,7 +21,18 @@ begin
   nt = timeindex    ; which time index to plot
 
 ;---The graphics section
-  wks = gsn_open_wks("png",outfile)    ; "png", "x11", "ps", "pdf"
+  directory = "/data/" + wid + "/"
+  echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
+  if (echo .eq. "notfound") then
+      system("mkdir " + directory)
+  end if
+
+  filename_out = directory + tid + "_plot"
+  if(isfilepresent(filename_out)) then
+    system("rm -rf " + filename_out)
+  end if
+
+  wks = gsn_open_wks("png",filename_out)    ; "png", "x11", "ps", "pdf"
     
   res                      = True
 

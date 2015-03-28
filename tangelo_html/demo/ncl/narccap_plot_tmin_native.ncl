@@ -26,8 +26,19 @@ begin
 
   nt = timeindex    ; which time index to plot
 
+  directory = "/data/" + wid + "/"
+  echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
+  if (echo .eq. "notfound") then
+      system("mkdir " + directory)
+  end if
+
+  filename_out = directory + tid + "_nativeplot"
+  if(isfilepresent(filename_out)) then
+    system("rm -rf " + filename_out)
+  end if
+
 ;---The graphics section
-  wks = gsn_open_wks("png","outfile")          
+  wks = gsn_open_wks("png",filename_out)          
     
   res                   = True
 

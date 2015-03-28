@@ -43,7 +43,6 @@ format = "%Y-%N-%D %H:%M:%S"
 
 ;; Command-line inputs:
 ;; filename
-;; outfile
 ;; variable
 ;; interval: day, month, season, or year (no default)
 ;; method:  mean, min, max (defaults to mean)
@@ -52,12 +51,6 @@ format = "%Y-%N-%D %H:%M:%S"
 ;; check   (boolean option: print provenance checking info?)
 ;; offset  (optional: float added to time to shift day boundary)
 ;; taint   (boolean option: propagate missing values?)
-;; verbose (boolean option: print progress indicators?)
-
-
-if (.not. isvar("verbose")) then
-  verbose = False
-end if
 
 if (.not. isvar("check")) then
   check = False
@@ -78,7 +71,6 @@ if (outtime.ne."start" .and. outtime.ne."mid" .and. outtime.ne."end") then
   print("Invalid outtime: '"+outtime+"'.  Use start, mid, or end.")
   exit
 end if
-
 
 if (.not.isvar("method")) then
   method = "mean"
@@ -125,12 +117,7 @@ if(cyclic .and. interval .eq. "day") then
   exit
 end if
 
-if (verbose) then print("Opening "+filename) end if
-
 fin = addfile(filename, "r")
-
-
-if (verbose) then print("Reading time coordinate") end if
 
 time = fin->time
 nt = dimsizes(time)
@@ -146,8 +133,6 @@ end if
 
 
 ;; get or create time@bounds as appropriate
-
-if (verbose) then print("Setting up time_bnds") end if
 
 ;if (isatt(time,"bounds")) then
  ; tbname = time@bounds
@@ -184,8 +169,6 @@ names =  getnames(interval)
 
 
 ;; Construct mapping info:
-
-if (verbose) then print("Constructing index mapping") end if
 
 ;; oci == output cell index array
 
@@ -232,8 +215,6 @@ end if
 
 ;; And now for the actual averaging of data
 
-if (verbose) then print("Setting up result array") end if
-
 ;; This is a cheap way to get metadata from a non-copied var
 outdata = fin->$variable$(0:nout-1,:,:)
 outdata(:,:,:) = outdata@_FillValue
@@ -251,8 +232,6 @@ slab = 0
 
 ;; Note that we dodge around reading in fin->$variable$ so that we
 ;; don't crash in cases where it's too big to fit into memory.
-
-if (verbose) then print("Aggregating") end if
 
 do i=0, nout-1
 
@@ -319,8 +298,6 @@ do i=0, nout-1
   end if
 end do
 
-if (verbose) then print("Aggregating") end if
-
 
 if(isvar("offset")) then 
   cell_bnds = cell_bnds - offset
@@ -332,8 +309,6 @@ end if
 ;; generating output
 
 ;; Add appropriate metadata to output variables
-
-if (verbose) then print("Adding metadata to results") end if
 
 delete(time)
 delete(time_bnds)
@@ -396,18 +371,19 @@ outdata@cell_methods = cmstring
 
 ;; Create output file
 
-if (verbose) then print("Creating output file") end if
-
-outfile = "tmin_aggregate_monthly.nc"
-
-if(isfilepresent(outfile)) then
-  system("rm -rf "+outfile)
+directory = "/data/" + wid + "/"
+echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
+if (echo .eq. "notfound") then
+  system("mkdir " + directory)
 end if
-fout = addfile(outfile, "c")
+
+filename_out = directory + tid + "_aggregate.nc"
+if(isfilepresent(filename_out)) then
+  system("rm -rf " + filename_out)
+end if
+
+fout = addfile(filename_out, "c")
 filedimdef(fout,"time",-1,True)  ;; make time dimension unlimited
-
-
-if (verbose) then print("Copying other variables from input") end if
 
 ;; copy global attributes
 
@@ -432,9 +408,6 @@ do i = 0,dimsizes(var_names)-1
   fout->$var_names(i)$ = fin->$var_names(i)$
 end do
 
-
-if (verbose) then print("Writing results to output") end if
-
 ;; add our data
 
 fout->time_bnds = time_bnds
@@ -442,78 +415,4 @@ fout->$variable$ = outdata
 fout->time      = time
 ; For some reason, time needs to come *last* or it gets values from fin instead
 delete(fout->time@_FillValue)  ;; coming from filedimdf call to make it unlimited, I think
-
-
-;; append history entry
-
-hstring = systemfunc("date")
-hstring = hstring + ": ncl aggregate.ncl filename="+filename+" outfile="+outfile+" variable="+variable+" interval="+interval
-if (cyclic) then
-  hstring = hstring + " cyclic=True"
-end if 
-;;if (midpoint) then
-;;  hstring = hstring + " midpoint=True"
-;;end if 
-hstring = hstring+" method="+method
-hstring = hstring+" outtime="+outtime
-fout@history = hstring+inttochar(10)+fout@history
-
-
-;; provenance checking - to be sure that your data is coming from where you think it should.
-
-if(check) then
-
-if (verbose) then print("") end if
-if (verbose) then print("") end if
-if (verbose) then print("Provenance check:") end if
-if (verbose) then print("") end if
-
-  db = ndtooned(time_bnds)
-  db@calendar = time@calendar
-  db@units = time@units
-  ;; Note: ut_string complains about illegal arguments for 360-day calendar, but still gives correct results
-  date_bnds = onedtond(ut_string(db,format), dimsizes(time_bnds))
-  
-  tab = "	"
-
-  if(cyclic) then spacer = "" else spacer = "        " end if
-
-  print("#index"+tab+"#date"+spacer+tab+"#starting_cell_bdy"+tab+"#ending_cell_bdy"+tab+"#nsteps"+tab+"#missing")
-
-  nxy = product(dimsizes(outdata(0,:,:)))
-
-  do i=0,nout-1
-    print(i+tab+date(i)+tab+date_bnds(i,0)+tab+date_bnds(i,1)+tab+stepcount(i)+tab+misscount(i)/nxy)
-  end do
-
-  print("")
-  print("")
-
-  if(cyclic) then
-
-    nb = dimsizes(names)
-
-    head = ""
-    do b = 1, nb-1
-      head = head+tab+names(b)
-    end do
-    print(""+head)
-
-    do y = min(year), max(year)
-      line = ""+y
-      do b = 1, nb-1
-        line = line + tab + num(year.eq.y .and. bin.eq.b)
-      end do
-      print(""+line)
-    end do
-
-  end if
-
-
-end if
-
 exit
-
-
-;; Copyright 2009-2012 Univ. Corp. for Atmos. Research
-;; Author: Seth McGinnis, mcginnis@ucar.edu

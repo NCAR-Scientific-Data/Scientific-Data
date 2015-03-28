@@ -56,13 +56,18 @@ begin
         end if
     end if
 
-    outfile = "conversion_subset.nc"
-
-    if(isfilepresent(outfile)) then
-        system("rm -rf "+outfile)
+    directory = "/data/" + wid + "/"
+    echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
+    if (echo .eq. "notfound") then
+        system("mkdir " + directory)
     end if
 
-    fout = addfile(outfile,"c")
+    filename_out = directory + tid + "_unitconv.nc"
+    if(isfilepresent(filename_out)) then
+        system("rm -rf " + filename_out)
+    end if
+    
+    fout = addfile(filename_out,"c")
     
     att_names = getvaratts(f)
     

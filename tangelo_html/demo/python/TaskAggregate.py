@@ -33,7 +33,10 @@ class TaskAggregate(pyutilib.workflow.Task):
             else:
                     sOuttime = "outtime=\"{0}\"".format(self.outtime)
             sVariable = "variable=\"{0}\"".format(self.variable)
-            args = ['ncl', '-n', '-Q', sFilename, sVariable, sInterval, sMethod, sOuttime, 'ncl/aggregate.ncl']
+            wid = "wid={0}".format(self.workflowid)
+            tid = "tid={0}".format(self.id)
+
+            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sInterval, sMethod, sOuttime, 'ncl/aggregate.ncl']
             args = filter(None,args)
 
             sysError = False
@@ -55,7 +58,8 @@ class TaskAggregate(pyutilib.workflow.Task):
                                 nclError = True
                                 error = re.sub('.*?Invalid','Invalid',line)
                                 break
+            result = "/data/{0}/{1}_aggregate.nc".format(wid,tid)
             if nclError or sysError:
                     self.result = { "error": error }
             else:
-                    self.result = { "result":  "tmin_aggregate_monthly.nc" }
+                    self.result = { "result":  result }

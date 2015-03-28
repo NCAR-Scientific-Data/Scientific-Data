@@ -21,9 +21,12 @@ class TaskUnitConversion(pyutilib.workflow.Task):
 
     def execute(self):
             sFilename = "filename=\"{0}\"".format(self.filename)
-            sVariable = "varname=\"{0}\"".format(self.variable)
+            sVariable = "variable=\"{0}\"".format(self.variable)
             sOutunit = "outunit=\"{0}\"".format(self.outunit)
-            args = ['ncl', '-n', '-Q', sFilename, sVariable, sOutunit, 'ncl/unit_conversion.ncl']
+            wid = "wid={0}".format(self.workflowid)
+            tid = "tid={0}".format(self.id)
+            
+            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sOutunit, 'ncl/unit_conversion.ncl']
             args = filter(None,args)
 
             sysError = False
@@ -45,7 +48,8 @@ class TaskUnitConversion(pyutilib.workflow.Task):
                                 nclError = True
                                 error = re.sub('.*?Invalid','Invalid',line)
                                 break
+            result = "/data/{0}/{1}_unitconv.nc".format(wid,tid)
             if nclError or sysError:
                     self.result = { "error": error }
             else:
-                    self.result = { "result":  "conversion_subset.nc" }
+                    self.result = { "result":  result }
