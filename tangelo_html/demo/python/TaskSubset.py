@@ -34,7 +34,7 @@ class TaskSubset(pyutilib.workflow.Task):
         wid = "wid={0}".format(self.workflowid)
         tid = "tid={0}".format(self.id)
         
-        args = ['ncl', '-n', '-Q', wid, tid, filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
+        args = ['ncl', '-n', '-Q', wid, tid, filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/subset_time_latlon.ncl']
         sysError = False
         nclError = False
         try:

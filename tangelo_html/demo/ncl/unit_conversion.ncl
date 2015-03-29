@@ -56,12 +56,14 @@ begin
         end if
     end if
 
+    ;Check if workflow directory exists, if not create one
     directory = "/data/" + wid + "/"
     echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
     if (echo .eq. "notfound") then
         system("mkdir " + directory)
     end if
 
+    ;Uniquely name output file by task id
     filename_out = directory + tid + "_unitconv.nc"
     if(isfilepresent(filename_out)) then
         system("rm -rf " + filename_out)
@@ -69,12 +71,14 @@ begin
     
     fout = addfile(filename_out,"c")
     
+    ; copy global attributes
     att_names = getvaratts(f)
     
     do i = 0, dimsizes(att_names)-1
         fout@$att_names(i)$ = f@$att_names(i)$
     end do
-
+    
+    ; copy over other variables
     var_names = getfilevarnames(f)
 
     do i = 0,dimsizes(var_names) -1

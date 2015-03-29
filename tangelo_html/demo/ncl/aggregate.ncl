@@ -48,20 +48,9 @@ format = "%Y-%N-%D %H:%M:%S"
 ;; method:  mean, min, max (defaults to mean)
 ;; outtime: start, mid, end  (defaults to end)
 ;; cyclic  (boolean option: average over multiple years?)
-;; check   (boolean option: print provenance checking info?)
-;; offset  (optional: float added to time to shift day boundary)
-;; taint   (boolean option: propagate missing values?)
-
-if (.not. isvar("check")) then
-  check = False
-end if
 
 if (.not. isvar("cyclic")) then
   cyclic = False
-end if
-
-if (.not. isvar("taint")) then
-  taint = False
 end if
 
 if (.not.isvar("outtime")) then
@@ -122,10 +111,6 @@ fin = addfile(filename, "r")
 time = fin->time
 nt = dimsizes(time)
 
-if(isvar("offset")) then 
-  time = time + offset
-end if
-
 if(.not. any(typeof(time).eq.(/"float","double"/))) then
   print("Error: time is not floating-point.")
   exit
@@ -134,12 +119,12 @@ end if
 
 ;; get or create time@bounds as appropriate
 
-;if (isatt(time,"bounds")) then
- ; tbname = time@bounds
-  ;time_bnds = fin->$tbname$
-;else
+if (isatt(time,"bounds")) then
+  tbname = time@bounds
+  time_bnds = fin->$tbname$
+else
   time_bnds = transpose(onedtond(time,(/2,nt/)))
-;end if
+end if
 
  
 ;; Extract month & year using ut_calendar
@@ -244,9 +229,7 @@ do i=0, nout-1
     ;; of timesteps and a threshold for allowable %missing instead of
     ;; simple yes-no tainting by missing value...
 
-    if(.not. taint) then
-      outdata(i,:,:) = fin->$variable$(map(0):map(0),:,:)
-    end if
+    outdata(i,:,:) = fin->$variable$(map(0):map(0),:,:)
     misscount(i) = num(ismissing(outdata(i,:,:)))
     stepcount(i) = 1
     cell_bnds(i,0) = time_bnds(map(0),0)
@@ -266,14 +249,6 @@ do i=0, nout-1
     if(method.eq."max") then
       outdata(i,:,:) = dim_max_n(slab,0)
     end if
-  
-    if(taint) then
-      ds = dimsizes(slab)
-      do tt = 0,ds(0)-1
-        outdata(i,:,:) = outdata(i,:,:) + (slab(tt,:,:)*0)
-      end do
-      delete(ds)
-    end if 
   
     nmap = dimsizes(map)
     misscount(i) = num(ismissing(slab))
@@ -297,11 +272,6 @@ do i=0, nout-1
     end if
   end if
 end do
-
-
-if(isvar("offset")) then 
-  cell_bnds = cell_bnds - offset
-end if
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -348,14 +318,12 @@ time@calendar = fin->time@calendar
 time@units = fin->time@units
 time@standard_name = "time"
 time@long_name = "time"
-;;delete(time@_FillValue)
 time!0 = "time"
 time&time = time
 
 time_bnds = cell_bnds
 time_bnds!0 = "time"
 time_bnds!1 = "bnds"
-;;delete(time_bnds@_FillValue)
 
 
 if (cyclic) then
@@ -370,13 +338,14 @@ outdata@cell_methods = cmstring
 
 
 ;; Create output file
-
+;;Check if workflow directory exists, if not create one
 directory = "/data/" + wid + "/"
 echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
 if (echo .eq. "notfound") then
   system("mkdir " + directory)
 end if
 
+;Uniquely name output file by task id
 filename_out = directory + tid + "_aggregate.nc"
 if(isfilepresent(filename_out)) then
   system("rm -rf " + filename_out)
@@ -395,7 +364,7 @@ end do
 
 ;; copy over other variables
 
-var_names = getfilevariables (fin) ;
+var_names = getfilevarnames(fin) ;
 
 do i = 0,dimsizes(var_names)-1      
 

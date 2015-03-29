@@ -24,9 +24,9 @@ class TaskPlot(pyutilib.workflow.Task):
         else:
                 sTimeindex = "timeindex={0}".format(self.timeindex)
         if self.native:
-                plotScript = 'ncl/narccap_plot_tmin_native.ncl'
+                plotScript = 'ncl/plot_native.ncl'
         else:
-                plotScript = 'ncl/narccap_plot_tmin_latlon.ncl'
+                plotScript = 'ncl/plot.ncl'
         wid = "wid={0}".format(self.workflowid)
         tid = "tid={0}".format(self.id)
 

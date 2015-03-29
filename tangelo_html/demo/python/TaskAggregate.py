@@ -19,6 +19,7 @@ class TaskAggregate(pyutilib.workflow.Task):
         self.inputs.declare('interval')
         self.inputs.declare('method')
         self.inputs.declare('outtime')
+        self.inputs.declare('cyclic')
         self.outputs.declare('result')
 
     def execute(self):
@@ -32,11 +33,12 @@ class TaskAggregate(pyutilib.workflow.Task):
                     sOuttime = ""
             else:
                     sOuttime = "outtime=\"{0}\"".format(self.outtime)
+            sCyclic = "cyclic={0}".format(self.cyclic)
             sVariable = "variable=\"{0}\"".format(self.variable)
             wid = "wid={0}".format(self.workflowid)
             tid = "tid={0}".format(self.id)
 
-            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sInterval, sMethod, sOuttime, 'ncl/aggregate.ncl']
+            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sInterval, sMethod, sOuttime, sCyclic, 'ncl/aggregate.ncl']
             args = filter(None,args)
 
             sysError = False
