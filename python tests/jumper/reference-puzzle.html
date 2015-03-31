@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Puzzle One</title>
+    <link rel="icon" type="image/ico" href="icon.png"/>
+
+		<!-- jQuery Link -->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+		<!-- External JS -->
+		<script src="./functions.js"></script>
+
+		<!-- CSS Styling -->
+		<link rel="stylesheet" type="text/css" href="./puzzle-page.css">
+
+		<script>
+            
+			$(document).ready(function(){
+                // var old = new Array();
+
+                $(document).keydown(function(event){
+				    event.preventDefault();
+
+				    // left
+				    if(event.which == 37){
+				    	player.move(-1,0);
+				    }
+				    // up
+				    else if (event.which == 38){
+				    	player.move(0,-1);
+				    }
+				    // right
+				    else if(event.which == 39){
+				    	player.move(1,0);
+				    }
+				    // down
+				    else if(event.which == 40){
+				    	player.move(0,1);
+				    }
+                    if(event.which == 13){
+                        location.reload();   
+                    }
+				    return false;
+				});
+
+                //VARIABLES
+					var canvas = document.getElementById("canvas");
+					var ctx = canvas.getContext('2d');
+					var player = new Player (0,0,10, ctx, "2");
+
+
+				// 	--------------- PUZZLE 1 - 5x5 ----------------
+					var s = "start";
+					var x = "finish";
+					// untouched also = 0
+					var u = "untouched";
+					var t = "touched";
+					var w = "wall";
+
+					puzzleArray = [	[s,w,w,0,0],
+									[0,0,0,0,0],
+									[0,0,0,0,0],
+									[0,0,0,0,0],
+									[0,0,0,0,x] ];
+
+				// 	-----------------------------------------------
+
+					// generate Tile objects, insert into array
+					tileArray = generateTiles(puzzleArray, ctx);
+
+					// draw grid of Tiles given array of tiles
+					drawGrid(tileArray, ctx);
+
+					// draw player
+                    player.draw();
+
+
+			});
+		</script>
+	</head>
+
+	<body>
+		<canvas id="canvas" width="200" height="200"></canvas>
+		
+	</body>
+</html>

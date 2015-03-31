@@ -1,0 +1,4 @@
+synax: glob
+
+.egg-info
+__pycache__
