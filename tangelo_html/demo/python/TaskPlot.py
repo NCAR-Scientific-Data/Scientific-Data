@@ -23,12 +23,14 @@ class TaskPlot(pyutilib.workflow.Task):
                 sTimeindex = "timeindex=0"
         else:
                 sTimeindex = "timeindex={0}".format(self.timeindex)
-        sOutfile = "outfile=\"tmin_latlon\""
         if self.native:
-                plotScript = 'ncl/narccap_plot_tmin_native.ncl'
+                plotScript = 'ncl/plot_native.ncl'
         else:
-                plotScript = 'ncl/narccap_plot_tmin_latlon.ncl'
-        args = ['ncl', '-n', sFilename, sTimeindex, sOutfile, plotScript]
+                plotScript = 'ncl/plot.ncl'
+        wid = "wid={0}".format(self.workflowid)
+        tid = "tid={0}".format(self.id)
+
+        args = ['ncl', '-n','-Q', wid, tid, sFilename, sTimeindex, plotScript]
         sysError = False
         nclError = False
         try:
@@ -47,7 +49,11 @@ class TaskPlot(pyutilib.workflow.Task):
                             nclError = True
                             error = re.sub('.*?Invalid','Invalid',line)
                             break
+        if self.native:
+                result = "/data/{0}/{1}_nativeplot.png".format(wid,tid)
+        else:
+                result = "/data/{0}/{1}_plot.png".format(wid,tid)
         if nclError or sysError:
                 self.result = { "error": error }
         else:
-                self.result = { "image": "tmin_latlon.png" }
+                self.result = { "image": result }

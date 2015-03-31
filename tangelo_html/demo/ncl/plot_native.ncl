@@ -8,26 +8,37 @@
 ;----------------------------------------------------------------------
 
 begin
- ; dir      = "/glade/p/image/narccap/summaries/daily/"
- ; filename = "tmin.CRCM.ncep.dayavg.native.nc"
   f        = addfile(filename,"r")
 
 ;---Read some data off the file, including map projection information.
-  tm       = f->tmin
+  varname       = f->$variable$
   proj     = f->polar_stereographic
   lat2d    = f->lat
   lon2d    = f->lon
-  pname    = tm@grid_mapping
+  pname    = varname@grid_mapping
 
-  dims = dimsizes(tm)
+  dims = dimsizes(varname)
   ntime = dims(0)        ; Leftmost dimension is "time"
   nlat  = dims(1)
   nlon  = dims(2)
 
   nt = timeindex    ; which time index to plot
 
+  ;Check if workflow directory exists, if not create one
+  directory = "/data/" + wid + "/"
+  echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
+  if (echo .eq. "notfound") then
+      system("mkdir " + directory)
+  end if
+  
+  ;Uniquely name output file by task id
+  filename_out = directory + tid + "_nativeplot"
+  if(isfilepresent(filename_out)) then
+    system("rm -rf " + filename_out)
+  end if
+
 ;---The graphics section
-  wks = gsn_open_wks("png","outfile")          
+  wks = gsn_open_wks("png",filename_out)          
     
   res                   = True
 
@@ -57,5 +68,5 @@ begin
 
   res@pmTickMarkDisplayMode = "Always"    ; add tickmarks and labels
 
-  plot = gsn_csm_contour_map(wks,tm(nt,:,:),res) 
+  plot = gsn_csm_contour_map(wks,varname(nt,:,:),res) 
 end

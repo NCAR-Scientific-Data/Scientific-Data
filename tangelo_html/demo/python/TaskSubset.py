@@ -31,8 +31,10 @@ class TaskSubset(pyutilib.workflow.Task):
         endDate = "endDate={0}".format(self.enddate)
         filename = "filename=\"{0}\"".format(self.url)
         v = "variable=\"{0}\"".format(self.variable)
+        wid = "wid={0}".format(self.workflowid)
+        tid = "tid={0}".format(self.id)
         
-        args = ['ncl', '-n', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/narccap_subset_tmin_time_latlon.ncl']
+        args = ['ncl', '-n', '-Q', wid, tid, filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/subset_time_latlon.ncl']
         sysError = False
         nclError = False
         try:
@@ -47,7 +49,8 @@ class TaskSubset(pyutilib.workflow.Task):
                     nclError = True
                     error = re.sub('\[.*?\]:',' ',line)
                     break
+        result = "/data/{0}/{1}_subset.nc".format(wid,tid)
         if nclError or sysError:
             self.subset = { "error": error }
         else:
-            self.subset = { "subset": "tmin_subset_time_latlon.nc" }
+            self.subset = { "subset": result }
