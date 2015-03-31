@@ -1,4 +1,5 @@
 import pyutilib.workflow
+import uuid
 
 class TaskA(pyutilib.workflow.Task):
 	def __init__(self, *args, **kwds):
@@ -96,6 +97,7 @@ def createWorkflow():
 
 	print(w.__list__())
 
+	print(uuid.uuid4())
 
 
-#createWorkflow()
+createWorkflow()
