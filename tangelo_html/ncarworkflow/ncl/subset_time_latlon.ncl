@@ -18,17 +18,16 @@ begin
 ;---Get NetCDF file
   f        = addfile(filename,"r")
 
-;---Read tmin, lat, lon off the file
-  tmin  = f->$variable$
+;---Read variable, lat, lon off the file
+  varname  = f->$variable$
   lat2d = f->lat
   lon2d = f->lon
+  tbnds = f->time_bnds
 
-  ;printVarSummary(tmin)       ; Print some info about "tmin"
-  ;printMinMax(tmin,0)
 
 ;---Convert "time" array into something we can more easily understand.
   opt      = -2
-  new_time = cd_calendar(tmin&time,opt)    ; ntime x 6
+  new_time = cd_calendar(varname&time,opt)    ; ntime x 6
   stDate = str_split(startDate, "-")
   edDate = str_split(endDate, "-")
   
@@ -60,38 +59,52 @@ begin
   ii_time = ind(new_time.ge.startTime.and.new_time.le.endTime)
 
 ;---Subset the variables with calculated indexes
-  tmin_sub =  tmin(ii_time,ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
+  var_sub =  varname(ii_time,ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   lat_sub  = lat2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   lon_sub  = lon2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
-
-  ;printVarSummary(tmin_sub)    ; Note metadata still attached
-  printMinMax(tmin_sub,0)
-
+  tb_sub   = tbnds(ii_time,:)
 ;----------------------------------------------------------------------
 ; Write subsetted data to a file, using inefficient (lazy) method.
 ;----------------------------------------------------------------------
 
 ;---Remove file first, if it exists.
-  filename_out = "tmin_subset_time_latlon.nc"
+  ;Check if workflow directory exists, if not create one
+  directory = "/data/" + wid + "/"
+  echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
+  if (echo .eq. "notfound") then
+    system("mkdir " + directory)
+  end if
+
+  ;Uniquely name output file by task id
+  filename_out = directory + tid + "_subset.nc"
   if(isfilepresent(filename_out)) then
     system("rm -rf " + filename_out)
   end if
 
 ;---Open NetCDF file to write to.
   fout = addfile(filename_out,"c")
+  att_names = getvaratts(f)
+  do i=0, dimsizes(att_names)-1
+    fout@$att_names(i)$ = f@$att_names(i)$
+  end do
+
+  var_names = getfilevarnames(f)
+
+  do i=0, dimsizes(var_names)-1
+    if (var_names(i) .eq. "lat") then continue end if
+    if (var_names(i) .eq. "lon") then continue end if
+    if (var_names(i) .eq. "time") then continue end if
+    if (var_names(i) .eq. "xc") then continue end if
+    if (var_names(i) .eq. "yc") then continue end if
+    if (var_names(i) .eq. "time_bnds") then continue end if
+    if (var_names(i) .eq. variable) then continue end if
+    fout->$var_names(i)$ = f->$var_names(i)$
+  end do
+
 
 ;---Write three variables to file. Metadata will be written automatically.
-  fout->tmin = tmin_sub
+  fout->$variable$ = var_sub
   fout->lat  = lat_sub
   fout->lon  = lon_sub
-  time_bnd = fout->time
-  delete(time_bnd@bounds)
-;----------------------------------------------------------------------
-; When script is finished, type:
-;
-;  ncl_filedump tmin_subset_time_latlon.nc
-;
-; Note that some of the metadata (like "actual_range") may
-; be incorrect. This script should be updated to fix this.
-;----------------------------------------------------------------------
+  fout->time_bnds = tb_sub
 end
