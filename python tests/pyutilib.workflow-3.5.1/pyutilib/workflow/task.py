@@ -85,7 +85,7 @@ class Task(object):
         return set(task.name for task in self.prev_tasks())
 
     # Robert Crimi
-    def addWorkflow(self, workflow):
+    def setWorkflowID(self, workflow):
         self.workflowID = workflow
            
     def execute(self, debug=False):
