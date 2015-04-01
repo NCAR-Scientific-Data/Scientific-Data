@@ -1,6 +1,5 @@
 import pyutilib.workflow
 import json
-from StringIO import StringIO
 
 class TaskA(pyutilib.workflow.Task):
 	def __init__(self, *args, **kwds):

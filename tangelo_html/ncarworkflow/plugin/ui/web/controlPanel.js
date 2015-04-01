@@ -74,7 +74,6 @@
 
         // Make a d3 selection out of the target element.
         s = d3.select(this[0]);
-
         // Bail out silently if the selection is empty.
         if (s.empty()) {
             return;

@@ -99,7 +99,7 @@ window.onload = function () {
 
 
 
-            $("#content").nodelink({
+            $("#workflow").nodelink({
                 data: data,
                 nodeCharge: tangelo.accessor({value: -10000}),
                 linkSource: tangelo.accessor({field: "source"}),

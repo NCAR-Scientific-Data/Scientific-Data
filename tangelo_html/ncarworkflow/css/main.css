@@ -243,3 +243,11 @@ div.form-inline {
 #qunit {
 	margin-left: 310px;
 }
+
+#miniMenu {
+	position: absolute;
+	top: 90%;
+	left: 90%;
+	right: 0%;
+	bottom: 0%;
+}
