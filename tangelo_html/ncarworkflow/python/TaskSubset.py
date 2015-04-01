@@ -8,7 +8,7 @@ import sys
 import re
 import pyutilib.workflow
 
-class TaskSubset(pyutilib.workflow.Task):
+class taskSubset(pyutilib.workflow.Task):
     def __init__(self,*args,**kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
@@ -21,6 +21,7 @@ class TaskSubset(pyutilib.workflow.Task):
         self.inputs.declare('startdate')
         self.inputs.declare('enddate')
         self.outputs.declare('subset')
+        self.workflowID = 1235
 
     def execute(self):
         swLat = "swLat={0}".format(self.swlat)
@@ -31,7 +32,7 @@ class TaskSubset(pyutilib.workflow.Task):
         endDate = "endDate={0}".format(self.enddate)
         filename = "filename=\"{0}\"".format(self.url)
         v = "variable=\"{0}\"".format(self.variable)
-        wid = "wid={0}".format(self.workflowid)
+        wid = "wid={0}".format(self.workflowID)
         tid = "tid={0}".format(self.id)
         
         args = ['ncl', '-n', '-Q', wid, tid, filename, v, swLat, swLon, neLat, neLon, startDate, endDate, 'ncl/subset_time_latlon.ncl']

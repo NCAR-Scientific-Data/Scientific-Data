@@ -8,7 +8,7 @@ import sys
 import re
 import pyutilib.workflow
 
-class TaskPlot(pyutilib.workflow.Task):
+class taskPlot(pyutilib.workflow.Task):
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self, *args, **kwds)

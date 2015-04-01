@@ -46,7 +46,7 @@ class Task(object):
         self.output_controls.set_name(self.name+'-output-controls')
         self.debug = False
         # Robert Crimi
-        self.workflow = None
+        self.workflowID = None
 
     def add_resource(self, resource):
         """Add a resource that is required for this task to execute."""
@@ -85,8 +85,8 @@ class Task(object):
         return set(task.name for task in self.prev_tasks())
 
     # Robert Crimi
-    def addWorkflow(self, workflow):
-        self.workflow = workflow
+    def setWorkflowID(self, workflow):
+        self.workflowID = workflow
            
     def execute(self, debug=False):
         """Execute this task."""
