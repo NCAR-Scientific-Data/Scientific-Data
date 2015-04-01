@@ -10,7 +10,7 @@ import sys
 import re
 import pyutilib.workflow
 
-class TaskUnitConversion(pyutilib.workflow.Task):
+class taskUnitConversion(pyutilib.workflow.Task):
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
