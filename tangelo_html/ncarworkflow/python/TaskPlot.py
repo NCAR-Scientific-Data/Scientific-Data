@@ -7,6 +7,7 @@ import subprocess
 import sys
 import re
 import pyutilib.workflow
+import os
 
 class taskPlot(pyutilib.workflow.Task):
     def __init__(self, *args, **kwds):
@@ -27,33 +28,26 @@ class taskPlot(pyutilib.workflow.Task):
                 plotScript = 'ncl/plot_native.ncl'
         else:
                 plotScript = 'ncl/plot.ncl'
-        wid = "wid={0}".format(self.workflowid)
+        wid = "wid={0}".format(self.workflowID)
         tid = "tid={0}".format(self.id)
 
         args = ['ncl', '-n','-Q', wid, tid, sFilename, sTimeindex, plotScript]
         sysError = False
         nclError = False
         try:
-                status = subprocess.Popen(args, stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+                status = subprocess.check_call(args)
         except:
                 sysError = True
                 error = "System error, please contact site administrator."
-    
-        if not sysError:
-                for line in status.stdout:
-                        if line.find("fatal") != -1:
-                            nclError = True
-                            error = re.sub('\[.*?\]:',' ',line)
-                            break
-                        if line.find("Invalid") != -1:
-                            nclError = True
-                            error = re.sub('.*?Invalid','Invalid',line)
-                            break
         if self.native:
                 result = "/data/{0}/{1}_nativeplot.png".format(wid,tid)
         else:
-                result = "/data/{0}/{1}_plot.png".format(wid,tid)
+                result = "/data/{0}/{1}_plot.png".format(self.workflowID,self.id)
+        if not sysError:
+            if not os.path.isfile(result):
+                error = "NCL Error: Please check input parameters."
+                nclError = True
         if nclError or sysError:
-                self.result = { "error": error }
+                self.result = error
         else:
-                self.result = { "image": result }
+                self.result = result

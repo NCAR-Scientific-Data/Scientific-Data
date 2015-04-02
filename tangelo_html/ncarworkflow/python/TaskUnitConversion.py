@@ -9,6 +9,7 @@ import subprocess
 import sys
 import re
 import pyutilib.workflow
+import os
 
 class taskUnitConversion(pyutilib.workflow.Task):
     def __init__(self, *args, **kwds):
@@ -23,7 +24,7 @@ class taskUnitConversion(pyutilib.workflow.Task):
             sFilename = "filename=\"{0}\"".format(self.filename)
             sVariable = "variable=\"{0}\"".format(self.variable)
             sOutunit = "outunit=\"{0}\"".format(self.outunit)
-            wid = "wid={0}".format(self.workflowid)
+            wid = "wid={0}".format(self.workflowID)
             tid = "tid={0}".format(self.id)
             
             args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sOutunit, 'ncl/unit_conversion.ncl']
@@ -32,24 +33,18 @@ class taskUnitConversion(pyutilib.workflow.Task):
             sysError = False
             nclError = False
             try:
-                    status = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+                    status = subprocess.check_call(args)
             except:
                     sysError = True
-                    error = "System error, please contact site administrator."
+                    error = "System Error: Please contact site administrator."
         
             nclError = False
+            result = "/data/{0}/{1}_unitconv.nc".format(self.workflowID,self.id)
             if not sysError:
-                    for line in status.stdout:
-                            if line.find("fatal") != -1:
-                                nclError = True
-                                error = re.sub('\[.*?\]:',' ',line)
-                                break
-                            if line.find("Invalid") != -1:
-                                nclError = True
-                                error = re.sub('.*?Invalid','Invalid',line)
-                                break
-            result = "/data/{0}/{1}_unitconv.nc".format(wid,tid)
+                if not os.path.isfile(result):
+                    error = "NCL Error: Please check input parameters."
+                    nclError = True
             if nclError or sysError:
-                    self.result = { "error": error }
+                    self.result = error 
             else:
-                    self.result = { "result":  result }
+                    self.result = result
