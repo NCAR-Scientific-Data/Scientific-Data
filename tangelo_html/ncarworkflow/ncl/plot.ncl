@@ -18,6 +18,10 @@ begin
   ntime = dims(0)        ; Leftmost dimension is "time")
 
   nt = timeindex    ; which time index to plot
+  if (nt .ge. ntime ) then
+    print("Error: Time index out of range.")
+    exit
+  end if
 
 ;---The graphics section
   ;Check if workflow directory exists, if not create one
