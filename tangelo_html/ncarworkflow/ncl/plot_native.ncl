@@ -23,6 +23,10 @@ begin
   nlon  = dims(2)
 
   nt = timeindex    ; which time index to plot
+  if (nt .ge. ntime ) then
+    print("Error: Time index out of range.")
+    exit
+  end if
 
   ;Check if workflow directory exists, if not create one
   directory = "/data/" + wid + "/"

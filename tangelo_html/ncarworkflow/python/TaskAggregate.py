@@ -9,6 +9,7 @@ import subprocess
 import sys
 import re
 import pyutilib.workflow
+import os
 
 class taskAggregate(pyutilib.workflow.Task):
     def __init__(self, *args, **kwds):
@@ -21,16 +22,15 @@ class taskAggregate(pyutilib.workflow.Task):
         self.inputs.declare('outtime')
         self.inputs.declare('cyclic')
         self.outputs.declare('result')
-        self.workflowID = 1234
 
     def execute(self):
         sFilename = "filename=\"{0}\"".format(self.filename)
         sInterval = "interval=\"{0}\"".format(self.interval)
-        if not method:
+        if not self.method:
                 sMethod = ""
         else:
                 sMethod = "method=\"{0}\"".format(self.method)
-        if not outtime:
+        if not self.outtime:
                 sOuttime = ""
         else:
                 sOuttime = "outtime=\"{0}\"".format(self.outtime)
@@ -41,28 +41,20 @@ class taskAggregate(pyutilib.workflow.Task):
 
         args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sInterval, sMethod, sOuttime, sCyclic, 'ncl/aggregate.ncl']
         args = filter(None,args)
-
         sysError = False
         nclError = False
         try:
-                status = subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+                status = subprocess.check_call(args)
         except:
                 sysError = True
-                error = "System error, please contact site administrator."
-    
-        nclError = False
+                error = "System Error: Please contact site administrator."
+
+        result = "/data/{0}/{1}_aggregate.nc".format(self.workflowID,self.id)
         if not sysError:
-                for line in status.stdout:
-                        if line.find("fatal") != -1:
-                            nclError = True
-                            error = re.sub('\[.*?\]:',' ',line)
-                            break
-                        if line.find("Invalid") != -1:
-                            nclError = True
-                            error = re.sub('.*?Invalid','Invalid',line)
-                            break
-        result = "/data/{0}/{1}_aggregate.nc".format(wid,tid)
+            if not os.path.isfile(result):
+                error = "NCL Error: Please check input parameters."
+                nclError = True
         if nclError or sysError:
-                self.result = { "error": error }
+                self.result = error
         else:
-                self.result = { "result":  result }
+                self.result = result
