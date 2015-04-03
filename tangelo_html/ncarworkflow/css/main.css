@@ -245,7 +245,7 @@ div.form-inline {
 }
 
 #miniMenu {
-	position: absolute;
+	position: fixed;
 	top: 90%;
 	left: 90%;
 	right: 0%;

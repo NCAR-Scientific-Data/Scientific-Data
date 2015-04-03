@@ -1,49 +1,3 @@
-//Creating/Using Steps----------------------------------------------------------
-function newStep() {
-	$("aside a").removeClass("active");
-	$("aside a:last").addClass("active");
-	$("main").load("chooseStep.html");
-}
-
-function createStep(step, isNew, id) {
-	$("main").load(step + ".html");
-	if(isNew)
-	{
-		insertStep(step, null);
-	}
-	else
-	{
-		$("aside a").removeClass("active");
-		$("#"+id).addClass("active");
-	}	
-}
-
-function deleteStep() {
-	var startId = Number($(".active").attr("id"));
-	$("aside a.active").nextAll().each(function (index) {
-		if($(this).attr('id') != 0)
-		{
-			$(this).attr('id', startId);
-			startId+= 1;
-		}
-	});
-	$(".active").remove();
-	newStep();
-}
-
-function insertStep(stepName, stepValues) {
-	var id= $("aside a").length;
-	var idfull = "id=\"" + id +"\"";
-	var onclick = "onclick=\"createStep('" + stepName + "', false, this.id)\"";
-	
-	var newstep = "<a " + idfull + onclick + ">" + stepName + "</a>";
-	$(newstep).insertBefore($("aside a:last"));
-	$("aside a").removeClass("active");
-	$("#" + id).addClass("active");
-}
-//------------------------------------------------------------------------------
-
-//Manipulating NetCDFs----------------------------------------------------------
 function callSubset() {
 	var simulationType = $("#simulationType option:selected").val();
 	var variable = $("input[name='variable']:checked").val();
@@ -89,71 +43,6 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
     });
 }
 
-function callCalculate() {
-
-	var calc = encodeURIComponent($("#calc option:selected").val());
-	var interval = encodeURIComponent($("#interval option:selected").val());
-	var out = encodeURIComponent($("#outtime option:selected").val());
-	
-	calculate(calc, interval, out);
-}
-
-function calculate(calc, interval, out) {
-	calc = "&method=" + calc;
-	interval = "&interval=" + interval;
-	out = "&outtime=" + out;
-	url = "python/runCalculation?filename=" + encodeURIComponent(localStorage.getItem("subset")) + interval + calc + out;
-
-	$("<p>Running Calculations. Please Wait.</p>").insertAfter($(".form-inline"));
-
-	$.getJSON(url, function (data) {
-		if(data.result)
-		{
-			localStorage.result = data.result;
-			$("p").html("Calculations Succesful!");
-		}
-		else
-		{
-			localStorage.result = "";
-			$("p").html("Calculations Failed.<br>" + data.error);
-		}
-    });
-}
-
-function callPlot() {
-	var filename = encodeURIComponent(localStorage.result);
-	var timeindex = encodeURIComponent(0);
-	var natively = encodeURIComponent("False");
-
-	plot(filename, timeindex, natively);
-}
-
-function plot(filename, timeindex, natively)
-{
-	filename = "?filename=" + filename;
-	timeindex = "&timeindex=" + timeindex;
-	natively = "&native=" + natively;
-
-	url = "python/runPlot" + filename + timeindex + natively;
-
-	$("<p>Plotting. Please Wait.</p>").insertAfter($(".form-inline"));
-
-	$.getJSON(url, function (data) {
-		if(data.image)
-		{
-			document.getElementById("results").src = data.image;
-			$("p").html("Calculations Succesful!");
-			localStorage.clear();
-		}
-		else
-		{
-			$("p").html("Plotting Failed.<br>" + data.error);
-		}
-    });	
-}
-//------------------------------------------------------------------------------
-
-//Subset Functions--------------------------------------------------------------
 function changeDateRange(simulationType)
 {
 	var start;
@@ -261,6 +150,3 @@ function changeBasedOnRCM()
 	
 	changeGCM(simulationType, rcm);
 }
-//------------------------------------------------------------------------------
-
-$(document).ready(newStep);

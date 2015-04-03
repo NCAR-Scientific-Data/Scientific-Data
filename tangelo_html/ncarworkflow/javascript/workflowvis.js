@@ -1,58 +1,62 @@
+/*global window, $*/
+
 window.onload = function () {
-    var url= "python/workflowTwo";
-    
+    "use strict";
+    var url = "python/workflowTwo";
+
     $.getJSON(url, function (results) {
-        if(results.workflow) {
-            var workflow = results.workflow;
-        
-            var indexMap = {};
-            var i = 0;
-            workflow.forEach( function(list) {
-                var oldIndex = list[1]
+        if (results.workflow) {
+            var workflow = results.workflow,
+                indexMap = {},
+                i = 0,
+                data = { nodes: [], links: []},
+                width = $("#workflow").width(),
+                height = $("#workflow").height(),
+                targetParents = {},
+                numberOfColumns,
+                columnSize,
+                x,
+                target;
+
+            workflow.forEach(function (list) {
+                var oldIndex = list[1];
                 indexMap[oldIndex] = i;
-                i++;
+                i += 1;
             });
 
-            var data = { nodes: [], links: []};
-            workflow.forEach( function(list) {
-                data.nodes.push({type: list[0], name: list[0]+list[1]});
-                list[2].forEach(function(index) {
+            workflow.forEach(function (list) {
+                data.nodes.push({type: list[0], name: list[0] + list[1]});
+                list[2].forEach(function (index) {
                     var sourceIndex = list[1];
-                    if(indexMap[index])
-                    {
+                    if (indexMap[index]) {
                         data.links.push({source: indexMap[sourceIndex], target: indexMap[index]});
                     }
                 });
             });
 
-            var width = $("#content").width();
-            var height = $("#content").height();
+            data.links.forEach(function (dict) {
+                var sourceNode = dict.source,
+                    targetNode = dict.target;
 
-            var targetParents = {};
-
-            data.links.forEach( function(dict) {
-                var source = dict.source;
-                var target = dict.target;
-
-                if (targetParents[target]) {
-                    targetParents[target].push(source);
-                }
-                else
-                {
-                    targetParents[target] = [source];
+                if (targetParents[targetNode]) {
+                    targetParents[targetNode].push(sourceNode);
+                } else {
+                    targetParents[targetNode] = [sourceNode];
                 }
 
             });
 
-            var numberOfColumns = Object.keys(targetParents).length + 1;
-            var columnSize = width/numberOfColumns;
-            var x = columnSize/2;
+            numberOfColumns = Object.keys(targetParents).length + 1;
+            columnSize = width / numberOfColumns;
+            x = columnSize / 2;
 
             for (target in targetParents) {
-                targetParents[target].forEach( function(index) {
-                    data.nodes[index].x = x;
-                });
-                x += columnSize;
+                if (!$.isEmptyObject(target)) {
+                    targetParents[target].forEach(function (index) {
+                        data.nodes[index].x = x;
+                    });
+                    x += columnSize;
+                }
             }
 
             data.nodes[data.nodes.length - 1].x = x;
@@ -85,7 +89,7 @@ window.onload = function () {
                 });
 
                 var columnMap = {};
-                for(i = 0, len=actualColumnSize; i < actualColumnSize; i++)
+                for(var i = 0, len=actualColumnSize; i < actualColumnSize; i++)
                 {
                     var oldx = currentColumns[i];
                     var newx = actualColumns[i];
