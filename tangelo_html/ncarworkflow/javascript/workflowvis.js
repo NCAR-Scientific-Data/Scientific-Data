@@ -60,7 +60,6 @@ function listParentsOfTargetNode(listOfLinks) {
 
         }
     });
-    alert(JSON.stringify(parentsOfTargetNodes));
     return parentsOfTargetNodes;
 }
 
@@ -148,7 +147,6 @@ function formatWorkflow(workflow) {
         data = generateData(workflow, indexMap),
         parentsOfTargetNodes = listParentsOfTargetNode(data.links),
         numberOfColumns = assignXValue(data, parentsOfTargetNodes);
-    alert("Formatted Workflow");
     readjustColumns(data, numberOfColumns);
 
     return data;
@@ -161,7 +159,6 @@ window.onload = function () {
     $.getJSON(url, function (results) {
         if (results.workflow) {
             var data = formatWorkflow(results.workflow);
-            alert(JSON.stringify(data));
 
             $("#workflow").nodelink({
                 data: data,
