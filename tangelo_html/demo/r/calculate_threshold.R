@@ -15,7 +15,7 @@ rfunc <- function(filename, field, lower, upper){
 	library(ncdf)
 
 	# Open the NetCDF file
-	nc = open.ncdf(fname)
+	nc = open.ncdf(filename)
 
 	# Read the field data off the NetCDF file
 	field_data = get.var.ncdf(nc, field)	
