@@ -1,4 +1,158 @@
-/*global window, $*/
+/*global window, $, tangelo*/
+
+function getIndexMap(workflow) {
+    "use strict";
+    var indexMap = {},
+        nodeIndexForNodeLink = 0;
+
+    workflow.forEach(function (nodeProperties) {
+        var nodeIndex = nodeProperties[1];
+        indexMap[nodeIndex] = nodeIndexForNodeLink;
+        nodeIndexForNodeLink += 1;
+    });
+    return indexMap;
+}
+
+function generateData(workflow, indexMap) {
+    "use strict";
+    var data = { nodes: [], links: []};
+
+    workflow.forEach(function (nodeProperties) {
+        var nodeType = nodeProperties[0],
+            nodeIndex = nodeProperties[1],
+            nodeLinks = nodeProperties[2],
+            nodeName = nodeProperties[0] + nodeProperties[1],
+            sourceIndex;
+
+        data.nodes.push({type: nodeType, name: nodeName});
+
+        sourceIndex = nodeIndex;
+
+        for (var i = 0; i < nodeLinks.length; i += 1) {
+            var linkedNodeIndex = nodeLinks[i];
+            if (indexMap[linkedNodeIndex]) {
+                var sourceNode = indexMap[sourceIndex],
+                    targetNode = indexMap[linkedNodeIndex];
+
+                data.links.push({source: sourceNode, target: targetNode});
+            }
+        }
+    });
+    return data;
+
+}
+
+function listParentsOfTargetNode(listOfLinks) {
+    "use strict";
+    var parentsOfTargetNodes = {};
+
+    listOfLinks.forEach(function (linkDictionary) {
+        var sourceNode = linkDictionary.source,
+            targetNode = linkDictionary.target;
+
+        if (parentsOfTargetNodes.hasOwnProperty(targetNode)) {
+
+            parentsOfTargetNodes[targetNode].push(sourceNode);
+
+        } else {
+
+            parentsOfTargetNodes[targetNode] = [sourceNode];
+
+        }
+    });
+    alert(JSON.stringify(parentsOfTargetNodes));
+    return parentsOfTargetNodes;
+}
+
+function assignXValue(data, parentsOfTargetNodes) {
+    "use strict";
+
+    var width = $("#workflow").width(),
+        numberOfColumns = Object.keys(parentsOfTargetNodes).length + 1,
+        columnSize = width / numberOfColumns,
+        x = columnSize / 2;
+
+    for (var targetNode in parentsOfTargetNodes) {
+
+        if (parentsOfTargetNodes.hasOwnProperty(targetNode)) {
+            
+            var lengthOfParentsList = parentsOfTargetNodes[targetNode].length,
+                listOfNodesToChangeX = parentsOfTargetNodes[targetNode];
+            for (var i = 0; i < lengthOfParentsList; i += 1) {
+                data.nodes[listOfNodesToChangeX[i]].x = x;
+            }
+
+            x += columnSize;
+        }
+    }
+
+    data.nodes[data.nodes.length - 1].x = x;
+
+    return numberOfColumns;
+}
+
+function readjustColumns(data, numberOfColumns) {
+    "use strict";
+    var currentColumns = [],
+        numberOfActualColumns,
+        actualColumnSize,
+        actualColumns,
+        actualX,
+        columnMap = {},
+        width = $("#workflow").width();
+
+    data.nodes.forEach(function (node) {
+        if (currentColumns.indexOf(node.x) < 0) {
+
+            currentColumns.push(node.x);
+
+        }
+    });
+
+    currentColumns.sort(function (a, b) {
+        return a - b;
+    });
+
+    numberOfActualColumns = currentColumns.length;
+
+    if (numberOfColumns !== numberOfActualColumns) {
+
+        actualColumnSize = width / numberOfActualColumns;
+        actualX = actualColumnSize / 2;
+
+        actualColumns = currentColumns.map(function (value, index) {
+            if (index === 0) {
+                return actualX;
+            }
+            actualX += actualColumnSize;
+            return actualX;
+        });
+
+        for (var i = 0; i < actualColumnSize; i += 1) {
+
+            var oldx = currentColumns[i],
+                newx = actualColumns[i];
+
+            columnMap[oldx] = newx;
+        }
+
+        data.nodes.forEach(function (node) {
+            node.x = columnMap[node.x];
+        });
+    }
+}
+
+function formatWorkflow(workflow) {
+    "use strict";
+    var indexMap = getIndexMap(workflow),
+        data = generateData(workflow, indexMap),
+        parentsOfTargetNodes = listParentsOfTargetNode(data.links),
+        numberOfColumns = assignXValue(data, parentsOfTargetNodes);
+    alert("Formatted Workflow");
+    readjustColumns(data, numberOfColumns);
+
+    return data;
+}
 
 window.onload = function () {
     "use strict";
@@ -6,102 +160,8 @@ window.onload = function () {
 
     $.getJSON(url, function (results) {
         if (results.workflow) {
-            var workflow = results.workflow,
-                indexMap = {},
-                i = 0,
-                data = { nodes: [], links: []},
-                width = $("#workflow").width(),
-                height = $("#workflow").height(),
-                targetParents = {},
-                numberOfColumns,
-                columnSize,
-                x,
-                target;
-
-            workflow.forEach(function (list) {
-                var oldIndex = list[1];
-                indexMap[oldIndex] = i;
-                i += 1;
-            });
-
-            workflow.forEach(function (list) {
-                data.nodes.push({type: list[0], name: list[0] + list[1]});
-                list[2].forEach(function (index) {
-                    var sourceIndex = list[1];
-                    if (indexMap[index]) {
-                        data.links.push({source: indexMap[sourceIndex], target: indexMap[index]});
-                    }
-                });
-            });
-
-            data.links.forEach(function (dict) {
-                var sourceNode = dict.source,
-                    targetNode = dict.target;
-
-                if (targetParents[targetNode]) {
-                    targetParents[targetNode].push(sourceNode);
-                } else {
-                    targetParents[targetNode] = [sourceNode];
-                }
-
-            });
-
-            numberOfColumns = Object.keys(targetParents).length + 1;
-            columnSize = width / numberOfColumns;
-            x = columnSize / 2;
-
-            for (target in targetParents) {
-                if (!$.isEmptyObject(target)) {
-                    targetParents[target].forEach(function (index) {
-                        data.nodes[index].x = x;
-                    });
-                    x += columnSize;
-                }
-            }
-
-            data.nodes[data.nodes.length - 1].x = x;
-
-            var currentColumns = [];
-            data.nodes.forEach( function(node) {
-                if(currentColumns.indexOf(node.x) < 0)
-                {
-                    currentColumns.push(node.x);
-                }
-            });
-
-            currentColumns.sort(function (a, b) {
-                return a-b;
-            });
-
-            var numberOfActualColumns = currentColumns.length;
-            
-            if (numberOfColumns != numberOfActualColumns) {
-
-                var actualColumnSize = width/numberOfActualColumns;
-                var actualX = actualColumnSize/2;
-
-                var actualColumns = currentColumns.map( function(value, index) {
-                    if( index == 0) {
-                        return actualX;
-                    }
-                    actualX += actualColumnSize;
-                    return actualX;
-                });
-
-                var columnMap = {};
-                for(var i = 0, len=actualColumnSize; i < actualColumnSize; i++)
-                {
-                    var oldx = currentColumns[i];
-                    var newx = actualColumns[i];
-                    columnMap[oldx] = newx;
-                }
-
-                data.nodes.forEach( function(node) {
-                        node.x = columnMap[node.x];
-                });
-            }   
-
-
+            var data = formatWorkflow(results.workflow);
+            alert(JSON.stringify(data));
 
             $("#workflow").nodelink({
                 data: data,
@@ -109,7 +169,7 @@ window.onload = function () {
                 linkSource: tangelo.accessor({field: "source"}),
                 linkTarget: tangelo.accessor({field: "target"}),
                 nodeColor: tangelo.accessor({field: "type"}),
-                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeLabel: tangelo.accessor({field: "name"})
             });
         }
     });
