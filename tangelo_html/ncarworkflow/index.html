@@ -16,7 +16,7 @@
         #miniMenu {
             position: fixed;
             right: 0px;
-            bottom: 50px;
+            top: 50px;
             width: 150px;
             height: 200px;
         }
@@ -59,14 +59,14 @@
 
         <div id="miniMenu">
             <svg width="150" height="200">
-                <rect x="50" y="150" width="50" height="50" fill="grey" onclick="toggleMiniMenu()" />
-                <text x="62.5" y="187.5" font-size="40px" fill="black" onclick="toggleMiniMenu()">+</text>
+                <rect x="50" y="10" width="50" height="50" fill="grey" onclick="toggleMiniMenu()" />
+                <text x="62.5" y="45" font-size="40px" fill="black" onclick="toggleMiniMenu()">+</text>
 
-                <rect class="miniMenuOption" x="25" y="0" width="100" height="125" fill="white" stroke="black" />
-                <text class="miniMenuOption" x="45" y="25" font-size="18px" fill="black" onclick="newSubset()">Subset</text>
-                <text class="miniMenuOption" x="40" y="50" font-size="18px" fill="black" onclick="newAnalysis()">Analysis</text>
-                <text class="miniMenuOption" x="55" y="75" font-size="18px" fill="black" onclick="newPlot()">Plot</text>
-                <text class="miniMenuOption" x="35" y="100" font-size="18px" fill="black" onclick="newDownload()">Download</text>
+                <rect class="miniMenuOption" x="25" y="70" width="100" height="125" fill="white" stroke="black" />
+                <text class="miniMenuOption" x="45" y="95" font-size="18px" fill="black" onclick="newSubset()">Subset</text>
+                <text class="miniMenuOption" x="40" y="120" font-size="18px" fill="black" onclick="newAnalysis()">Analysis</text>
+                <text class="miniMenuOption" x="55" y="145" font-size="18px" fill="black" onclick="newPlot()">Plot</text>
+                <text class="miniMenuOption" x="35" y="170" font-size="18px" fill="black" onclick="newDownload()">Download</text>
             </svg>
         </div>
     </div>
