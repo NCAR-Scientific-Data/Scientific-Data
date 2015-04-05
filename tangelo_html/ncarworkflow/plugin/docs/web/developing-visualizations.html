@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Developing Visualizations &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="prev" title="Creating Tangelo Releases" href="releasing-tangelo.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="releasing-tangelo.html" title="Creating Tangelo Releases"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="developing-visualizations">
+<h1>Developing Visualizations<a class="headerlink" href="#developing-visualizations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="creating-jquery-widgets">
+<span id="jquery-widgets"></span><h2>Creating jQuery Widgets<a class="headerlink" href="#creating-jquery-widgets" title="Permalink to this headline">¶</a></h2>
+<p>Tangelo visualizations can be implemented as jQuery widgets. They extend the
+base jQuery UI widget class, but otherwise do not need to depend on anything
+else from jQuery UI.</p>
+</div>
+<div class="section" id="visualization-options">
+<h2>Visualization Options<a class="headerlink" href="#visualization-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="basic-options">
+<h3>Basic Options<a class="headerlink" href="#basic-options" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><cite>data</cite> - The data associated with the visualization, normally
+an array.</li>
+<li><cite>width</cite>, <cite>height</cite> - The width and height of the visualization, in pixels.
+If omitted, the visualization should resize to fit the DOM element.</li>
+</ul>
+</div>
+<div class="section" id="visualization-mapping-options">
+<h3>Visualization Mapping Options<a class="headerlink" href="#visualization-mapping-options" title="Permalink to this headline">¶</a></h3>
+<p>The following options are optional, but if your visualization is able to map
+data element properties to visual attributes like size, color, and label, you
+should use this standard naming convention. If you have multiple sets of visual
+elements (such as nodes and links in a graph), prefix these attributes as
+appropriate (e.g. <cite>nodeSize</cite>, <cite>nodeStrokeWidth</cite>).</p>
+<ul class="simple">
+<li><cite>size</cite> - The size of the visual element as a number of pixels. For example,
+if drawing a square for each data element, the squares should have sizes
+equal to the square-root of what the <cite>size</cite> option returns for each
+data element.</li>
+<li><cite>color</cite> - The main color of the visual element, specified as a CSS color string.</li>
+<li><cite>symbol</cite> - The symbol to use for the visual element.
+This should use D3&#8217;s standard set of symbol names.</li>
+<li><cite>label</cite> - The label for the visual element (a string).</li>
+<li><cite>stroke</cite> - The color of the stroke (outline) of the visual element specified
+in pixels.</li>
+<li><cite>strokeWidth</cite> - The width of the stroke of the visual element in pixels.</li>
+<li><cite>opacity</cite> - The opacity of the entire visual element, as a number between 0 to 1.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="accessor-specifications">
+<span id="accessor"></span><h2>Accessor Specifications<a class="headerlink" href="#accessor-specifications" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="accessorspec">
+<h3>AccessorSpec<a class="headerlink" href="#accessorspec" title="Permalink to this headline">¶</a></h3>
+<p>Each visual mapping should take an <cite>AccessorSpec</cite> for a value.
+Accessor specifications work much like <cite>DataRef</cite> specs do in Vega,
+though they also allow programmatic ways to generate arbitrary
+accessors and scales.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">function</span> <span class="pre">(d)</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}</span></code> - The most general purpose way
+to generate a visual mapping. The argument is the data element and the return
+value is the value for the visual property.</li>
+<li><code class="docutils literal"><span class="pre">{value:</span> <span class="pre">v}</span></code> - Sets the visual property to the same constant
+value <cite>v</cite> for all data elements.</li>
+<li><code class="docutils literal"><span class="pre">{index:</span> <span class="pre">true}</span></code> - Evaluates to the index of the data item within its
+array.</li>
+<li><code class="docutils literal"><span class="pre">{field:</span> <span class="pre">&quot;dot.separated.name&quot;}</span></code> - Retrieves the specified field
+or subfield from the data element and passes it through the
+visualization&#8217;s default scale for that visual property.
+Unlike Vega, fields from the original data do not need to be
+prefixed by <code class="docutils literal"><span class="pre">&quot;data.&quot;</span></code>. The special field name <code class="docutils literal"><span class="pre">&quot;.&quot;</span></code>
+refers to the entire data element.</li>
+<li><code class="docutils literal"><span class="pre">{field:</span> <span class="pre">&quot;dot.separated.name&quot;,</span> <span class="pre">scale:</span> <span class="pre">ScaleSpec}</span></code> - Overrides the default scale
+using a scale specification. Set <cite>scale</cite> to <code class="docutils literal"><span class="pre">tangelo.identity</span></code> to use
+a field directly as the visual property.</li>
+<li><code class="docutils literal"><span class="pre">{}</span></code> - The <em>undefined accessor</em>.  This is a function that, if called,
+throws an exception.  The function also has a property <code class="docutils literal"><span class="pre">undefined</span></code> set to
+<em>true</em>.  This is meant as a stand-in for the case when an accessor must be
+assigned but there is no clear choice for a default.  It is also used when
+creating Tangelo jQuery widgets to mark a property as being an accessor.
+Calling <a class="reference internal" href="tangelo-js.html#tangelo.accessor" title="tangelo.accessor"><code class="xref js js-func docutils literal"><span class="pre">tangelo.accessor()</span></code></a> with no arguments also results in an
+undefined accessor being created and returned.</li>
+</ul>
+</div>
+<div class="section" id="scalespec">
+<h3>ScaleSpec<a class="headerlink" href="#scalespec" title="Permalink to this headline">¶</a></h3>
+<p>A scale specification defines how to map data properties to visual properties.
+For example, if you want to color your visual elements using a data field
+<cite>continent</cite> containing values such as North America, Europe, Asia, etc.
+you will need a scale that maps North America to <code class="docutils literal"><span class="pre">&quot;blue&quot;</span></code>,
+Europe to <code class="docutils literal"><span class="pre">&quot;green&quot;</span></code>, etc. Vega has a number of built-in named scales that
+together define the <cite>ScaleSpec</cite>. In Tangelo, a <cite>ScaleSpec</cite> may also be an
+arbitrary function.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Developing Visualizations</a><ul>
+<li><a class="reference internal" href="#creating-jquery-widgets">Creating jQuery Widgets</a></li>
+<li><a class="reference internal" href="#visualization-options">Visualization Options</a><ul>
+<li><a class="reference internal" href="#basic-options">Basic Options</a></li>
+<li><a class="reference internal" href="#visualization-mapping-options">Visualization Mapping Options</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#accessor-specifications">Accessor Specifications</a><ul>
+<li><a class="reference internal" href="#accessorspec">AccessorSpec</a></li>
+<li><a class="reference internal" href="#scalespec">ScaleSpec</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="releasing-tangelo.html"
+                        title="previous chapter">Creating Tangelo Releases</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/developing-visualizations.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="releasing-tangelo.html" title="Creating Tangelo Releases"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

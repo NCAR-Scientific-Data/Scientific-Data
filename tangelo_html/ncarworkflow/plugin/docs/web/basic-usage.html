@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Basic Usage &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Tangelo Web Services" href="python-services.html" />
+    <link rel="prev" title="Setup and Administration" href="setup.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="python-services.html" title="Tangelo Web Services"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="Setup and Administration"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="basic-usage">
+<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<p>Once it is set up and running, Tangelo&#8217;s basic usage is relatively
+straightforward.  This chapter explains how Tangelo serves web content, a best
+practices guide for organizing your content, and how to use HTTP authentication
+to protect your content.</p>
+<div class="section" id="serving-web-content">
+<span id="web-content"></span><h2>Serving Web Content<a class="headerlink" href="#serving-web-content" title="Permalink to this headline">¶</a></h2>
+<p>Tangelo&#8217;s most basic purpose is <strong>to serve web content</strong>.  Once Tangelo is
+running, it will serve content from two types of locations:</p>
+<p><strong>Web root directory.</strong> Visiting most URLs (whose first path component is not
+<code class="docutils literal"><span class="pre">plugin</span></code>; see below) will cause Tangelo to serve content out of the <em>web root
+directory</em>, which is set in the Tangelo configuration file, or by the <code class="docutils literal"><span class="pre">-r</span></code> (or
+<code class="docutils literal"><span class="pre">--root</span></code>) flag when Tangelo is launched (see <a class="reference internal" href="setup.html"><em>Setup and Administration</em></a>).  For example, if
+the web root directory is set to <code class="docutils literal"><span class="pre">/srv/tangelo/root</span></code>, visiting
+<a class="reference external" href="http://localhost:8080/">http://localhost:8080/</a> would serve content from that directory, and visiting
+<a class="reference external" href="http://localhost:8080/foobar">http://localhost:8080/foobar</a> would serve content from
+<code class="docutils literal"><span class="pre">/srv/tangelo/root/foobar</span></code>, etc.</p>
+<p><strong>Plugin content directories.</strong> The URLs rooted at <a class="reference external" href="/plugin">/plugin</a> refer to web
+content served by any active Tangelo plugins.  Each active plugin can have
+static content associated with it, and such content is served from a directory
+particular to each plugin.  For information about how Tangelo plugins work, see
+<a class="reference internal" href="plugins.html#plugins"><em>Tangelo Plugins</em></a>.  In partciular, this means that if there is a subdirectory of
+the web root directory named <code class="docutils literal"><span class="pre">plugin</span></code>, <em>Tangelo will not be able to serve any
+content from this directory</em>.</p>
+<p>The foregoing examples demonstrate how Tangelo associates URLs to directories
+and files in the filesystem.  URLs referencing particular files will cause
+Tangelo to serve that file immediately.  URLs referencing a directory behave
+according to the following rules:</p>
+<ol class="arabic simple">
+<li>If the directory contains a file named <code class="docutils literal"><span class="pre">index.html</span></code>, that file will be
+served.</li>
+<li>If Tangelo was launched with the <code class="docutils literal"><span class="pre">--list-dir</span></code> option, Tangelo will generate
+and serve a directory listing for the directory.  This listing will include
+hyperlinks to the files contained therein.</li>
+<li>Tangelo will serve a <code class="docutils literal"><span class="pre">403</span> <span class="pre">Forbidden</span></code> error indicating that directory
+listing is disabled.</li>
+</ol>
+<p>Furthermore, any URL referring to a Python script, but lacking the final <code class="docutils literal"><span class="pre">.py</span></code>,
+names a <em>web service</em>; such URLs do not serve static content, but rather run the
+referred Python script and serve the results (see <a class="reference internal" href="python-services.html"><em>Tangelo Web Services</em></a>).</p>
+<p>The following table summarizes Tangelo&#8217;s URL types:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="29%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">URL type</th>
+<th class="head">Example</th>
+<th class="head">Behavior</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Web root</td>
+<td><a class="reference external" href="http://localhost:8080/holodeck3/status.html">http://localhost:8080/holodeck3/status.html</a></td>
+<td>serve <code class="docutils literal"><span class="pre">/srv/tangelo/root/holodeck3/status.html</span></code></td>
+</tr>
+<tr class="row-odd"><td>Indexed directory</td>
+<td><a class="reference external" href="http://localhost:8080/tenforward">http://localhost:8080/tenforward</a></td>
+<td>serve <code class="docutils literal"><span class="pre">/srv/tangelo/root/tenforward/index.html</span></code></td>
+</tr>
+<tr class="row-even"><td>Unindexed directory</td>
+<td><a class="reference external" href="http://localhost:8080/warpdrive">http://localhost:8080/warpdrive</a></td>
+<td>serve <code class="docutils literal"><span class="pre">403</span> <span class="pre">Forbidden</span></code> error, or directory listing for <code class="docutils literal"><span class="pre">/srv/tangelo/root/warpdrive</span></code></td>
+</tr>
+<tr class="row-odd"><td>Web service</td>
+<td><a class="reference external" href="http://localhost:8080/lcars/lookup">http://localhost:8080/lcars/lookup</a></td>
+<td>serve result of executing <code class="docutils literal"><span class="pre">run()</span></code> function of <code class="docutils literal"><span class="pre">/srv/tangelo/lcars/lookup.py</span></code></td>
+</tr>
+<tr class="row-even"><td>Plugin</td>
+<td><a class="reference external" href="http://localhost:8080/plugin/foobar/">http://localhost:8080/plugin/foobar/</a>...</td>
+<td>serve content from <code class="docutils literal"><span class="pre">foobar</span></code> plugin</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="http-authentication">
+<h2>HTTP Authentication<a class="headerlink" href="#http-authentication" title="Permalink to this headline">¶</a></h2>
+<p>Tangelo supports <a class="reference external" href="http://www.ietf.org/rfc/rfc2617.txt">HTTP Digest Authentication</a> to password protect web directories.
+The process to protect a directory is as follows:</p>
+<ol class="arabic">
+<li><p class="first">Go to the directory you wish to protect:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">engineering</span><span class="o">/</span><span class="n">DilithiumChamberStats</span>
+</pre></div>
+</div>
+<p>The idea is, this directory (which is accessible on the web as
+<a class="reference external" href="http://localhost:8080/DilithiumChamberStats">http://localhost:8080/DilithiumChamberStats</a>) contains sensitive
+information, and should be restricted to just certain people who have a
+password.</p>
+</li>
+<li><p class="first">Create a file there called <code class="docutils literal"><span class="pre">.htaccess</span></code> and make it look like the following
+example, customizing it to fit your needs:</p>
+<div class="highlight-python"><div class="highlight"><pre>AuthType digest
+AuthRealm USS Enterprise NCC-1701-D
+AuthPasswordFile /home/laforge/secret/dilithiumpw.txt
+</pre></div>
+</div>
+<p>This file requestes digest authnetication on the directory, sets the
+<em>authentication realm</em> to be the string &#8220;USS Enterprise NCC-1701-D&#8221;, and
+specifies that the acceptable usernames and passwords will be found in the
+file <code class="docutils literal"><span class="pre">/home/laforge/secret/dilithiumpw.txt</span></code>.</p>
+<p>Currently, the only supported authentication type is <em>digest</em>.  The realm will
+be displayed to the user when prompted for a username and password.</p>
+</li>
+<li><p class="first">Create the password file, using the <code class="docutils literal"><span class="pre">tangelo-passwd</span></code> program (see
+<a class="reference internal" href="tangelo-passwd-manpage.html"><em>tangelo-passwd</em></a>):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ tangelo-passwd -c ~laforge/secret/dilithiumpw.txt &quot;USS Enterprise NCC-1701-D&quot; picard
+Enter password for picard@USS Enterprise NCC-1701-D: &lt;type password here&gt;
+Re-enter password: &lt;retype password here&gt;
+</pre></div>
+</div>
+<p>This will create a new password file.  If you inspect the file, you will see
+a user <code class="docutils literal"><span class="pre">picard</span></code> associated with an md5 hash of the password that was
+entered.  You can add more users by repeating the command without the <code class="docutils literal"><span class="pre">-c</span></code>
+flag, and changing the username.</p>
+<p>At this point, the directory is password protected - when you visit the page,
+you will be prompted for a username and password, and access to the page will
+be restricted until you provide valid ones.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Basic Usage</a><ul>
+<li><a class="reference internal" href="#serving-web-content">Serving Web Content</a></li>
+<li><a class="reference internal" href="#http-authentication">HTTP Authentication</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="setup.html"
+                        title="previous chapter">Setup and Administration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="python-services.html"
+                        title="next chapter">Tangelo Web Services</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/basic-usage.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="python-services.html" title="Tangelo Web Services"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="Setup and Administration"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

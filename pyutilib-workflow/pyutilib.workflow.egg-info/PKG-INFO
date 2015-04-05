@@ -1,0 +1,75 @@
+Metadata-Version: 1.1
+Name: pyutilib.workflow
+Version: 3.5.2
+Summary: PyUtilib workflow automation.
+Home-page: https://software.sandia.gov/svn/public/pyutilib/pyutilib.workflow
+Author: William E. Hart
+Author-email: wehart@sandia.gov
+License: BSD
+Description: ========================
+        pyutilib.workflow README
+        ========================
+        
+        This Python package includes a simple workflow management system.  This
+        is inspired by other open-source workflow tools, such as pyphant and
+        spiffworkflow.  What distinguished pyutilib.workflow is that it is
+        not strongly dependent on the datatypes being managed (e.g. the use of 
+        scipy or numpy types).  Also, pyutilib.workflow is designed to support
+        Python-level definitions of the workflow (rather than a separate XML
+        specification).
+        
+        See `Managing Scientific Workflows in Python with pyutilib.workflow <https://software.sandia.gov/svn/public/pyutilib/pyutilib.workflow/trunk/doc/workflow/workflow.pdf>`_ for a detailed description of PyUtilib workflows and examples of their use.
+        
+        -------
+        License
+        -------
+        
+        BSD.  See the LICENSE.txt file.
+        
+        
+        ------------
+        Organization
+        ------------
+        
+        + Directories
+        
+          * pyutilib - The root directory for PyUtilib source code
+        
+        + Documentation and Bug Tracking
+        
+          * Trac wiki: https://software.sandia.gov/trac/pyutilib
+        
+        + Authors
+        
+          * See the AUTHORS.txt file.
+        
+        + Project Managers
+        
+          * William E. Hart, wehart@sandia.gov
+        
+        + Mailing List
+        
+          * pyutilib-forum@googlegroups.com
+            - The main list for help and announcements
+          * pyutilib-developers@googlegroups.com
+            - Where developers of PyUtilib discuss new features
+        
+        --------------------
+        Third Party Software
+        --------------------
+        
+        None.
+        
+        
+Keywords: utility
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Unix Shell
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
