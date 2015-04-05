@@ -7,24 +7,25 @@ begin
     f = addfile(filename,"r")
 
     if (.not.isvar("variable")) then
-        print("fatal: Please specify variable for conversion.")
-        exit
+        status_exit(2)
     end if
+
+    if (.not. isfilevar(f, variable)) then
+        status_exit(5)
+    end if
+
     var = f->$variable$
 
     if (.not.isvar("outunit")) then
-        print("fatal: Please specify variable from unit.")
-        exit
+        status_exit(2)
     end if
     if (outunit.ne."degC" .and. outunit.ne."degF" .and. outunit.ne."degK") then
-        print("fatal: Units must be either celcius, fahrenheit, or kelvin")
-        exit
+        status_exit(5)
     end if
 
     vunits = str_get_field(var@units,1," ")
     if (vunits.ne."degC" .and. vunits.ne."degF" .and. vunits.ne."degK") then
-        print("fatal: Conversion from variable unit not supported.")
-        exit
+        status_exit(5)
     end if
 
     if (vunits.ne.outunit) then
