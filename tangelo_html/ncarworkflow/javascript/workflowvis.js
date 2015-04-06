@@ -258,6 +258,47 @@ function readjustColumns(data, numberOfColumns) {
 }
 
 /*
+    Function: assignYValue
+    Assigns a Y value to each node.
+
+    Parameters:
+
+        data - an object containing all nodes and links.
+
+    Returns:
+
+        Nothing
+
+    See Also:
+
+        <assignXValue>
+        <formatWorkflow>
+*/
+function assignYValue(data) {
+    var nodesInColumns = {},
+        height = $("#workflow").height();
+
+    data.nodes.forEach(function (node) {
+        if (nodesInColumns.hasOwnProperty(node.x)) {
+            nodesInColumns[node.x].push(data.nodes.indexOf(node));
+        } else {
+            nodesInColumns[node.x] = [data.nodes.indexOf(node)];
+        }
+    })
+
+    for (nodeX in nodesInColumns) {
+        if (nodesInColumns.hasOwnProperty(nodeX)) {
+            var nodeList = nodesInColumns[nodeX],
+                offset = 0;
+            for (var i = 0; i < nodeList.length; i += 1) {
+                data.nodes[nodeList[i]].y = (height/nodeList.length/2) + offset;
+                offset += height/nodeList.length;
+            }
+        }
+    }
+}
+
+/*
     Function: formatWorkflow
     Formats a workflow object into an object easily parsed by nodelink.
 
@@ -289,6 +330,7 @@ function formatWorkflow(workflow) {
         parentsOfTargetNodes = listParentsOfTargetNode(data.links),
         numberOfColumns = assignXValue(data, parentsOfTargetNodes);
     readjustColumns(data, numberOfColumns);
+    assignYValue(data);
 
     return data;
 }
