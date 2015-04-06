@@ -1,7 +1,7 @@
-"""@package docstring
-This script plots a given NetCDF file and returns a .png of the plot via a NCL script. The NCL script
-simply takes in a NetCDF file and returns a plot using a standard projection.
-"""
+#   File: TaskPlot.py
+#   This script plots a given NetCDF file and returns a .png of the plot via a NCL script. The NCL script
+#   simply takes in a NetCDF file and returns a plot using a standard projection.
+
 
 import subprocess
 import sys
@@ -9,6 +9,8 @@ import re
 import pyutilib.workflow
 import os
 
+#   Class: taskPlot
+#   A task that plots.
 class taskPlot(pyutilib.workflow.Task):
     def __init__(self, *args, **kwds):
         """Constructor."""
