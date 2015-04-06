@@ -34,20 +34,36 @@ class taskSubset(pyutilib.workflow.Task):
         v = "variable=\"{0}\"".format(self.variable)
         wid = "wid={0}".format(self.workflowID)
         tid = "tid={0}".format(self.id)
+        
         args = ['ncl', '-n', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, 'ncl/subset_time_latlon.ncl']
+        args = filter(None,args)
         sysError = False
         nclError = False
+
         try:
-            status = subprocess.check_call(args)
+            status = subprocess.call(args)
         except:
             sysError = True
             error = "System Error: Please contact the site administrator"
-
-        result = "/data/{0}/{1}_subset.nc".format(self.workflowID,self.id)
         if not sysError:
-            print os.path.isfile(result)
+            if status:
+                if status == 2:
+                    error = "NCL Error: Missing input parameter"
+                elif status == 3:
+                    error = "NCL Error: Lat/Lon values out of range"
+                elif status == 4:
+                    error = "NCL Error: Date value out of range"
+                elif status == 5:
+                    error = "NCL Error: Invalid parameter value"
+                elif status == 6:
+                    error = "NCL Error: Conversion error"
+                else:
+                    error = "NCL Error: Error with NCL script"
+                nclError = True
+        result = "/data/{0}/{1}_subset.nc".format(self.workflowID, self.id)
+        if not sysError or not nclError:
             if not os.path.isfile(result):
-                error = "NCL Error: Please check input parameters."
+                error = "NCL Error: Error with NCL script"
                 nclError = True
         if nclError or sysError:
             self.subset = error

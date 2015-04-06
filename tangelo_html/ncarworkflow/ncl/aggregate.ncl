@@ -106,7 +106,7 @@ time = f->time
 nt = dimsizes(time)
 
 if(.not. any(typeof(time).eq.(/"float","double"/))) then
-  status_exit(6)
+  status_exit(5)
 end if
 
 if (.not. isfilevar(f, variable)) then
@@ -139,7 +139,7 @@ if(interval .eq. "day") then
     else if (tunits .eq. "hours") then
       jday  = doubletointeger(time/24)
     else
-      status_exit(7)
+      status_exit(6)
     end if
   end if
 end if
