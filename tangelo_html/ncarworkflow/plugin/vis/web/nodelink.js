@@ -128,6 +128,7 @@
             this.node.enter()
                 .append("circle")
                 .classed("node", true)
+                .on("click", that._click)
                 .call(this.force.drag)
                 .append("title");
 
@@ -328,5 +329,9 @@
 
             return label;
         },
+
+        _click: function (node) {
+            alert("Clicked!");
+        }
     });
 }(window.tangelo, window.jQuery, window.d3));
