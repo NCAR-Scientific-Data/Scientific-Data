@@ -9,6 +9,9 @@
 begin
   f        = addfile(filename,"r")
 
+  if (.not. isfilevar(f, variable)) then
+    status_exit(5)
+  end if
 ;---Read some data off the file, including map projection information.
   varname       = f->$variable$
   varname@lat2d = f->lat
@@ -18,6 +21,10 @@ begin
   ntime = dims(0)        ; Leftmost dimension is "time")
 
   nt = timeindex    ; which time index to plot
+
+  if (nt .ge. ntime ) then
+    status_exit(5)
+  end if
 
 ;---The graphics section
   ;Check if workflow directory exists, if not create one

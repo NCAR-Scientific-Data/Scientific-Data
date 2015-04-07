@@ -148,6 +148,11 @@ class Port(object):
         tmp['Connections']['Outputs'] = []
         for c in self.output_connections:
             tmp['Connections']['Outputs'].append(repr(c))
+
+        # Robert Crimi
+        tmp['IConnections'] = {}
+        for c in self.input_connections:
+            print(c.from_port.task())
         return tmp
 
     def __repr__(self):
@@ -290,5 +295,3 @@ class OutputPorts(Ports):
         """Constructor."""
         Ports.__init__(self, task)
         self._outputs=True
-
-

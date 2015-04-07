@@ -19,23 +19,32 @@ begin
   f        = addfile(filename,"r")
 
 ;---Read variable, lat, lon off the file
+  if (.not. isfilevar(f, variable)) then
+    status_exit(5)
+  end if
+
   varname  = f->$variable$
   lat2d = f->lat
   lon2d = f->lon
   tbnds = f->time_bnds
-
 
 ;---Convert "time" array into something we can more easily understand.
   opt      = -2
   new_time = cd_calendar(varname&time,opt)    ; ntime x 6
   stDate = str_split(startDate, "-")
   edDate = str_split(endDate, "-")
-  
-;---SW and NE corners of a lat/lon area of interest.
-  sw_lat =  swLat    
-  sw_lon = swLon
-  ne_lat =  neLat
-  ne_lon = neLon
+
+  latmin = min(lat2d)
+  latmax = max(lat2d)
+  lonmin = min(lon2d)
+  lonmax = max(lon2d)
+
+  if (swLat .lt. latmin .or. swLat .gt. latmax .or. neLat .lt. latmin .or. neLat .gt. latmax) then
+    status_exit(3)
+  else if (swLon .lt. lonmin .or. swLon .gt. lonmax .or. neLon .lt. lonmin .or. neLon .gt. lonmax) then
+    status_exit(3)
+  end if
+  end if
 
 ;---Start and end date of interest
   start_year  = stringtointeger(stDate(0))
@@ -50,9 +59,13 @@ begin
   endTime   = end_year*100 + end_month
   endTime   = endTime*100 + end_day
 
+  if (startTime .lt. min(new_time) .or. startTime .gt. max(new_time) .or. endTime .lt. min(new_time) .or. endTime .gt. max(new_time)) then
+    status_exit(4)
+  end if
+
 ;---Call function to get indexes closest to the SW and NE corners
-  ii_sw = getind_latlon2d (lat2d, lon2d, sw_lat, sw_lon)
-  ii_ne = getind_latlon2d (lat2d, lon2d, ne_lat, ne_lon)
+  ii_sw = getind_latlon2d (lat2d, lon2d, swLat, swLon)
+  ii_ne = getind_latlon2d (lat2d, lon2d, neLat, neLon)
 
 ;---Call function to get date range of interest
  

@@ -10,6 +10,10 @@
 begin
   f        = addfile(filename,"r")
 
+  if (.not. isfilevar(f, variable)) then
+    status_exit(5)
+  end if
+
 ;---Read some data off the file, including map projection information.
   varname       = f->$variable$
   proj     = f->polar_stereographic
@@ -24,8 +28,7 @@ begin
 
   nt = timeindex    ; which time index to plot
   if (nt .ge. ntime ) then
-    print("Error: Time index out of range.")
-    exit
+    status_exit(5)
   end if
 
   ;Check if workflow directory exists, if not create one

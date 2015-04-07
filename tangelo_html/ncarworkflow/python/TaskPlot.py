@@ -1,7 +1,7 @@
-"""@package docstring
-This script plots a given NetCDF file and returns a .png of the plot via a NCL script. The NCL script
-simply takes in a NetCDF file and returns a plot using a standard projection.
-"""
+#   File: TaskPlot.py
+#   This script plots a given NetCDF file and returns a .png of the plot via a NCL script. The NCL script
+#   simply takes in a NetCDF file and returns a plot using a standard projection.
+
 
 import subprocess
 import sys
@@ -9,6 +9,8 @@ import re
 import pyutilib.workflow
 import os
 
+#   Class: taskPlot
+#   A task that plots.
 class taskPlot(pyutilib.workflow.Task):
     def __init__(self, *args, **kwds):
         """Constructor."""
@@ -32,10 +34,12 @@ class taskPlot(pyutilib.workflow.Task):
         tid = "tid={0}".format(self.id)
 
         args = ['ncl', '-n','-Q', wid, tid, sFilename, sTimeindex, plotScript]
+        args = filter(None,args)
         sysError = False
         nclError = False
+
         try:
-                status = subprocess.check_call(args)
+                status = subprocess.call(args)
         except:
                 sysError = True
                 error = "System error, please contact site administrator."
@@ -44,6 +48,21 @@ class taskPlot(pyutilib.workflow.Task):
         else:
                 result = "/data/{0}/{1}_plot.png".format(self.workflowID,self.id)
         if not sysError:
+            if status:
+                if status == 2:
+                    error = "NCL Error: Missing input parameter"
+                elif status == 3:
+                    error = "NCL Error: Lat/Lon values out of range"
+                elif status == 4:
+                    error = "NCL Error: Date value out of range"
+                elif status == 5:
+                    error = "NCL Error: Invalid parameter value"
+                elif status == 6:
+                    error = "NCL Error: Conversion error"
+                else:
+                    error = "NCL Error: Error with NCL script"
+                nclError = True
+        if not sysError or not nclError:
             if not os.path.isfile(result):
                 error = "NCL Error: Please check input parameters."
                 nclError = True

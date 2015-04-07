@@ -1,5 +1,8 @@
 import pyutilib.workflow
 import uuid
+import json
+import ast
+import Tasks
 
 class TaskA(pyutilib.workflow.Task):
 	def __init__(self, *args, **kwds):
@@ -43,16 +46,6 @@ class TaskD(pyutilib.workflow.Task):
 		"""Compute the sum of the inputs."""
 		self.h = self.g*self.g
 
-class TaskF(pyutilib.workflow.Task):
-	def __init__(self, *args, **kwds):
-		"""Constructor."""
-		pyutilib.workflow.Task.__init__(self, *args, **kwds)
-		self.inputs.declare('hi')
-		self.outputs.declare('h')
-	def execute(self):
-		"""Compute the sum of the inputs."""
-		self.h = self.g*self.g
-
 class TaskE(pyutilib.workflow.Task):
 	def __init__(self, *args, **kwds):
 		"""Constructor."""
@@ -63,6 +56,42 @@ class TaskE(pyutilib.workflow.Task):
 	def execute(self):
 		"""Compute the sum of the inputs."""
 		self.i = self.h+self.f
+
+class TaskF(pyutilib.workflow.Task):
+	def __init__(self, *args, **kwds):
+		"""Constructor."""
+		pyutilib.workflow.Task.__init__(self, *args, **kwds)
+		self.inputs.declare('hi')
+		self.outputs.declare('h')
+	def execute(self):
+		"""Compute the sum of the inputs."""
+		self.h = self.g*self.g
+
+def addTask(task, links, workflow):
+	#temp = pyutilib.workflow.Workflow()
+	for i in task.inputs:
+		if(type(links[i][0]) == pyutilib.workflow.port.Port):
+			links[i][1].reset_all_outputs()
+			task.inputs[i] = links[i][0]
+		else:
+			task.inputs[i] = links[i][0]
+
+	workflow.add(task)
+	return workflow
+
+def get_Task(taskType):
+	if taskType == 'TaskA':
+		return TaskA()
+	if taskType == 'TaskB':
+		return TaskB()
+	if taskType == 'TaskC':
+		return TaskC()
+	if taskType == 'TaskD':
+		return TaskD()
+	if taskType == 'TaskE':
+		return TaskE()
+	if taskType == 'TaskF':
+		return TaskF()
 
 
 def createWorkflow():
@@ -85,19 +114,23 @@ def createWorkflow():
 	w.add(C)
 	w.add(D)
 	w.add(E)
+	print(w())
 
-	print(w.__list__())
+	w.setWorkflowID(str(uuid.uuid4()))
+	print(w.workflowID)
 
-	F = TaskF()
-	D.reset_all()
-	E.reset_all()
-	F.inputs.hi = D.outputs.h
-	E.inputs.h = F.outputs.h
-	w.add(F)
+	with open(w.workflowID+'.json', 'w') as outfile:
+		json.dump(w.__dict__(), outfile)
 
-	print(w.__list__())
+	with open(w.workflowID+'.json') as data_file:    
+		data = json.load(data_file)
 
-	print(uuid.uuid4())
+	q = pyutilib.workflow.Workflow()
+	for task in data:
+		if not task['Type'] in ['EmptyTask']:
+			t = get_Task(task['Type'])
+			addTask(t, task['Inputs'], q)
 
+	print(q())
 
-createWorkflow()
+#createWorkflow()

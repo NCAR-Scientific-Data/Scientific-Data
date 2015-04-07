@@ -57,8 +57,7 @@ if (.not.isvar("outtime")) then
   outtime = "end"
 end if
 if (outtime.ne."start" .and. outtime.ne."mid" .and. outtime.ne."end") then
-  print("Invalid outtime: '"+outtime+"'.  Use start, mid, or end.")
-  exit
+  status_exit(5)
 end if
 
 if (.not.isvar("method")) then
@@ -66,8 +65,7 @@ if (.not.isvar("method")) then
 end if
 
 if (method.ne."mean" .and. method.ne."min" .and. method.ne."max") then
-  print("Invalid method: '"+method+"'.  Use mean, min, or max.")
-  exit
+  status_exit(5)
 end if
 
 if (method .eq. "max") then
@@ -80,40 +78,39 @@ else if (method .eq. "min") then
 end if
 
 if (.not.isvar("interval")) then
-  print("Specify interval: day, month, season, or year")
-  exit
+  status_exit(2)
 end if
 if (interval.ne."day" .and. interval.ne."month" .and. interval.ne."season" .and. interval.ne."year") then
-  print("Invalid interval: '"+interval+"'.  Use day, month, season, or year.")
-  exit
+  status_exit(5)
 end if
 
 if(cyclic .and. interval .eq. "year") then
-  print("Error: annual interval not allowed with cyclic option.")
   ;; actually, this is just averaging over all time.  The only reason to
   ;; disallow it is clarity.  If we add an "all" option, we can make
   ;; this case synonymous with that and implement it with just a
   ;; dim_avg_n shortcut.
-  exit
+  status_exit(5)
 end if
 
 if(cyclic .and. interval .eq. "day") then
-  print("Error: day interval not allowed with cyclic option (due to leap days).")
   ;; once NCL v.6.1.0 is readily available, this is actually an
   ;; allowable option.  Use day_of_year() to convert from Y/M/D output
   ;; of cd_calendar to julian day, and just discard day 366 in leap
   ;; years.  (day_of_year doesn't recognize calendars before v.6.1.0)
-  exit
+  status_exit(5)
 end if
 
-fin = addfile(filename, "r")
+f = addfile(filename, "r")
 
-time = fin->time
+time = f->time
 nt = dimsizes(time)
 
 if(.not. any(typeof(time).eq.(/"float","double"/))) then
-  print("Error: time is not floating-point.")
-  exit
+  status_exit(5)
+end if
+
+if (.not. isfilevar(f, variable)) then
+  status_exit(5)
 end if
 
 
@@ -121,7 +118,7 @@ end if
 
 if (isatt(time,"bounds")) then
   tbname = time@bounds
-  time_bnds = fin->$tbname$
+  time_bnds = f->$tbname$
 else
   time_bnds = transpose(onedtond(time,(/2,nt/)))
 end if
@@ -142,8 +139,7 @@ if(interval .eq. "day") then
     else if (tunits .eq. "hours") then
       jday  = doubletointeger(time/24)
     else
-      print("Error: don't know how to convert time unit '"+tunits+"'into julian day.")
-      exit
+      status_exit(6)
     end if
   end if
 end if
@@ -201,7 +197,7 @@ end if
 ;; And now for the actual averaging of data
 
 ;; This is a cheap way to get metadata from a non-copied var
-outdata = fin->$variable$(0:nout-1,:,:)
+outdata = f->$variable$(0:nout-1,:,:)
 outdata(:,:,:) = outdata@_FillValue
 odim = dimsizes(outdata)
 
@@ -215,7 +211,7 @@ date = new (nout, "string")                          ;; plain-text version of ou
 map  = 0
 slab = 0 
 
-;; Note that we dodge around reading in fin->$variable$ so that we
+;; Note that we dodge around reading in f->$variable$ so that we
 ;; don't crash in cases where it's too big to fit into memory.
 
 do i=0, nout-1
@@ -229,7 +225,7 @@ do i=0, nout-1
     ;; of timesteps and a threshold for allowable %missing instead of
     ;; simple yes-no tainting by missing value...
 
-    outdata(i,:,:) = fin->$variable$(map(0):map(0),:,:)
+    outdata(i,:,:) = f->$variable$(map(0):map(0),:,:)
     misscount(i) = num(ismissing(outdata(i,:,:)))
     stepcount(i) = 1
     cell_bnds(i,0) = time_bnds(map(0),0)
@@ -238,7 +234,7 @@ do i=0, nout-1
   else 
 
     delete(slab)
-    slab = fin->$variable$(map,:,:)
+    slab = f->$variable$(map,:,:)
   
     if(method.eq."mean") then
       outdata(i,:,:) = dim_avg_n(slab,0)
@@ -297,9 +293,9 @@ if(outtime.eq."mid") then
       mout = (/1,4,7,10/)
     end if
     z0 = 0
-    z0@calendar = fin->time@calendar
+    z0@calendar = f->time@calendar
     outyear = tointeger((year(0)+year(nt-1))/2)
-    time = ut_inv_calendar(z0+outyear,mout,z0+15,z0+12,z0,z0,fin->time@units, z0(0))
+    time = ut_inv_calendar(z0+outyear,mout,z0+15,z0+12,z0,z0,f->time@units, z0(0))
   else
     time = cell_bnds(:,1)
     time = (time + cell_bnds(:,0))/2
@@ -314,8 +310,8 @@ else
 time@bounds = "time_bnds"
 end if
 time@axis = "T"
-time@calendar = fin->time@calendar
-time@units = fin->time@units
+time@calendar = f->time@calendar
+time@units = f->time@units
 time@standard_name = "time"
 time@long_name = "time"
 time!0 = "time"
@@ -356,15 +352,15 @@ filedimdef(fout,"time",-1,True)  ;; make time dimension unlimited
 
 ;; copy global attributes
 
-att_names = getvaratts(fin) 
+att_names = getvaratts(f) 
 
 do i = 0,dimsizes(att_names)-1
-  fout@$att_names(i)$ = fin@$att_names(i)$
+  fout@$att_names(i)$ = f@$att_names(i)$
 end do
 
 ;; copy over other variables
 
-var_names = getfilevarnames(fin) ;
+var_names = getfilevarnames(f) ;
 
 do i = 0,dimsizes(var_names)-1      
 
@@ -374,7 +370,7 @@ do i = 0,dimsizes(var_names)-1
   if (var_names(i) .eq. "date")      then continue end if
   if (var_names(i) .eq. "date_bnds") then continue end if
 
-  fout->$var_names(i)$ = fin->$var_names(i)$
+  fout->$var_names(i)$ = f->$var_names(i)$
 end do
 
 ;; add our data
@@ -382,6 +378,6 @@ end do
 fout->time_bnds = time_bnds
 fout->$variable$ = outdata
 fout->time      = time
-; For some reason, time needs to come *last* or it gets values from fin instead
+; For some reason, time needs to come *last* or it gets values from f instead
 delete(fout->time@_FillValue)  ;; coming from filedimdf call to make it unlimited, I think
 exit

@@ -1,0 +1,1 @@
+[{"Inputs": {}, "Type": "EmptyTask"}, {"Inputs": {"a": [21.0], "b": [4.0]}, "Type": "TaskA"}, {"Inputs": {"c": ["Port", 8]}, "Type": "EmptyTask"}]
