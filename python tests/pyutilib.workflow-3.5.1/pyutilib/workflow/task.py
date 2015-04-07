@@ -228,6 +228,23 @@ class Task(object):
         tmp['OutputControls'] = self.output_controls._repn_()
         return tmp 
 
+    # Robert Crimi
+    def __dict__(self):
+        tmp = {}
+        tmp['Type'] = self.__class__.__name__
+        tmp['Inputs'] = {}
+        dictionary = self.inputs._repn_()
+        for key in dictionary:
+            if not key in ['A_TYPE','Name','Mode','Owner']:
+                val = dictionary[key]
+                if val['Value'].isdigit():
+                    val = [float(val['Value'])]
+                else:
+                    val = ['Port', int(val['Task'])]
+                tmp['Inputs'][key] = val
+
+        return tmp
+
     def __repr__(self):
         """Return a string representation for this task."""
         return pprint.pformat(self._repn_(), 2)
@@ -260,7 +277,16 @@ class Task(object):
             self.inputs[i].set_ready()
         for i in self.input_controls:
             self.input_controls[i].reset_all()
-            self.input_controls[i].set_ready()        
+            self.input_controls[i].set_ready()
+
+    # Robert Crimi
+    def reset_all_outputs(self):
+        for i in self.outputs:
+            self.outputs[i].reset_all()
+            self.outputs[i].set_ready()
+        for i in self.output_controls:
+            self.output_controls[i].reset_all()
+            self.output_controls[i].set_ready()                
 
     def set_ready(self):
         for i in self.outputs:

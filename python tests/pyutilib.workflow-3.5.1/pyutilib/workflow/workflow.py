@@ -227,6 +227,10 @@ class Workflow(Task):
         return "Workflow %s:\n" % self.name+Task.__repr__(self)+'\n'+"\n".join(self._dfs_([self._start_task.id], lambda t: repr(t)))
 
     # Robert Crimi
+    def __dict__(self):
+        return self._dfs_([self._start_task.id], lambda t: t.__dict__())
+
+    # Robert Crimi
     def __list__(self):
         tasks = list(self._dfs_([self._start_task.id], lambda t: t.__list__()))
         filteredTasks = []

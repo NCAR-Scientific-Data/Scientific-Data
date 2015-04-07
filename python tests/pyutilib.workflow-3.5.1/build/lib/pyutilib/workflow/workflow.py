@@ -56,6 +56,8 @@ class Workflow(Task):
         self._final_task = EmptyTask()
         self.add(self._start_task)
         self.add(self._final_task)
+        # Robert Crimi
+        self.workflowID = None
 
     def add(self, task, loadall=True):
         if self.debug:
@@ -224,14 +226,22 @@ class Workflow(Task):
     def __repr__(self):
         return "Workflow %s:\n" % self.name+Task.__repr__(self)+'\n'+"\n".join(self._dfs_([self._start_task.id], lambda t: repr(t)))
 
-    #Robert Crimi
+    # Robert Crimi
+    def __dict__(self):
+        return self._dfs_([self._start_task.id], lambda t: t.__dict__())
+
+    # Robert Crimi
     def __list__(self):
         tasks = list(self._dfs_([self._start_task.id], lambda t: t.__list__()))
         filteredTasks = []
         for task in tasks:
             if task[0] != 'EmptyTask':
                 filteredTasks.append(task)
-        return filteredTasks 
+        return filteredTasks
+    
+    # Robert Crimi
+    def setWorkflowID(self, uid):
+        self.workflowID = uid
 
     def _dfs_(self, indices, fn, touched=None):
         if touched is None:
