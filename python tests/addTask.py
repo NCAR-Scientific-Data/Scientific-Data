@@ -1,65 +1,85 @@
-from test import TaskA
-from test import TaskB
+import test
 import pyutilib.workflow
 import uuid
 import json
+import re
 
-def get_Task(taskType):
-	if taskType == 'TaskA':
-		return TaskA()
-	if taskType == 'TaskB':
-		return TaskB()
-	if taskType == 'TaskC':
-		return TaskC()
-	if taskType == 'TaskD':
-		return TaskD()
-	if taskType == 'TaskE':
-		return TaskE()
-	if taskType == 'TaskF':
-		return TaskF()
-
+# Add task with linkks to workflow
 def addTask(task, links, workflow):
 	for i in task.inputs:
-		# PROBLEM HERE
-		if(type(links[i][0]) == pyutilib.workflow.port.Port):
-			links[i][1].reset_all_outputs()
-			task.inputs[i] = links[i][0]
+		# Input is Port
+		if(links[i][0] == 'Port'):
+			# Find the task in the workflow with UID in link[i]
+			t = workflow._dfs_([workflow._start_task.id], lambda t: t.getTaskWithID(links[i][1]))
+			# Reset the tasks outputs
+			t[0].reset_all_outputs()
+			# Set the input to the outputs of found task
+			task.inputs[i] = t[0].outputs[links[i][2]]
+		# Input is number
+		# TODO:
+		# Better checking
 		else:
 			task.inputs[i] = links[i][0]
 
+	# Add updated task to workflow and return new workflow
 	workflow.add(task)
 	return workflow
 
+# Build a workflow from json file with id workflowID
 def deserialize(workflowID):
-	with open(workflowID+'.json') as data_file:    
+	with open('json/'+workflowID+'.json') as data_file:    
 		data = json.load(data_file)
 
+	# Create temp workflow
 	q = pyutilib.workflow.Workflow()
 	for task in data:
+		# Dont recreate empty tasks (done for you)
 		if not task['Type'] in ['EmptyTask']:
-			t = get_Task(task['Type'])
+			# Create instance of specified task
+			# TODO:
+			# Make this a factory and replace with actual tasks
+			t = task.getInstance(task['Type'])
+			# Set UID to its previous instance's
+			# This is so the particular task in the workflow
+			# will always be linked properly
+			t.setUID(task['UID'])
+			# Add task t to workflow q with proper inputs
 			addTask(t, task['Inputs'], q)
 	return q
 
+# Serialize workflow into json file with UID as filename
 def serialize(workflow):
-	with open(workflow.workflowID+'.json', 'w') as outfile:
+	with open('json/'+workflow.workflowID+'.json', 'w') as outfile:
 		json.dump(workflow.__dict__(), outfile)
 
-def run(task, links, workflowID):
+# Call this function to add a new task to a workflow
+def run(taskType, links, workflowID):
+	# Build workflow with filename workflowID.json
 	workflow = deserialize(workflowID)
+	# Add task to the workflow
+	# TODO:
+	# MAKE the task input be a type and call a factory to get instance of task
+	task = test.getInstance(taskType)
+	task.setUID(str(uuid.uuid4()))
 	workflow = addTask(task, links, workflow)
 
+	# Set UID of workflow so it lives in the same space in memory
 	workflow.setWorkflowID(workflowID)
+	# Serialize the workflow into json file
 	serialize(workflow)
+	
+	# Get output of workflow
+	output = workflow().__str__()
+	splitOutput = output.split(',')
+	result = []
+	for o in splitOutput:
+		if(".nc" in o):
+			keyVal = o.split(": ")
+			val = keyVal[1]
+			val = val[1:len(val)-1]
+			result.append(val)
+		else:
+			result.append(re.findall("[-+]?\d*\.\d+|\d+", output)[0])
 
-	output = workflow()
-	result = [int(s) for s in output.__str__().split() if s.isdigit()]
-	return {"result":result, "list":workflow.__list__()}
-
-w = pyutilib.workflow.Workflow()
-w.setWorkflowID(str(uuid.uuid4()))
-serialize(w)
-A = TaskA()
-B = TaskB()
-test = run(A, {"a" :[21], "b":[4]}, w.workflowID)
-test1 = run(B, {"d": [A.outputs.c, A]}, w.workflowID)
+	# Return the result, list representation of the workflow, and UID of the added task
+	return {"result":result, "list":workflow.__list__(), "taskID": task.uid}

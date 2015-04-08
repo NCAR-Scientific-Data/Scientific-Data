@@ -228,7 +228,7 @@ class Workflow(Task):
 
     # Robert Crimi
     def __dict__(self):
-        return self._dfs_([self._start_task.id], lambda t: t.__dict__())
+        return self._dfs_([self._start_task.id], lambda t: t.__dict__(self))
 
     # Robert Crimi
     def __list__(self):
