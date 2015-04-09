@@ -2,7 +2,6 @@ import pyutilib.workflow
 import uuid
 import json
 import ast
-import Tasks
 
 class TaskA(pyutilib.workflow.Task):
 	def __init__(self, *args, **kwds):
@@ -13,7 +12,7 @@ class TaskA(pyutilib.workflow.Task):
 		self.outputs.declare('c')
 	def execute(self):
 		"""Compute the sum of the inputs."""
-		self.c = self.a + self.b
+		self.c = "test.nc"
 
 class TaskB(pyutilib.workflow.Task):
 	def __init__(self, *args, **kwds):
@@ -79,7 +78,7 @@ def addTask(task, links, workflow):
 	workflow.add(task)
 	return workflow
 
-def get_Task(taskType):
+def getInstance(taskType):
 	if taskType == 'TaskA':
 		return TaskA()
 	if taskType == 'TaskB':
@@ -93,7 +92,7 @@ def get_Task(taskType):
 	if taskType == 'TaskF':
 		return TaskF()
 
-
+'''
 def createWorkflow():
 	A = TaskA()
 	B = TaskB()
@@ -134,3 +133,4 @@ def createWorkflow():
 	print(q())
 
 #createWorkflow()
+'''
