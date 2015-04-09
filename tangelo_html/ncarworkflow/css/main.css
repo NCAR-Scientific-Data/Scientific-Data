@@ -255,12 +255,12 @@ div.form-inline {
 #miniMenu {
     position: fixed;
     right: 0px;
-    bottom: 50px;
+    top: 50px;
     width: 150px;
     height: 200px;
 }
 
-text.miniMenuOption {
+.miniMenuOption {
 	cursor: pointer;
 
 }
