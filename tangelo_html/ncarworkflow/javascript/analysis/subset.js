@@ -1,14 +1,15 @@
-/*global $, localStorage*/
+/*global $, urlCatalog, addTask*/
 
 function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm) {
     "use strict";
 
     var basicString = "http://tds.ucar.edu/thredds/dodsC/narccap.",
         modelString = rcm + "." + gcm + simulationType + "." + variable.substring(0,6),
-        version = urlCatalog.urlCatalog[modelString],
+        version = urlCatalog.urlCatalog[modelString];
+
         modelString += variable.substring(6);
 
-        if (version == 0) {
+        if (version === 0) {
             version = ".aggregation";
         } else {
             version = "." + String(version) + ".aggregation";
@@ -69,8 +70,8 @@ function changeDateRange(simulationType) {
     endYearDropDown.empty();
 
     for (i = start; i <= end; i += 1) {
-        startYearDropDown.append($('<option></option>').val(i).html(i.toString()));
-        endYearDropDown.append($('<option></option>').val(i).html(i.toString()));
+        startYearDropDown.append($("<option></option>").val(i).html(i.toString()));
+        endYearDropDown.append($("<option></option>").val(i).html(i.toString()));
     }
 
     $("#endYear option:last-child").prop("selected", true);
@@ -89,55 +90,55 @@ function changeGCM(simulationType, rcm) {
     });
 
     if (simulationType === "ncep") {
-        $("#none").attr('disabled', false);
+        $("#none").attr("disabled", false);
 
-        $("#none").prop('checked', true);
+        $("#none").prop("checked", true);
     } else {
         if (rcm === "crcm") {
-            ccsm.attr('disabled', false);
-            cgcm3.attr('disabled', false);
+            ccsm.attr("disabled", false);
+            cgcm3.attr("disabled", false);
 
-            cgcm3.prop('checked', true);
+            cgcm3.prop("checked", true);
         } else if (rcm === "ecp2") {
 
-            gfdl.attr('disabled', false);
+            gfdl.attr("disabled", false);
 
-            gfdl.prop('checked', true);
+            gfdl.prop("checked", true);
 
         } else if (rcm === "hrm3") {
 
-            gfdl.attr('disabled', false);
-            hadcm3.attr('disabled', false);
+            gfdl.attr("disabled", false);
+            hadcm3.attr("disabled", false);
 
-            gfdl.prop('checked', true);
+            gfdl.prop("checked", true);
 
         } else if (rcm === "mm5i") {
 
-            ccsm.attr('disabled', false);
+            ccsm.attr("disabled", false);
 
             if (simulationType === "-current") {
 
-                hadcm3.attr('disabled', false);
-                hadcm3.prop('checked', true);
+                hadcm3.attr("disabled", false);
+                hadcm3.prop("checked", true);
 
             } else {
 
-                ccsm.prop('checked', true);
+                ccsm.prop("checked", true);
 
             }
         } else if (rcm === "rcm3") {
 
-            gfdl.attr('disabled', false);
-            cgcm3.attr('disabled', false);
+            gfdl.attr("disabled", false);
+            cgcm3.attr("disabled", false);
 
-            gfdl.prop('checked', true);
+            gfdl.prop("checked", true);
 
         } else if (rcm === "wrfg") {
 
-            ccsm.attr('disabled', false);
-            cgcm3.attr('disabled', false);
+            ccsm.attr("disabled", false);
+            cgcm3.attr("disabled", false);
 
-            cgcm3.prop('checked', true);
+            cgcm3.prop("checked", true);
         }
     }
 }
