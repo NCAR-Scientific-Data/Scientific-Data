@@ -336,16 +336,19 @@ function formatWorkflow(workflow) {
 }
 
 /*
-    Function: unnamedFunction
-    Draws a workflow.
+    Function: addTask
+    Run and then draw a workflow.
 
     See Also:
 
         <formatWorkflow>
 */
-window.onload = function () {
+function addTask(taskType, links) {
     "use strict";
-    var url = "python/workflowTwo";
+    var taskType = "taskType=" + taskType,
+        links = "&links=" + links,
+        workflowid = "&workflowID=" + localStorage.uid,
+        url = "python/addTask?" + taskType + links + workflowid;
 
     $.getJSON(url, function (results) {
         if (results.workflow) {
@@ -362,3 +365,21 @@ window.onload = function () {
         }
     });
 };
+
+/*
+    Function: Create a Workflow
+    Create a workflow with a unique id.
+
+    See Also:
+
+        <addTask>
+*/
+window.onload = function () {
+    "use strict";
+
+    $.getJSON("python/createWorkflow", function (results) {
+        if (results.uid) {
+            localStorage.uid = results.uid;
+        }
+    }
+}
