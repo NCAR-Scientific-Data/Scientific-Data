@@ -1,0 +1,50 @@
+<h1>Analyze Data</h1>
+<button class="delete" onclick="deleteStep()">Delete This Analysis</button>
+<!--Calculation Form-->
+<div class="form-inline">
+
+	<!--Analysis Type Section-->
+	<section>
+		<div class="title">
+			<h2>Analysis Type</h2>
+			<h3>About Analysis Types</h3>
+		</div>
+		<select id="analysisType">
+			<option value="mean">Average</option>
+			<option value="min">Find Minimum</option>
+			<option value="max">Find Maximum</option>
+		</select>
+	</section>
+	<!--End Analysis Type Section-->
+
+	<!--Time Interval Section-->
+	<section>
+		<div class="title">
+			<h2>Time Interval</h2>
+			<h3>Explanation of Time Interval</h3>
+		</div>
+		<select id="interval">
+			<option value="day">Daily</option>
+			<option value="month">Monthly</option>
+			<option value="year">Yearly</option>
+			<option value="season">Seasonally</option>
+		</select>
+	</section>
+	<!--End Time Interval Section-->
+
+	<!--Output Date Section-->
+	<section>
+		<div class="title">
+			<h2>Output Date</h2>
+			<h3>Explanation of Output Date</h3>
+		</div>
+		<select id="outtime">
+			<option value="start">Beginning</option>
+			<option value="mid">Middle</option>
+			<option value="end">End</option>
+		</select>
+	</section>
+
+	<button class="btn btn-class subset" onclick="callCalculate()">Subset Data</button>
+</div>
+<!--End Calculation Form-->
