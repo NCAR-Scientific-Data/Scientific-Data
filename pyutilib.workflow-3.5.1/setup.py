@@ -24,7 +24,7 @@ if sys.version_info < (2,7):
     dependencies.append('argparse')
 
 setup(name="pyutilib.workflow",
-    version='3.5.2',
+    version='3.5.1',
     maintainer='William E. Hart',
     maintainer_email='wehart@sandia.gov',
     url = 'https://software.sandia.gov/svn/public/pyutilib/pyutilib.workflow',
