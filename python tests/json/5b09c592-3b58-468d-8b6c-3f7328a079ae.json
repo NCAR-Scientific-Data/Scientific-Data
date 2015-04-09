@@ -1,1 +1,0 @@
-[{"Inputs": {}, "Type": "EmptyTask"}, {"UID": "03d14228-ea61-4ac2-b26b-cdb49d5b2196", "Inputs": {"b": [4.0], "a": ["test.nc"]}, "Type": "TaskA"}, {"Inputs": {"c": ["Port", "03d14228-ea61-4ac2-b26b-cdb49d5b2196", "c"]}, "Type": "EmptyTask"}]
