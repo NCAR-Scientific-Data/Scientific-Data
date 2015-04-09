@@ -69,3 +69,7 @@ class taskSubset(pyutilib.workflow.Task):
             self.subset = error
         else:
             self.subset = result
+
+def getInstance(taskType):
+    if(taskType == 'TaskSubset'):
+        return taskSubset()

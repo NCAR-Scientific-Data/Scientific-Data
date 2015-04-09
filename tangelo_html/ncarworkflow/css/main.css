@@ -244,10 +244,23 @@ div.form-inline {
 	margin-left: 310px;
 }
 
-#miniMenu {
+/*#miniMenu {
 	position: fixed;
 	top: 90%;
 	left: 90%;
 	right: 0%;
 	bottom: 0%;
+}*/
+
+#miniMenu {
+    position: fixed;
+    right: 0px;
+    bottom: 50px;
+    width: 150px;
+    height: 200px;
+}
+
+text.miniMenuOption {
+	cursor: pointer;
+
 }
