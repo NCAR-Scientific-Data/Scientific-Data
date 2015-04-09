@@ -1,8 +1,9 @@
-import test
 import pyutilib.workflow
 import uuid
 import json
+import tasks
 import re
+import ast
 
 # Add task with linkks to workflow
 def addTask(task, links, workflow):
@@ -38,7 +39,7 @@ def deserialize(workflowID):
 			# Create instance of specified task
 			# TODO:
 			# Make this a factory and replace with actual tasks
-			t = task.getInstance(task['Type'])
+			t = tasks.getInstance(task['Type'])
 			# Set UID to its previous instance's
 			# This is so the particular task in the workflow
 			# will always be linked properly
@@ -57,9 +58,11 @@ def run(taskType, links, workflowID):
 	# Build workflow with filename workflowID.json
 	workflow = deserialize(workflowID)
 	# Add task to the workflow
-	# TODO:
+	
+	links = ast.literal_eval(links)
+
 	# MAKE the task input be a type and call a factory to get instance of task
-	task = test.getInstance(taskType)
+	task = tasks.getInstance(taskType)
 	task.setUID(str(uuid.uuid4()))
 	workflow = addTask(task, links, workflow)
 
@@ -82,4 +85,4 @@ def run(taskType, links, workflowID):
 			result.append(re.findall("[-+]?\d*\.\d+|\d+", output)[0])
 
 	# Return the result, list representation of the workflow, and UID of the added task
-	return {"result":result, "list":workflow.__list__(), "taskID": task.uid}
+	return {"result":result, "list":workflow.__list__()}
