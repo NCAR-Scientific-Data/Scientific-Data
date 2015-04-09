@@ -17,8 +17,8 @@ class taskThreshold(pyutilib.workflow.Task):
 	upperlimit = str(self.upper) if self.upper else "max"
 
 	# Import the R script so we can use its function
-	scriptname = "tangelo_html/demo/r/calculate_threshold.R"
+	scriptname = "ncarworkflow/r/calculationModule.R"
 	ro.r['source'](scriptname)
 
 	# Call the function that does the calculation
-	value = ro.r['rfunc'](self.filename, self.field, lowerlimit, upperlimit)
+	value = ro.r['daysWithinThreshold'](self.filename, self.field, lowerlimit, upperlimit)

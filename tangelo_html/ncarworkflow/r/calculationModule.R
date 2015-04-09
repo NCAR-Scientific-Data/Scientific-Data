@@ -10,7 +10,7 @@
 #                Lower limit of the threshold, upper limit of the threshold
 #
 ##########################################################
-rfunc <- function(filename, field, lower, upper){
+daysWithinThreshold <- function(filename, field, lower, upper){
 	# Import required libraries
 	library(ncdf)
 
@@ -49,4 +49,19 @@ rfunc <- function(filename, field, lower, upper){
 	totalDays <- dim(time)
 	numDaysWithinThreshold <- totalDays - sum(climatology == 0)
 	return(numDaysWithinThreshold)
+}
+
+ncdfDelta <- function(filename1, filename2, outputfname, field){
+	library(ncdf)	
+
+	nc1 = open.ncdf(filename1)
+	field1 = get.var.ncdf(nc1, field)
+
+	nc2 = open.ncdf(filename2)
+	field2 = get.var.ncdf(nc2, field)
+
+	field_delta = abs(field1 - field2)
+
+	nc3 = open.ncdf(outputfname, write=TRUE)
+	put.var.ncdf(nc3, field, field_delta)
 }
