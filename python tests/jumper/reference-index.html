@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+
+<!-- Page Details -->
+
+	<title>GridRunner</title>
+	
+<!-- Meta Tags -->	
+	<meta charset="UTF-8">
+	<meta name="author" content="Dillon Drenzek, Logan McCaul">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	
+<!-- Links -->
+    <link rel="icon" type="image/ico" href="icon.png"/>
+	
+<!-- Scripts -->
+
+	<!-- jQuery -->	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+	<script src = "./reference-functions.js"></script>
+	
+<!-- Styles -->	
+	<style type="text/css">
+	
+	/* UTILITY */
+		
+		*,
+		*:before,
+		*:after{
+			box-sizing:border-box;
+				-webkit-box-sizing:border-box;
+			margin: 0;
+		}
+		html{
+			background: #252423;
+			/*background: url("") no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;*/
+		}
+
+		body{
+			font-size: 16px;
+			padding: 0;
+			margin: 0;
+		}
+		html, body {
+  			height: 100%;
+  			overflow: hidden;
+		}
+
+
+	/* HTML ELEMENTS */
+
+
+		/***  Header  ***/
+
+		/***  Main Page  ***/
+
+		/***  Canvas  ***/
+		.center{
+			display: -webkit-box;
+			display: -moz-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			margin: auto;
+			margin-top: 5rem;
+		}
+        #canvas{
+         background:black;  
+            margin-top: 1rem;
+        }
+		#start{
+			width:40px;
+			color: white;
+            font-size:2em;
+            text-decoration:none;
+		}
+		/*temporary link style*/
+		#start:hover	{ color:#777;}
+        
+        #intro{
+            margin-top:4rem;
+            text-align:center;
+            color:white;
+            width:800px;
+            font-size:1.2em;
+            line-height: 30px;
+        }
+
+	</style>
+		<script>
+		$(document).ready(function(){
+					var canvas = document.getElementById("canvas");
+					var ctx = canvas.getContext('2d');
+					var player = new Player (5,0,10, ctx, 0);
+
+
+				// 	--------------- PUZZLE 1 - 5x5 ----------------
+					var s = "start";
+					var x = "finish";
+					// untouched also = 0
+					var u = "untouched";
+					var t = "touched";
+					var w = "wall";
+
+					puzzleArray = [	[s,t,w,0,x]];
+
+				// 	-----------------------------------------------
+
+					// generate Tile objects, insert into array
+					tileArray = generateTiles(puzzleArray, ctx);
+
+					// draw grid of Tiles given array of tiles
+					drawGrid(tileArray, ctx);
+
+					// draw player
+                    player.draw();
+                });
+	</script>
+
+</head>
+
+<body>
+    <img src="logo.png" class="center">
+	<canvas id="canvas" class="center" width="240" height="40"> </canvas>
+    <p id="intro" class="center">Grid Runner is a minimalist and challenging puzzle game created by Dillon Drenzek and Logan McCaul for Digital Media 2. The goal of the game is to make it from the start to the finish after touching every tile on the grid exactly once. The Green tiles are the start, the Orange tiles are touched, the Blue tiles are Walls, the White tiles are untouched, and finally the Pink tile is the finish. Use the arrow keys to move. If you get stuck, press Enter to reload. Best of Luck! </p>
+    <a id="start" class="center" href="#" onclick="window.open('reference-puzzle.html','Puzzle One','height=200, width=200, toolbar = no, menubar=no, scrollbars=no, resizable=no, location=no, directories=no, status = no, top=100, left= 100')">Start</a>
+
+</body>
+</html>

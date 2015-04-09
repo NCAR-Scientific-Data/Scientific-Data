@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tangelo-passwd &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Python Web Service API" href="tangelo-py.html" />
+    <link rel="prev" title="tangelo" href="tangelo-manpage.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tangelo-py.html" title="Python Web Service API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tangelo-manpage.html" title="tangelo"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tangelo-passwd">
+<h1><code class="docutils literal"><span class="pre">tangelo-passwd</span></code><a class="headerlink" href="#tangelo-passwd" title="Permalink to this headline">¶</a></h1>
+<p>tangelo-passwd [-h] [-c] passwordfile realm user</p>
+<p>Edit .htaccess files for Tangelo</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="49%" />
+<col width="51%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Positional argument</th>
+<th class="head">Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>passwordfile</td>
+<td>Password file</td>
+</tr>
+<tr class="row-odd"><td>realm</td>
+<td>Authentication realm</td>
+</tr>
+<tr class="row-even"><td>user</td>
+<td>Username</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Optional argument</th>
+<th class="head">Effect</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>-h, &#8211;help</td>
+<td>Show this help message and exit</td>
+</tr>
+<tr class="row-odd"><td>-c, &#8211;create</td>
+<td>Create new password file</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
+<p>To create a new password file:</p>
+<div class="highlight-python"><div class="highlight"><pre>tangelo-passwd -c secret.txt romulus tomalak
+</pre></div>
+</div>
+<p>(Then type in the password as prompted.)</p>
+<p>To add a user to the file:</p>
+<div class="highlight-python"><div class="highlight"><pre>tangelo-passwd secret.txt Qo\&#39;noS martok
+</pre></div>
+</div>
+<p>(Again, type in password.)</p>
+<p>To overwrite a new password file on top of the old one:</p>
+<div class="highlight-python"><div class="highlight"><pre>tangelo-passwd -c secret.txt betazed troi
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">tangelo-passwd</span></code></a><ul>
+<li><a class="reference internal" href="#example-usage">Example Usage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tangelo-manpage.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">tangelo</span></code></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tangelo-py.html"
+                        title="next chapter">Python Web Service API</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tangelo-passwd-manpage.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tangelo-py.html" title="Python Web Service API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tangelo-manpage.html" title="tangelo"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

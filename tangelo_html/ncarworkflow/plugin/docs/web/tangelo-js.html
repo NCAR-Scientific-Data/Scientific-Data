@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tangelo JavaScript Library &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Bundled Plugins" href="bundled-plugins.html" />
+    <link rel="prev" title="Python Web Service API" href="tangelo-py.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="bundled-plugins.html" title="Bundled Plugins"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tangelo-py.html" title="Python Web Service API"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tangelo-javascript-library">
+<h1>Tangelo JavaScript Library<a class="headerlink" href="#tangelo-javascript-library" title="Permalink to this headline">¶</a></h1>
+<p>The Tangelo clientside library (<em>tangelo.js</em>) contains functions to help work
+with Tangelo, including basic support for creating web applications.  These
+functions represent basic tasks that are widely useful in working with web
+applications; for advanced functionality and associated JavaScript/Python
+functions, see <a class="reference internal" href="bundled-plugins.html#bundled"><em>Bundled Plugins</em></a>.</p>
+<dl class="function">
+<dt id="tangelo.version">
+<code class="descclassname">tangelo.</code><code class="descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.version" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><strong>string</strong> &#8211; the version string</td>
+</tr>
+</tbody>
+</table>
+<p>Returns a string representing Tangelo&#8217;s current version number.  See
+<a class="reference internal" href="setup.html#versioning"><em>A Note on Version Numbers</em></a> for more information on Tangelo version numbers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.getPlugin">
+<code class="descclassname">tangelo.</code><code class="descname">getPlugin</code><span class="sig-paren">(</span><em>pluginName</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.getPlugin" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>pluginName</em>) &#8211; The name of the plugin to retrieve</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><strong>object</strong> &#8211; the contents of the requested plugin</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns an object containing the plugin contents for <cite>pluginName</cite>.  If
+<cite>pluginName</cite> does not yet exist as a plugin, the function first creates it
+as an empty object.</p>
+<p>This is a standard way to create and work with plugins.  For instance, if
+<code class="docutils literal"><span class="pre">foobar.js</span></code> introduces the <em>foobar</em> clientside plugin, it may contain code
+like this:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">plugin</span> <span class="o">=</span> <span class="nx">tangelo</span><span class="p">.</span><span class="nx">getPlugin</span><span class="p">(</span><span class="s2">&quot;foobar&quot;</span><span class="p">);</span>
+
+<span class="nx">plugin</span><span class="p">.</span><span class="nx">awesomeFunction</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+
+<span class="nx">plugin</span><span class="p">.</span><span class="nx">greatConstant</span> <span class="o">=</span> <span class="p">...</span>
+</pre></div>
+</div>
+<p>The contents of this example plugin would hereafter be accessible via
+<code class="docutils literal"><span class="pre">tangelo.plugin.foobar</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.pluginUrl">
+<code class="descclassname">tangelo.</code><code class="descname">pluginUrl</code><span class="sig-paren">(</span><em>plugin</em><span class="optional">[</span>, <em>*pathComponents</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.pluginUrl" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>api</strong> (<em>string</em>) &#8211; The name of the Tangelo plugin to construct a URL for.</li>
+<li><strong>*pathComponents</strong> (<em>string</em>) &#8211; Any extra path components to be appended to
+the constructed URL.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><strong>string</strong> &#8211; the URL corresponding to the requested plugin and path</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Constructs and returns a URL for the named <cite>plugin</cite>, with optional trailing
+path components listed in the remaining arguments to the function.</p>
+<p>For example, a call to <code class="docutils literal"><span class="pre">tangelo.pluginUrl(&quot;stream&quot;,</span> <span class="pre">&quot;next&quot;,</span> <span class="pre">&quot;a1b2c3d4e5&quot;)</span></code>
+will return the string <code class="docutils literal"><span class="pre">&quot;/plugin/stream/next/a1b2c3d4e5&quot;</span></code>.  This function is
+useful for calls to, e.g., <code class="docutils literal"><span class="pre">$.ajax()</span></code> when engaging a Tangelo plugin.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.queryArguments">
+<code class="descclassname">tangelo.</code><code class="descname">queryArguments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.queryArguments" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><strong>object</strong> &#8211; the query arguments as key-value pairs</td>
+</tr>
+</tbody>
+</table>
+<p>Returns an object whose key-value pairs are the query arguments passed to
+the current web page.</p>
+<p>This function may be useful to customize page content based on query
+arguments, or for restoring state based on configuration options, etc.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.absoluteUrl">
+<code class="descclassname">tangelo.</code><code class="descname">absoluteUrl</code><span class="sig-paren">(</span><em>webpath</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.absoluteUrl" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>webpath</strong> (<em>string</em>) &#8211; an absolute or relative web path</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><strong>string</strong> &#8211; an absolute URL corresponding to the input webpath</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Computes an absolute web path for <cite>webpath</cite> based on the current location.
+If <cite>webpath</cite> is already an absolute path, it is returned unchanged;
+if relative, the return value has the appropriate prefix computed and prepended.</p>
+<p>For example, if called from a page residing at <code class="docutils literal"><span class="pre">/foo/bar/index.html</span></code>,
+<code class="docutils literal"><span class="pre">tangelo.absoluteUrl(&quot;../baz/qux/blah.html&quot;)</span></code> would yield
+<code class="docutils literal"><span class="pre">/foo/baz/qux/blah.html</span></code>, and <code class="docutils literal"><span class="pre">tangelo.absoluteUrl(&quot;/one/two/three&quot;)</span></code>
+would yield <code class="docutils literal"><span class="pre">/one/two/three</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.accessor">
+<code class="descclassname">tangelo.</code><code class="descname">accessor</code><span class="sig-paren">(</span><span class="optional">[</span><em>spec</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.accessor" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>object</strong> (<em>spec</em>) &#8211; The accessor specification</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><strong>function</strong> &#8211; the accessor function</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns an <em>accessor function</em> that behaves according to the accessor
+specification <cite>spec</cite>.  Accessor functions generally take as input a
+JavaScript object, and return some value that may or may not be related to
+that object.  For instance, <code class="docutils literal"><span class="pre">tangelo.accessor({field:</span> <span class="pre">&quot;mass&quot;})</span></code> returns a
+function equivalent to:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">function</span> <span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">mass</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>while <code class="docutils literal"><span class="pre">tangelo.accessor({value:</span> <span class="pre">47})</span></code> return a constant function that
+returns 47, regardless of its input.</p>
+<p>As a special case, if <cite>spec</cite> is missing, or equal to the empty object
+<code class="docutils literal"><span class="pre">{}</span></code>, then the return value is the <code class="docutils literal"><span class="pre">undefined</span> <span class="pre">accessor</span></code>, which simply
+raises a fatal error when called.</p>
+<p>For more information of the semantics of the <cite>spec</cite> argument, see
+<a class="reference internal" href="developing-visualizations.html#accessor"><em>Accessor Specifications</em></a>.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tangelo-py.html"
+                        title="previous chapter">Python Web Service API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bundled-plugins.html"
+                        title="next chapter">Bundled Plugins</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tangelo-js.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="bundled-plugins.html" title="Bundled Plugins"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tangelo-py.html" title="Python Web Service API"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

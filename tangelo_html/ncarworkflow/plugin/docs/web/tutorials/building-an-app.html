@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Building a Tangelo Web Application from Scratch &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="../index.html" />
+    <link rel="next" title="Driving a Visualization with SQLAlchemy" href="db-vis.html" />
+    <link rel="prev" title="Bundled Plugins" href="../bundled-plugins.html" />
+<link rel=stylesheet type=text/css href=../_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="db-vis.html" title="Driving a Visualization with SQLAlchemy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../bundled-plugins.html" title="Bundled Plugins"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="building-a-tangelo-web-application-from-scratch">
+<h1>Building a Tangelo Web Application from Scratch<a class="headerlink" href="#building-a-tangelo-web-application-from-scratch" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will go through the steps of building a working, albeit simple,
+Tangelo application from the ground up.  Most Tangelo applications consist of
+(at least) three parts:  an HTML document presenting the form of the application
+as a web page, a JavaScript file to drive dynamic content and behavior within
+the web page, and a Python service to perform serverside processing.  The
+tutorial application will have one of each to demonstrate how they will fit
+together.</p>
+<div class="section" id="string-reverser">
+<h2>String Reverser<a class="headerlink" href="#string-reverser" title="Permalink to this headline">¶</a></h2>
+<p>The tutorial application will be a <em>string reverser</em>.  The user will see a form
+where a word can be entered, and a button to submit the word.  The word will
+then make a trip to the server, where it will be reversed and returned to the
+client.  The reversed word will then be displayed in the web page.</p>
+<div class="section" id="preparing-the-stage">
+<h3>Preparing the Stage<a class="headerlink" href="#preparing-the-stage" title="Permalink to this headline">¶</a></h3>
+<p>Tangelo will need to be running in order for the application to work.  The
+quickstart instructions will be sufficient (see <a class="reference internal" href="../index.html#quickstart"><em>Quick Start</em></a>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tangelo</span>
+</pre></div>
+</div>
+<p>This should launch Tangelo on <em>localhost</em>, port 8080 (also known as
+<a class="reference external" href="http://localhost:8080/">http://localhost:8080/</a>).</p>
+<p>First we need a place to put the files for the application.  We will serve the
+application out of a specialized directory to contain several Tangelo
+applications. It is a good practice to house each application in its own
+subdirectory - this keeps things organized, and allows for easy development of
+web applications in source control systems such as GitHub:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd ~
+mkdir tangelo_apps
+cd tangelo_apps
+mkdir reverser
+</pre></div>
+</div>
+<p>Next, we need to serve this directory to the web.  We&#8217;d also like to be able to
+see the directory contents and Python source as we edit our application, since
+we&#8217;re in &#8220;developer mode&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tangelo</span> <span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="nb">dir</span> <span class="o">--</span><span class="n">show</span><span class="o">-</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>By default, Tangelo serves files from the current directory.  It would also be
+possible to use the web root option by adding <code class="docutils literal"><span class="pre">--root</span> <span class="pre">~/tangelo_apps</span></code> to make the
+desired root directory explicit.</p>
+<p>Visiting <a class="reference external" href="http://localhost:8080/reverser">http://localhost:8080/reverser</a> in a web browser should at this point
+show you a directory listing of no entries.  Let&#8217;s fix that by creating some
+content.</p>
+</div>
+<div class="section" id="html">
+<h3>HTML<a class="headerlink" href="#html" title="Permalink to this headline">¶</a></h3>
+<p>The first step is to create a web page.  In a text editor, open a file called
+<code class="docutils literal"><span class="pre">index.html</span></code> and copy in the following:</p>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;title&gt;</span>Reverser<span class="nt">&lt;/title&gt;</span>
+
+<span class="c">&lt;!-- Boilerplate JavaScript --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">http://code.jquery.com/jquery-1.11.0.min.js</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">/js/tangelo.js</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+<span class="c">&lt;!-- The app&#39;s JavaScript --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">myapp.js</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+<span class="c">&lt;!-- A form to submit the text --&gt;</span>
+<span class="nt">&lt;h2&gt;</span>Reverser<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">form-inline</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">text</span> <span class="na">type=</span><span class="s">text</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">go</span> <span class="na">class=</span><span class="s">&quot;btn btn-class&quot;</span><span class="nt">&gt;</span>Go<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="c">&lt;!-- A place to show the output --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">output</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre></div>
+</td></tr></table></div>
+<p>This is a very simple page, containing a text field (with ID <code class="docutils literal"><span class="pre">text</span></code>), a button
+(ID <code class="docutils literal"><span class="pre">go</span></code>), and an empty div element (ID <code class="docutils literal"><span class="pre">output</span></code>).  Feel free to reload the
+page in your browser to see if everything worked properly.</p>
+<p>Next we need to attach some behaviors to these elements.</p>
+</div>
+<div class="section" id="javascript">
+<h3>JavaScript<a class="headerlink" href="#javascript" title="Permalink to this headline">¶</a></h3>
+<p>We want to be able to read the text from the input element, send it to the
+server, and do something with the result.  We would like to do this whenever the
+&#8220;Go&#8221; button is clicked.  The JavaScript to accomplish this follows - place this
+in a file named <code class="docutils literal"><span class="pre">myapp.js</span></code> (to reflect the script tag in line 9 of
+<code class="docutils literal"><span class="pre">index.html</span></code>):</p>
+<div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#go&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#text&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+        <span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;myservice?text=&quot;</span> <span class="o">+</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">text</span><span class="p">),</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#output&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">reversed</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</td></tr></table></div>
+<p>Several things are happening in this short bit of code, so let&#8217;s examine them
+one by one.  Line 1 simply makes use of the jQuery <code class="docutils literal"><span class="pre">$()</span></code> function, which takes
+a single argument:  a function to invoke with no arguments when the page content
+is loaded and ready.</p>
+<p>Line 2 uses the &#8220;CSS selector&#8221; variant of the <code class="docutils literal"><span class="pre">$()</span></code> function to select an
+element by ID - in this case, the &#8220;go&#8221; button - and attach a behavior to its
+&#8220;click&#8221; callback.</p>
+<p>Line 3 - the first line of the function executed on button click - causes the
+contents of of the text input field to be read out into the variable <code class="docutils literal"><span class="pre">text</span></code>.</p>
+<p>Line 4 uses the jQuery convenience function <code class="docutils literal"><span class="pre">$.getJSON()</span></code> to initiate an ajax
+request to the URL <a class="reference external" href="http://localhost:8080/reverser/myservice">http://localhost:8080/reverser/myservice</a>, passing in the text
+field contents as a query argument.  When the server has a response prepared,
+the function passed as the second argument to <code class="docutils literal"><span class="pre">$.getJSON()</span></code> will be called,
+with the response as the argument.</p>
+<p>Line 5 makes use of this response data to place some text in the blank div.
+Because <code class="docutils literal"><span class="pre">$.getJSON()</span></code> converts the server response to a JSON object
+automatically, we can simply get the reversed word we are looking for in
+<code class="docutils literal"><span class="pre">data.reversed</span></code>.  The output div in the webpage should now be displaying the
+reversed word.</p>
+<p>The final component of this application is the server side processing itself,
+the service named <code class="docutils literal"><span class="pre">myservice</span></code>.</p>
+</div>
+<div class="section" id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<p>The Python web service will perform a reversal of its input.  The following
+Python code accomplishes this (save it in a file named <code class="docutils literal"><span class="pre">myservice.py</span></code>, again,
+to reflect the usage of that name in the <code class="docutils literal"><span class="pre">myapp.js</span></code> above):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&quot;reversed&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>This short Python function uses a terse array idiom to reverse the order of the
+letters in a string.  Note that a string goes into this function from the client
+(i.e., the call to <code class="docutils literal"><span class="pre">$.getJSON</span></code> is line 4 of <code class="docutils literal"><span class="pre">myapp.js</span></code>), and a Python dict
+comes out.  The dict is automatically converted to JSON-encoded text, which the
+<code class="docutils literal"><span class="pre">$.getJSON()</span></code> function automatically converts to a JavaScript object, which is
+finally passed to the anonymous function on line 4 of <code class="docutils literal"><span class="pre">myapp.js</span></code>.</p>
+</div>
+<div class="section" id="tying-it-all-together">
+<h3>Tying it All Together<a class="headerlink" href="#tying-it-all-together" title="Permalink to this headline">¶</a></h3>
+<p>The application is now complete.  Once more refresh the page at
+<a class="reference external" href="http://localhost:8080/reverser/">http://localhost:8080/reverser/</a>, type in your favorite word, and click the &#8220;Go&#8221;
+button.  If all goes well, you should see your favorite word, reversed, below
+the text input field!</p>
+</div>
+<div class="section" id="discussion">
+<h3>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h3>
+<p>Of course, we did not need to bring the server into this particular example,
+since JavaScript is perfectly suited to reversing words should the need arise.
+However, this example was meant to demonstrate how the three pieces - content,
+dynamic clientside behavior, and serverside processing - come together to
+implement a full, working web application.</p>
+<p>Now imagine that instead of reversing the word, you wanted to use the word as a
+search index in a database, or to direct the construction of a complex object,
+or to kick off a large, parallel processing job on a computation engine, or that
+you simply want to use some Python library that has no equivalent in the
+JavaScript world.  Each of these cases represents some action that is difficult
+or impossible to achieve using clientside JavaScript.  By writing Tangelo web
+services you can enrich your application by bringing in the versatility and
+power of Python and its libraries.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Building a Tangelo Web Application from Scratch</a><ul>
+<li><a class="reference internal" href="#string-reverser">String Reverser</a><ul>
+<li><a class="reference internal" href="#preparing-the-stage">Preparing the Stage</a></li>
+<li><a class="reference internal" href="#html">HTML</a></li>
+<li><a class="reference internal" href="#javascript">JavaScript</a></li>
+<li><a class="reference internal" href="#python">Python</a></li>
+<li><a class="reference internal" href="#tying-it-all-together">Tying it All Together</a></li>
+<li><a class="reference internal" href="#discussion">Discussion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../bundled-plugins.html"
+                        title="previous chapter">Bundled Plugins</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="db-vis.html"
+                        title="next chapter">Driving a Visualization with SQLAlchemy</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/building-an-app.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="db-vis.html" title="Driving a Visualization with SQLAlchemy"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../bundled-plugins.html" title="Bundled Plugins"
+             >previous</a> |</li>
+        <li><a href="../index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

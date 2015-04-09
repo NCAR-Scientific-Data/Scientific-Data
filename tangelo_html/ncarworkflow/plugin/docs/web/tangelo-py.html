@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Python Web Service API &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Tangelo JavaScript Library" href="tangelo-js.html" />
+    <link rel="prev" title="tangelo-passwd" href="tangelo-passwd-manpage.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tangelo-js.html" title="Tangelo JavaScript Library"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tangelo-passwd-manpage.html" title="tangelo-passwd"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="python-web-service-api">
+<h1>Python Web Service API<a class="headerlink" href="#python-web-service-api" title="Permalink to this headline">¶</a></h1>
+<p>The web service API is a collection of Python functions meant to help write web
+service scripts in as &#8220;Pythonic&#8221; a way as possible.  The functionality is
+divided into severul areas:  core services for generally useful utilities; HTTP
+interaction, for manipulating request headers, retrieving request bodies, and
+formatting errors; and web service utilities to supercharge Python services.</p>
+<div class="section" id="core-services">
+<h2>Core Services<a class="headerlink" href="#core-services" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tangelo.log">
+<code class="descclassname">tangelo.</code><code class="descname">log</code><span class="sig-paren">(</span><span class="optional">[</span><em>context</em>, <span class="optional">]</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a message <code class="docutils literal"><span class="pre">msg</span></code> to the log file.  The optional <code class="docutils literal"><span class="pre">context</span></code> is a
+descriptive tag that will be prepended to the message within the log file
+(defaulting to &#8220;TANGELO&#8221; if omitted).  Common context tags used internally
+in Tangelo include &#8220;TANGELO&#8221; (to describe startup/shutdown activities), and
+&#8220;ENGINE&#8221; (which describes actions being taken by CherryPy).  This function
+may be useful for debugging or otherwise tracking a service&#8217;s activities as
+it runs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.log_info">
+<code class="descclassname">tangelo.</code><code class="descname">log_info</code><span class="sig-paren">(</span><span class="optional">[</span><em>context</em>, <span class="optional">]</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.log_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variant of <a class="reference internal" href="#tangelo.log" title="tangelo.log"><code class="xref py py-func docutils literal"><span class="pre">tangelo.log()</span></code></a> that writes out messages in purple.
+Informational messages are those that simply declare a helpful description
+of what the system is doing at the moment.  For example, when a plugin is
+about to perform initialization, a call like <code class="docutils literal"><span class="pre">tangelo.log_info(&quot;FOOBAR&quot;,</span>
+<span class="pre">&quot;About</span> <span class="pre">to</span> <span class="pre">initialize...&quot;)</span></code> may be appropriate.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.log_warning">
+<code class="descclassname">tangelo.</code><code class="descname">log_warning</code><span class="sig-paren">(</span><span class="optional">[</span><em>context</em>, <span class="optional">]</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.log_warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variant of <a class="reference internal" href="#tangelo.log" title="tangelo.log"><code class="xref py py-func docutils literal"><span class="pre">tangelo.log()</span></code></a> that writes out messages in yellow.
+Warnings are messages indicating that something did not work out as
+expected, but not so bad as to compromise the continued running of the
+system.  For example, if Tangelo is unable to load a plugin for any reason,
+Tangelo itself is able to continue running - this constitutes a warning
+about the failed plugin loading.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.log_error">
+<code class="descclassname">tangelo.</code><code class="descname">log_error</code><span class="sig-paren">(</span><span class="optional">[</span><em>context</em>, <span class="optional">]</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.log_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variant of <a class="reference internal" href="#tangelo.log" title="tangelo.log"><code class="xref py py-func docutils literal"><span class="pre">tangelo.log()</span></code></a> that writes out messages in red.  Errors
+describe conditions that prevent the further functioning of the system.
+Generally, you will not need to call this function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.log_success">
+<code class="descclassname">tangelo.</code><code class="descname">log_success</code><span class="sig-paren">(</span><span class="optional">[</span><em>context</em>, <span class="optional">]</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.log_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variant of <a class="reference internal" href="#tangelo.log" title="tangelo.log"><code class="xref py py-func docutils literal"><span class="pre">tangelo.log()</span></code></a> that writes out messages in green.  This
+is meant to declare that some operation went as expected.  It is generally
+not needed because the absence of errors and warnings can generally be
+regarded as a success condition.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="http-interaction">
+<h2>HTTP Interaction<a class="headerlink" href="#http-interaction" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tangelo.content_type">
+<code class="descclassname">tangelo.</code><code class="descname">content_type</code><span class="sig-paren">(</span><span class="optional">[</span><em>type</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.content_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the content type for the current request, as a string.  If <cite>type</cite>
+is specified, also sets the content type to the specified string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.http_status">
+<code class="descclassname">tangelo.</code><code class="descname">http_status</code><span class="sig-paren">(</span><em>code</em><span class="optional">[</span>, <em>message</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.http_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the HTTP status code for the current request&#8217;s response.  <cite>code</cite> should
+be an integer; optional <cite>message</cite> can give a concise description of the
+code.  Omitting it results in a standard message; for instance,
+<code class="docutils literal"><span class="pre">tangelo.http_status(404)</span></code> will send back a status of <code class="docutils literal"><span class="pre">404</span> <span class="pre">Not</span> <span class="pre">Found</span></code>.</p>
+<p>This function can be called before returning, e.g., a <code class="docutils literal"><span class="pre">dict</span></code> describing in
+detail what went wrong.  Then, the response will indicate the general error
+while the body contains error details, which may be informational for the
+client, or useful for debugging.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.header">
+<code class="descclassname">tangelo.</code><code class="descname">header</code><span class="sig-paren">(</span><em>header_name</em><span class="optional">[</span>, <em>new_value</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value associated to <cite>header_name</cite> in the HTTP headers, or
+<code class="docutils literal"><span class="pre">None</span></code> if the header is not present.</p>
+<p>If <cite>new_value</cite> is supplied, the header value will additionally be replaced
+by that value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.request_header">
+<code class="descclassname">tangelo.</code><code class="descname">request_header</code><span class="sig-paren">(</span><em>header_name</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.request_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value associated to <cite>header_name</cite> in the request headers, or
+<code class="docutils literal"><span class="pre">None</span></code> if the header is not present.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.request_path">
+<code class="descclassname">tangelo.</code><code class="descname">request_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.request_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the path of the current request.  This is generally the sequence of
+path components following the domain and port number in a URL.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.request_body">
+<code class="descclassname">tangelo.</code><code class="descname">request_body</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.request_body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a filelike object that streams out the body of the current request.
+This can be useful, e.g., for retrieving data submitted in the body for a
+POST request.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.session">
+<code class="descclassname">tangelo.</code><code class="descname">session</code><span class="sig-paren">(</span><em>key</em><span class="optional">[</span>, <em>value</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value currently associated to the session key <cite>key</cite>, or <cite>None</cite>
+if there is no such key.  If <cite>value</cite> is given, it will become newly associated
+to <cite>key</cite>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="web-services-utilities">
+<h2>Web Services Utilities<a class="headerlink" href="#web-services-utilities" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tangelo.paths">
+<code class="descclassname">tangelo.</code><code class="descname">paths</code><span class="sig-paren">(</span><em>paths</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Augments the Python system path with the list of web directories specified
+in <code class="docutils literal"><span class="pre">paths</span></code>.  Each path must be <strong>within the web root directory</strong> or
+<strong>within a user&#8217;s web home directory</strong> (i.e., the paths must be legal with
+respect to <code class="docutils literal"><span class="pre">tangelo.legal_path()</span></code>).</p>
+<p>This function can be used to let web services access commonly used functions
+that are implemented in their own Python modules somewhere in the web
+filesystem.</p>
+<p>After a service calling this function returns, the system path will be
+restored to its original state.  This requires calling <code class="docutils literal"><span class="pre">tangelo.paths()</span></code>
+in every function wishing to change the path, but prevents shadowing of
+expected locations by modules with the same name in other directories, and
+the uncontrolled growth of the <code class="docutils literal"><span class="pre">sys.path</span></code> variable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.config">
+<code class="descclassname">tangelo.</code><code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the service configuration dictionary (see
+<a class="reference internal" href="python-services.html#configuration"><em>Configuring Web Services</em></a>).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.restful">
+<code class="descclassname">&#64;</code><code class="descclassname">tangelo.</code><code class="descname">restful</code><a class="headerlink" href="#tangelo.restful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks a function in a Python service file as being part of that service&#8217;s
+RESTful API.  This prevents accidental exposure of unmarked support
+functions as part of the API, and also enables the use of arbitrary words as
+REST verbs (so long as those words are also valid Python function names).
+An example usage might look like the following, which uses a both a standard
+verb (&#8220;GET&#8221;) and a custom one (&#8220;NORMALIZE&#8221;).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo</span>
+
+<span class="nd">@tangelo.restful</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">baz</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="nd">@tangelo.restful</span>
+<span class="k">def</span> <span class="nf">normalize</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Note that Tangelo automatically converts the verb used by the web client to
+all lowercase letters before searching the Python module for a matching
+function to call.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.types">
+<code class="descclassname">&#64;</code><code class="descclassname">tangelo.</code><code class="descname">types</code><span class="sig-paren">(</span><em>arg1=type1</em>, <em>...</em>, <em>argN=typeN</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorates a service by converting it from a function of several string
+arguments to a function taking typed arguments.  Each argument to
+<code class="docutils literal"><span class="pre">tangelo.types()</span></code> is a function that converts strings to some other type -
+the standard Python functions <code class="docutils literal"><span class="pre">int()</span></code>, <code class="docutils literal"><span class="pre">float()</span></code>, and <code class="docutils literal"><span class="pre">json.loads()</span></code>
+are good examples.  The functions are passed in as keyword arguments, with
+the keyword naming an argument in the decorated function.  For example, the
+following code snippet</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo</span>
+
+<span class="k">def</span> <span class="nf">stringfunc</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="nd">@tangelo.types</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">intfunc</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="k">print</span> <span class="n">stringfunc</span><span class="p">(</span><span class="s">&quot;3&quot;</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">intfunc</span><span class="p">(</span><span class="s">&quot;3&quot;</span><span class="p">,</span> <span class="s">&quot;4&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mi">34</span>
+<span class="mi">7</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">stringfunc()</span></code> performs string concatentation, while <code class="docutils literal"><span class="pre">intfunc()</span></code> performs
+addition on strings that have been converted to integers.</p>
+<p>Though the names of the built-in conversion functions make this decorator look
+like it accepts &#8220;types&#8221; as arguments, any function that maps strings to any type
+can be used.  For instance, a string representing the current time could be
+consumed by a function that parses the string and returns a Python <code class="docutils literal"><span class="pre">datetime</span></code>
+object, or, as mentioned above, <code class="docutils literal"><span class="pre">json.loads()</span></code> could be used to convert
+arbitrary JSON data into Python objects.</p>
+<p>If an exception is raised by any of the conversion functions, its error message
+will be passed back to the client via a <code class="xref py py-class docutils literal"><span class="pre">tangelo.HTTPStatusCode</span></code>
+object.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tangelo.return_type">
+<code class="descclassname">&#64;</code><code class="descclassname">tangelo.</code><code class="descname">return_type</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#tangelo.return_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similarly to how <a class="reference internal" href="#tangelo.types" title="tangelo.types"><code class="xref py py-func docutils literal"><span class="pre">tangelo.types()</span></code></a> works, this decorator can be used to
+provide a function to convert the return value of a service function to some
+other type or form.  By default, return values are converted to JSON via the
+standard <code class="docutils literal"><span class="pre">json.dumps()</span></code> function.  However, this may not be sufficient in
+certain cases.  For example, the <code class="docutils literal"><span class="pre">bson.dumps()</span></code> is a function provided by
+PyMongo that can handle certain types of objects that <code class="docutils literal"><span class="pre">json.dumps()</span></code> cannot,
+such as <code class="docutils literal"><span class="pre">datetime</span></code> objects.  In such a case, the service module can provide
+whatever functions it needs (e.g., by <code class="docutils literal"><span class="pre">import</span></code>ing an appropriate module or
+package) then naming the conversion function in this decorator.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Python Web Service API</a><ul>
+<li><a class="reference internal" href="#core-services">Core Services</a></li>
+<li><a class="reference internal" href="#http-interaction">HTTP Interaction</a></li>
+<li><a class="reference internal" href="#web-services-utilities">Web Services Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tangelo-passwd-manpage.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">tangelo-passwd</span></code></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tangelo-js.html"
+                        title="next chapter">Tangelo JavaScript Library</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tangelo-py.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tangelo-js.html" title="Tangelo JavaScript Library"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tangelo-passwd-manpage.html" title="tangelo-passwd"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

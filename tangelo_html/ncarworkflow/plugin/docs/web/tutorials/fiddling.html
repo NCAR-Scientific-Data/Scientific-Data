@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fiddling with the Bundled Examples &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="../index.html" />
+    <link rel="next" title="Coding Style Guidelines" href="../coding-style-guide.html" />
+    <link rel="prev" title="Driving a Visualization with SQLAlchemy" href="db-vis.html" />
+<link rel=stylesheet type=text/css href=../_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../coding-style-guide.html" title="Coding Style Guidelines"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="db-vis.html" title="Driving a Visualization with SQLAlchemy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fiddling-with-the-bundled-examples">
+<h1>Fiddling with the Bundled Examples<a class="headerlink" href="#fiddling-with-the-bundled-examples" title="Permalink to this headline">¶</a></h1>
+<p>The previous tutorials have shown how to develop various types of Tangelo
+applications, but you might also want to simply fiddle around with the example
+applications that come bundled with Tangelo.  Since the bundled examples are
+treated in a somewhat special manner by Tangelo, this tutorial explains how you
+can make a copy of the example applications, set them up with a Tangelo
+configuration file, and then experiment and see the results yourself.</p>
+<p>The examples can be viewed at <a class="reference external" href="http://localhost:8080">http://localhost:8080</a> by launching Tangelo in
+example mode:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tangelo</span> <span class="o">--</span><span class="n">examples</span>
+</pre></div>
+</div>
+<p>The index page contains links to different examples, each of which is served as
+the web content of one plugin or another.  For example,
+<a class="reference external" href="http://localhost:8080/plugin/vis/examples/barchart/">http://localhost:8080/plugin/vis/examples/barchart/</a> serves an example of the
+barchart that is part of the <em>vis</em> plugin.</p>
+<div class="section" id="the-example-web-applications">
+<h2>The Example Web Applications<a class="headerlink" href="#the-example-web-applications" title="Permalink to this headline">¶</a></h2>
+<p>The example web applications are bundled in the Tangelo Python package with the
+following directory structure:</p>
+<div class="highlight-python"><div class="highlight"><pre>tangelo.ico
+web/
+    ...
+plugin/
+    ...
+</pre></div>
+</div>
+<p>The file <code class="docutils literal"><span class="pre">tangelo.ico</span></code> is served by Tangelo statically as the default favicon,
+while the <code class="docutils literal"><span class="pre">web</span></code> directory contains the example site&#8217;s front page (including
+the Tangelo Sunrise, and the menu of links to the individual examples).  The
+examples themselves are contained within the <code class="docutils literal"><span class="pre">plugin</span></code> directory.  As an
+example, the directory for the <em>Bokeh</em> plugin looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>plugin/
+    bokeh/
+        requirements.txt
+        python/
+            __init__.py
+        web/
+            bokeh.js
+            examples/
+                iris/
+                    index.html
+                    iris.py
+</pre></div>
+</div>
+<p>This plugin contains a Python component and a clientside component, as well as
+the Iris example application, which demonstrates how the pieces fit together
+(for information about how plugins work, see <a class="reference internal" href="../plugins.html#plugins"><em>Tangelo Plugins</em></a>).  The web
+application content in the <code class="docutils literal"><span class="pre">iris</span></code> directory would be a good place to play
+around to discover for yourself how this plugin works.</p>
+<p>Therefore, we will want to make a private copy of the <code class="docutils literal"><span class="pre">web</span></code> and <code class="docutils literal"><span class="pre">plugin</span></code>
+directories in order to experiment with the contents of the example web
+applications.</p>
+</div>
+<div class="section" id="making-a-copy">
+<h2>Making a Copy<a class="headerlink" href="#making-a-copy" title="Permalink to this headline">¶</a></h2>
+<p>To actually play with the examples, we&#8217;d like to set up our own sandbox, copy
+these materials into it, configure Tangelo to run with the appropriate plugins,
+and finally serve our own version of the example applications.</p>
+<div class="section" id="step-1-create-a-sandbox">
+<h3>Step 1:  Create a Sandbox<a class="headerlink" href="#step-1-create-a-sandbox" title="Permalink to this headline">¶</a></h3>
+<p>The examples are bundled as <em>package data</em> with the Tangelo Python package,
+meaning they will be found within the <code class="docutils literal"><span class="pre">tangelo/pkgdata</span></code> subdirectory of the
+<code class="docutils literal"><span class="pre">site-packages</span></code> directory of the Python installation that contains Tangelo.
+On a typical Linux Python installation, this directory might be
+<code class="docutils literal"><span class="pre">/usr/lib/python2.7/site-packages/tangelo/pkgdata</span></code>.  Because different Python
+setups may behave differently with respect to where such files are kept, Tangelo
+includes a program <code class="docutils literal"><span class="pre">tangelo-pkgdata</span></code> that simply reports the full path to the
+<code class="docutils literal"><span class="pre">pkgdata</span></code> directory.  Using this program, the following sequence of shell
+commands will create an area where we can safely modify and otherwise experiment
+with the examples:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ cd ~
+$ mkdir tangelo-examples
+$ cd tangelo-examples
+$ cp -r `tangelo-pkgdata` .
+</pre></div>
+</div>
+<p>(Enclosing a command in backticks causes the shell to run the enclosed program
+and substitute its output in the original command.  You can also run
+<code class="docutils literal"><span class="pre">tangelo-pkgdata</span></code> manually, inspect the output, and copy it into your own
+manual shell command as well.)</p>
+</div>
+<div class="section" id="step-2-configure-the-plugins">
+<h3>Step 2:  Configure the Plugins<a class="headerlink" href="#step-2-configure-the-plugins" title="Permalink to this headline">¶</a></h3>
+<p>We will want to have Tangelo serve the <code class="docutils literal"><span class="pre">web</span></code> directory, while loading the
+appropriate plugins from the <code class="docutils literal"><span class="pre">plugin</span></code> directory.  For the latter, we will need
+a <a class="reference external" href="../_static/fiddling/config.yaml.txt">configuration file</a> to declare the plugins:</p>
+<p>This very simple configuration simply names the plugins we need, together with
+relative paths stating where the plugins can be found.  Create a file
+<code class="docutils literal"><span class="pre">config.yaml</span></code> (in the <code class="docutils literal"><span class="pre">tangelo-examples</span></code> directory) and copy the
+configuration into it.</p>
+</div>
+<div class="section" id="step-3-launch-tangelo">
+<h3>Step 3:  Launch Tangelo<a class="headerlink" href="#step-3-launch-tangelo" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have web materials, plugins, and a configuration, we just need to
+start Tangelo:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ tangelo --root web --config config.yaml
+</pre></div>
+</div>
+<p>Tangelo should begin serving the example site at <a class="reference external" href="http://localhost:8080">http://localhost:8080</a> (if you
+get an error about port 8080 not being free, try again with the <code class="docutils literal"><span class="pre">--port</span></code>
+option to select a different port).</p>
+</div>
+<div class="section" id="step-4-fiddle">
+<h3>Step 4:  Fiddle!<a class="headerlink" href="#step-4-fiddle" title="Permalink to this headline">¶</a></h3>
+<p>Now you can go into the various <code class="docutils literal"><span class="pre">web</span></code> subdirectories of the plugin paths, make
+changes, and observe them live.  If you find things don&#8217;t update as expected,
+you can try restarting the server (certain features of plugins can only be
+instantiated when Tangelo first starts up).</p>
+<p>Try changing the data values in the <em>mapping</em> plugin examples, or changing how
+some of the web services retrieve, process, or format their output data.
+With a safe, hands-on approach, you can learn a lot about how Tangelo operates.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Fiddling with the Bundled Examples</a><ul>
+<li><a class="reference internal" href="#the-example-web-applications">The Example Web Applications</a></li>
+<li><a class="reference internal" href="#making-a-copy">Making a Copy</a><ul>
+<li><a class="reference internal" href="#step-1-create-a-sandbox">Step 1:  Create a Sandbox</a></li>
+<li><a class="reference internal" href="#step-2-configure-the-plugins">Step 2:  Configure the Plugins</a></li>
+<li><a class="reference internal" href="#step-3-launch-tangelo">Step 3:  Launch Tangelo</a></li>
+<li><a class="reference internal" href="#step-4-fiddle">Step 4:  Fiddle!</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="db-vis.html"
+                        title="previous chapter">Driving a Visualization with SQLAlchemy</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../coding-style-guide.html"
+                        title="next chapter">Coding Style Guidelines</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/fiddling.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../coding-style-guide.html" title="Coding Style Guidelines"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="db-vis.html" title="Driving a Visualization with SQLAlchemy"
+             >previous</a> |</li>
+        <li><a href="../index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

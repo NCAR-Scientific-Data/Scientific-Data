@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating Tangelo Releases &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Developing Visualizations" href="developing-visualizations.html" />
+    <link rel="prev" title="Coding Style Guidelines" href="coding-style-guide.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="developing-visualizations.html" title="Developing Visualizations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="coding-style-guide.html" title="Coding Style Guidelines"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="creating-tangelo-releases">
+<h1>Creating Tangelo Releases<a class="headerlink" href="#creating-tangelo-releases" title="Permalink to this headline">¶</a></h1>
+<p>Tangelo is developed on GitHub using the <a class="reference external" href="http://nvie.com/posts/a-successful-git-branching-model/">Git Flow</a> work style.  The
+main development branch is named <code class="docutils literal"><span class="pre">develop</span></code>, while all commits on <code class="docutils literal"><span class="pre">master</span></code>
+correspond to tagged releases.  Topic, hotfix, and release branches are all used
+as described in the discussion in the link above.</p>
+<p>This page documents the careful steps to take in creating a new release, meaning
+that a new commit is made on <code class="docutils literal"><span class="pre">master</span></code>, and a package is uploaded to the Python
+Package Index.</p>
+<div class="section" id="release-procedure">
+<h2>Release Procedure<a class="headerlink" href="#release-procedure" title="Permalink to this headline">¶</a></h2>
+<p>Suppose for the sake of example that the last release&#8217;s version number is <em>1.1</em>.
+The following procedure will produce a new release of Tangelo:</p>
+<p><strong>1. Merge all topic branches to develop.</strong> Be sure that <code class="docutils literal"><span class="pre">develop</span></code> contains
+the code from which you wish to create the new release.</p>
+<p><strong>2. Create a release branch.</strong> A release branch needs to be created off of
+develop:</p>
+<div class="highlight-shell"><div class="highlight"><pre>git checkout -b release-1.2 develop
+</pre></div>
+</div>
+<p>Note that the version number mentioned in the branch name is the version number
+of the release being created.</p>
+<p><strong>3. Bump the version number.</strong> Edit the file <code class="docutils literal"><span class="pre">package.json</span></code> in the top level
+of the repository, updating the version number to <em>1.2.0</em>.  Be sure to use the
+<em>major.minor.patch</em> format.</p>
+<p>Also edit <code class="docutils literal"><span class="pre">js/tests/tangelo-version.js</span></code>, <code class="docutils literal"><span class="pre">tests/tangelo-version.py</span></code>, and
+<code class="docutils literal"><span class="pre">tests/commandline-version.py</span></code> to bump the version numbers there manually (in
+each file, the expected version string is contained in a variable named
+<code class="docutils literal"><span class="pre">expected</span></code>).  This is done by hand to ensure that the version tests are
+deployed correctly for step 6 below.</p>
+<p>Finally, edit the file <code class="docutils literal"><span class="pre">CHANGELOG.md</span></code> in the root of the codebase.  Change the
+<code class="docutils literal"><span class="pre">[Unreleased]</span> <span class="pre">-</span> <span class="pre">[unreleased]</span></code> line near the top of the file to something like
+<code class="docutils literal"><span class="pre">[1.2.0]</span> <span class="pre">-</span> <span class="pre">2014-12-18</span></code>.  Look over the specified changes.  Edit these if
+necessary, making sure that the list is up to date.</p>
+<p><strong>4. Build Tangelo.</strong> Issue the following commands to create a fresh build of
+Tangelo from scratch:</p>
+<div class="highlight-shell"><div class="highlight"><pre>grunt clean:all
+npm install
+grunt
+</pre></div>
+</div>
+<p>This should result in a virtual environment with a newly built Tangelo.  Bumping
+the version number in the previous step means that Grunt should have also
+updated the version string in all parts of the code that require it.</p>
+<p><strong>5. Commit.</strong> Make a commit on the release branch containing the version number
+update:</p>
+<div class="highlight-shell"><div class="highlight"><pre>git commit -am <span class="s2">&quot;Bumping version number for release&quot;</span>
+</pre></div>
+</div>
+<p>then visit <a class="reference external" href="http://localhost:8080/plugin/tangelo/version">http://localhost:8080/plugin/tangelo/version</a> to verify the version
+number there.  Finally, load up any of the examples that uses <em>tangelo.js</em>
+(e.g., <a class="reference external" href="http://localhost:8080/plugin/vis/examples/barchart">http://localhost:8080/plugin/vis/examples/barchart</a>), and, in the console,
+issue <code class="docutils literal"><span class="pre">tangelo.version()</span></code> to verify the clientside version number as well.</p>
+<p><strong>6. Run the tests.</strong></p>
+<p>Issue this command to verify that the client and server side tests all pass:</p>
+<div class="highlight-shell"><div class="highlight"><pre>grunt <span class="nb">test</span>
+</pre></div>
+</div>
+<p>If any tests fail, fix the root causes, making commits and retesting as you go.
+In particular, the tests regarding Tangelo version numbers will fail if the
+version number bump or build process did not work properly for any reason.</p>
+<p><strong>7. Merge into master.</strong> Switch to the <code class="docutils literal"><span class="pre">master</span></code> branch and merge the release
+branch into it:</p>
+<div class="highlight-shell"><div class="highlight"><pre>git checkout master
+git merge --no-ff release-1.2
+</pre></div>
+</div>
+<p>Do not omit the <code class="docutils literal"><span class="pre">--no-ff</span></code> flag!  You can use the default merge commit message.</p>
+<p><strong>8. Tag the release.</strong> Create a tag for the release as follows:</p>
+<div class="highlight-shell"><div class="highlight"><pre>git tag -a v1.2
+</pre></div>
+</div>
+<p>Use a commit message like &#8220;Release v1.2&#8221;.  Be sure to push the tag so it becomes
+visible to GitHub:</p>
+<div class="highlight-shell"><div class="highlight"><pre>git push --tags
+</pre></div>
+</div>
+<p><strong>9. Upload the package to PyPI.</strong>  Unpack the built package file, and then use
+the <code class="docutils literal"><span class="pre">upload</span></code> option to <code class="docutils literal"><span class="pre">setup.py</span></code>:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nb">cd </span>sdist
+tar xzvf tangelo-1.2.0.tar.gz
+../venv/bin/python setup.py sdist upload
+</pre></div>
+</div>
+<p><strong>10. Merge into develop.</strong> The changes made on the release branch must be
+merged back into <code class="docutils literal"><span class="pre">develop</span></code> as well, so that development may continue there:</p>
+<div class="highlight-shell"><div class="highlight"><pre>git checkout develop
+git merge release-1.2
+</pre></div>
+</div>
+<p>This is one of the few times you should not use the <code class="docutils literal"><span class="pre">--no-ff</span></code> flag.  We want
+both <code class="docutils literal"><span class="pre">master</span></code> and <code class="docutils literal"><span class="pre">develop</span></code> to thread through the release branch to simplify
+the graph view of the release.  After the next step, this leaves both <code class="docutils literal"><span class="pre">master</span></code>
+and <code class="docutils literal"><span class="pre">develop</span></code> one commit ahead of the same, prepared release branch point.</p>
+<p><strong>11. Bump the version number again.</strong>  The version number on the <code class="docutils literal"><span class="pre">develop</span></code>
+branch needs to be changed again, to add a <em>-dev</em> suffix.  In our example, the
+version number will now be <em>1.2.0-dev</em>.  This entails editing <code class="docutils literal"><span class="pre">package.json</span></code>
+once more, as well as <code class="docutils literal"><span class="pre">js/tests/tangelo-version.js</span></code>,
+<code class="docutils literal"><span class="pre">tests/tangelo-version.py</span></code>, and <code class="docutils literal"><span class="pre">tests/commandline-version.py</span></code>.</p>
+<p>Also edit <code class="docutils literal"><span class="pre">CHANGELOG.md</span></code> again, reproducing a skeleton of a new changes
+section, copying the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">## [Unreleased] - [unreleased]</span>
+<span class="c">### Added</span>
+
+<span class="c">### Changed</span>
+
+<span class="c">### Deprecated</span>
+
+<span class="c">### Removed</span>
+
+<span class="c">### Fixed</span>
+
+<span class="c">### Security</span>
+</pre></div>
+</div>
+<p>This will allow developers to update the appropriate section easily whenever a
+topic branch is merged to <code class="docutils literal"><span class="pre">develop</span></code>.</p>
+<p><strong>12. Test again.</strong>  Run the tests one more time, to verify that the version
+number bump happened correctly, and to catch anything weird that may have
+happened as well.</p>
+<p><strong>13. Commit.</strong> Commit the change so that <code class="docutils literal"><span class="pre">develop</span></code> is ready to go:</p>
+<div class="highlight-shell"><div class="highlight"><pre>git commit -am <span class="s2">&quot;Bumping version number&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>You now have</p>
+<ul class="simple">
+<li>a new Tangelo package on PyPI.  Installing with <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">tangelo</span></code> will
+install the new version to the system.</li>
+<li>a new, tagged commit on <code class="docutils literal"><span class="pre">master</span></code> that corresponds exactly to the new
+release, and the new package in PyPI.  Anyone who checks this out and builds
+it will have the same Tangelo they would have if installing via <code class="docutils literal"><span class="pre">pip</span></code> as
+above.</li>
+<li>a new commit on <code class="docutils literal"><span class="pre">develop</span></code> representing a starting point for further
+development.  Be sure to create topic branches off of <code class="docutils literal"><span class="pre">develop</span></code> to implement
+new features and bugfixes.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Creating Tangelo Releases</a><ul>
+<li><a class="reference internal" href="#release-procedure">Release Procedure</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="coding-style-guide.html"
+                        title="previous chapter">Coding Style Guidelines</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="developing-visualizations.html"
+                        title="next chapter">Developing Visualizations</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/releasing-tangelo.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="developing-visualizations.html" title="Developing Visualizations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="coding-style-guide.html" title="Coding Style Guidelines"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>
