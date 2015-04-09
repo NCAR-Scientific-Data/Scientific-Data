@@ -2,4 +2,5 @@
 *.png
 *.swp
 *.pyc
+"python test/json"
 .DS_STORE
