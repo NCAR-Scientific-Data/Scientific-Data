@@ -1,29 +1,43 @@
-$( document ).ready(function() {
-  		
-});
+/*global $*/
 
 function toggleMiniMenu() {
-	"use strict";
-	$(".miniMenuOption").toggle("fast");
+    "use strict";
+    $(".miniMenuOption").toggle("fast");
+}
+
+function openClosedDrawer() {
+    "use strict";
+    if ($("#StepMaker").height() <= 20) {
+        $("[id^='tangelo-drawer-icon-']").trigger("click");
+    }
 }
 
 function newSubset() {
-  	$("#StepMaker").empty();
-	$("#StepMaker").load("Subset.html")
-	console.log("Stepmaker:", $("#StepMaker"));
-	
+    "use strict";
+    $("#HTMLLoadSection").empty();
+    $("#HTMLLoadSection").load("stepHTML/subset.html");
+    toggleMiniMenu();
+    openClosedDrawer();
 }
 
 function newAnalysis() {
-	$("#StepMaker").empty();
-	$("#StepMaker").load("Analysis.html")
+    "use strict";
+    $("#HTMLLoadSection").empty();
+    $("#HTMLLoadSection").load("stepHTML/analysis.html");
+    toggleMiniMenu();
+    openClosedDrawer();
 }
 
 function newPlot() {
-
+    "use strict";
+    //Load Goes Here
+    toggleMiniMenu();
+    openClosedDrawer();
 }
 
 function newDownload() {
-
+    "use strict";
+    //Load Goes Here
+    toggleMiniMenu();
+    openClosedDrawer();
 }
-
