@@ -1,0 +1,419 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tangelo Web Services &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Tangelo Plugins" href="plugins.html" />
+    <link rel="prev" title="Basic Usage" href="basic-usage.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="plugins.html" title="Tangelo Plugins"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="basic-usage.html" title="Basic Usage"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tangelo-web-services">
+<span id="web-services"></span><h1>Tangelo Web Services<a class="headerlink" href="#tangelo-web-services" title="Permalink to this headline">¶</a></h1>
+<p>Tangelo&#8217;s special power lies in its ability to run user-created <em>web services</em>
+as part of a larger web application.  Essentially, each Python file in Tangelo&#8217;s
+web space is associated to a URL; requesting this URL (e.g., by visiting it in a
+browser) will cause Tangelo to load the file as a Python module, run a
+particular function found within it, and return the output as the content for
+the URL.</p>
+<p>In other words, <strong>Tangelo web services</strong> mean that <strong>Python code</strong> can become
+<strong>web resources</strong>.  Python is a flexible and powerful programming language with
+a comprehensive standard library and a galaxy of third-party modules providing
+access to all kinds of APIs and software libraries.</p>
+<div class="section" id="general-services">
+<h2>General Services<a class="headerlink" href="#general-services" title="Permalink to this headline">¶</a></h2>
+<p>Here is a simple example of a web service.  Suppose
+<code class="docutils literal"><span class="pre">/home/riker/tangelo_html/calc.py</span></code> reads as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo</span>
+
+<span class="n">allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;add&quot;</span><span class="p">,</span> <span class="s">&quot;subtract&quot;</span><span class="p">,</span> <span class="s">&quot;multiply&quot;</span><span class="p">,</span> <span class="s">&quot;divide&quot;</span><span class="p">]</span>
+
+<span class="nd">@tangelo.types</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&quot;Parameter &#39;a&#39; is missing!&quot;</span>
+    <span class="k">elif</span> <span class="n">b</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&quot;Parameter &#39;b&#39; is missing!&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">operation</span> <span class="o">==</span> <span class="s">&quot;add&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s">&quot;subtract&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+        <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s">&quot;multiply&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+        <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s">&quot;divide&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;Unsupported operation: </span><span class="si">%s</span><span class="se">\n</span><span class="s">Allowed operations are: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&quot;Could not </span><span class="si">%s</span><span class="s"> &#39;</span><span class="si">%s</span><span class="s">&#39; and &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&quot;Can&#39;t divide by zero!&quot;</span>
+</pre></div>
+</div>
+<p>This is a Python module named <code class="docutils literal"><span class="pre">calc</span></code>, implementing a very rudimentary
+four-function calculator in the <code class="docutils literal"><span class="pre">run()</span></code> function.  Tangelo will respond to a
+request for the URL <a class="reference external" href="/examples/calculator/calc/add?a=33&amp;b=14">/examples/calculator/calc/add?a=33&amp;b=14</a>
+(<strong>without</strong> the trailing <code class="docutils literal"><span class="pre">.py</span></code>) by loading <code class="docutils literal"><span class="pre">calc.py</span></code> as a Python module,
+executing its <code class="docutils literal"><span class="pre">run()</span></code> function, and returning the result - in this case, the
+string <code class="docutils literal"><span class="pre">47</span></code> - as the contents of the URL.</p>
+<p>The <code class="docutils literal"><span class="pre">run()</span></code> function takes three arguments:  a positional argument named
+<code class="docutils literal"><span class="pre">operation</span></code>, and two keyword arguments named <code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">b</span></code>.  Tangelo maps
+the positional arguments to any &#8220;path elements&#8221; found after the name of the
+script in the URL (in this case, <code class="docutils literal"><span class="pre">add</span></code>), while keyword arguments are mapped to
+query parameters (<code class="docutils literal"><span class="pre">33</span></code> and <code class="docutils literal"><span class="pre">14</span></code> in this case).  In other words, the example
+URL is the equivalent of running the following short Python script:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">calc</span>
+<span class="k">print</span> <span class="n">calc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;add&quot;</span><span class="p">,</span> <span class="s">&quot;33&quot;</span><span class="p">,</span> <span class="s">&quot;14&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that <em>all arguments are passed as strings.</em>  This is due to the way URLs
+and associated web technologies work - the URL itself is simply a string, so it
+is chunked up into tokens which are then sent to the server.  These arguments
+must therefore be cast to appropriate types at run time.  The
+<a class="reference internal" href="tangelo-py.html#tangelo.types" title="tangelo.types"><code class="xref py py-func docutils literal"><span class="pre">tangelo.types()</span></code></a> decorator offers a convenient way to perform this type
+casting automatically, but of course you can do it manually within the service
+itself if it is necessary.</p>
+<p>Generally speaking, the web endpoints exposed by Tangelo for each Python file
+are not meant to be visited directly in a web browser; instead, they provide
+data to a web application using Ajax calls to retrieve the data.  Suppose we
+wish to use <code class="docutils literal"><span class="pre">calc.py</span></code> in a web calculator application, which includes an HTML
+file with two fields for the user to type inputs into, and four buttons, one for
+each arithmetic operation.  An associated JavaScript file might have code like
+the following:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">do_arithmetic</span><span class="p">(</span><span class="nx">op</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">a_val</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#input-a&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">b_val</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#input-b&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;calc/&quot;</span> <span class="o">+</span> <span class="nx">op</span><span class="p">,</span>
+        <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">a</span><span class="o">:</span> <span class="nx">a_val</span><span class="p">,</span>
+            <span class="nx">b</span><span class="o">:</span> <span class="nx">b_val</span>
+        <span class="p">},</span>
+        <span class="nx">dataType</span><span class="o">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#result&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+        <span class="p">},</span>
+        <span class="nx">error</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">jqxhr</span><span class="p">,</span> <span class="nx">textStatus</span><span class="p">,</span> <span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#result&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">reason</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#plus&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">do_arithmetic</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#minus&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">do_arithmetic</span><span class="p">(</span><span class="s2">&quot;subtract&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#times&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">do_arithmetic</span><span class="p">(</span><span class="s2">&quot;multiply&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#divide&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">do_arithmetic</span><span class="p">(</span><span class="s2">&quot;divide&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">do_arithmetic()</span></code> function is called whenever the operation buttons are
+clicked; it contains a call to the JQuery <code class="docutils literal"><span class="pre">ajax()</span></code> function, which prepares a
+URL with query parameters then retrieves data from it.  The <code class="docutils literal"><span class="pre">success</span></code> callback
+then takes the response from the URL and places it on the webpage so the user
+can see the result.  In this way, your web application front end can connect to
+the Python back end via Ajax.</p>
+<div class="section" id="return-types">
+<span id="id1"></span><h3>Return Types<a class="headerlink" href="#return-types" title="Permalink to this headline">¶</a></h3>
+<p>The type of the value returned from the <code class="docutils literal"><span class="pre">run()</span></code> function determines how
+Tangelo creates content for the associated web endpoint.  Since web server
+communication occurs via textual data, all values returned by web services must
+eventually be converted to strings.  By default, Tangelo accomplishes this by
+considering all such values to be JSON-encoded.  For example, in the calculator
+example, the <code class="docutils literal"><span class="pre">run()</span></code> function returns Python <code class="docutils literal"><span class="pre">int</span></code> value <code class="docutils literal"><span class="pre">47</span></code>; Tangelo
+takes this value and applies the standard function <code class="docutils literal"><span class="pre">json.dump()</span></code> to it,
+resulting in the string <code class="docutils literal"><span class="pre">&quot;47&quot;</span></code>, which is delivered to the client for further
+processing.  Similarly, a service that returns a Python <code class="docutils literal"><span class="pre">dict</span></code> value will be
+converted to a general JSON-object, making it easy to return structured
+information from any given web service.</p>
+<p>This means that, in the most general case, you can create your own types,
+equipped with methods for JSON encoding them, and use those are direct return
+values (see the <a class="reference external" href="http://docs.python.org/2/library/json.html#json.JSONEncoder">Python documentation</a> for information
+on custom JSON encoding).  Attempting to return a type that is not
+JSON-serializable results in a 400 error.</p>
+<p>The only exception to the default conversion behavior is that if the service
+returns a string directly, this value will not be JSON encoded (which entails
+surrounding it with double-quotes), but simply passed along unchanged.  This
+&#8220;escape hatch&#8221; enables a service to return any kind of data by encoding it as a
+string.  The <code class="docutils literal"><span class="pre">tangelo.content_type()</span></code> utility function can be used to specify
+the intended type of the returned data.  For instance,
+<code class="docutils literal"><span class="pre">tangelo.content_type(&quot;text/plain&quot;)</span></code> followed by <code class="docutils literal"><span class="pre">return</span> <span class="pre">&quot;hello,</span> <span class="pre">world&quot;</span></code>
+will result in a text result being sent to the client.  More complex types are
+also possible; e.g., a service might compute a PNG image, then send the PNG data
+back as a string after calling <code class="docutils literal"><span class="pre">tangelo.content_type(&quot;application/png&quot;)</span></code>.</p>
+</div>
+<div class="section" id="specifying-a-custom-return-type-converter">
+<span id="returntype"></span><h3>Specifying a Custom Return Type Converter<a class="headerlink" href="#specifying-a-custom-return-type-converter" title="Permalink to this headline">¶</a></h3>
+<p>Similarly to the <a class="reference internal" href="tangelo-py.html#tangelo.types" title="tangelo.types"><code class="xref py py-func docutils literal"><span class="pre">tangelo.types()</span></code></a> decorator mentioned above, services
+can specify a custom return type via the <a class="reference internal" href="tangelo-py.html#tangelo.return_type" title="tangelo.return_type"><code class="xref py py-func docutils literal"><span class="pre">tangelo.return_type()</span></code></a>
+decorator.  It takes a single argument, a function to convert the object
+returned from the service function to a string or JSON-serializable value (see
+<a class="reference internal" href="#return-types"><em>Return Types</em></a>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo</span>
+
+<span class="k">def</span> <span class="nf">excited</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s">&quot;!!!&quot;</span>
+
+<span class="nd">@tangelo.return_type</span><span class="p">(</span><span class="n">excited</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;hello </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Given <code class="docutils literal"><span class="pre">Data</span></code> as an input, this service will return the string <code class="docutils literal"><span class="pre">Hello</span>
+<span class="pre">Data!!!</span></code> to the client.</p>
+<p>A more likely use case for this decorator is special-purpose JSON converters,
+such as Pymongo&#8217;s <code class="docutils literal"><span class="pre">bson.json_util.dumps()</span></code> function, which can handle certain
+non-standard objects such as Python <code class="docutils literal"><span class="pre">datetime</span></code> objects when converting to JSON
+text.</p>
+</div>
+</div>
+<div class="section" id="http-status-codes">
+<h2>HTTP Status Codes<a class="headerlink" href="#http-status-codes" title="Permalink to this headline">¶</a></h2>
+<p>When something goes wrong during execution of a web service, you may wish to
+signal to the client what happened.  The <code class="docutils literal"><span class="pre">tangelo.http_status()</span></code> function can
+be used to set the status code to indicate the class of problem.  For instance,
+if the service invocation does not include the proper required arguments, the
+service might signal the error by the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">tangelo</span><span class="o">.</span><span class="n">http_status</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="s">&quot;Required Argument Missing&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Many HTTP status codes have <a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">standard meanings</a>, including default
+titles (e.g., the default title for 400 is &#8220;Bad Request&#8221;); invoking
+<code class="docutils literal"><span class="pre">tangelo.http_status()</span></code> with only a numerical code will use such a default
+title.  Otherwise, you may include a second string argument to provide a more
+specific description.</p>
+<p>Errors are generally signaled with <em>4xx</em> and <em>5xx</em> codes.  In these cases, the
+response body may be useful for providing specific information about the error
+to the client.  Such information can be provided as JSON, plain text, HTML, or
+any other feasible format.  Just make sure to call <code class="docutils literal"><span class="pre">tangelo.content_type()</span></code> to
+specify the MIME type of the response before using <code class="docutils literal"><span class="pre">return</span></code> to prepare and
+send the response.</p>
+</div>
+<div class="section" id="restful-services">
+<h2>RESTful Services<a class="headerlink" href="#restful-services" title="Permalink to this headline">¶</a></h2>
+<p>Tangelo also supports the creation of REST services.  Instead of placing
+functionality in a <code class="docutils literal"><span class="pre">run()</span></code> function, such a service has one function per
+desired REST verb.  For example, a rudimentary service to manage a collection of
+databases might look like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo</span>
+<span class="kn">import</span> <span class="nn">lcarsdb</span>
+
+<span class="nd">@tangelo.restful</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">dbname</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">lcarsdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;enterprise.starfleet.mil&quot;</span><span class="p">,</span> <span class="n">dbname</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">db</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">db</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="nd">@tangelo.restful</span>
+<span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="n">dbname</span><span class="p">):</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">lcarsdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;enterprise.starfleet.mil&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">connection</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&quot;FAIL&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">createDB</span><span class="p">(</span><span class="n">dbname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;OK&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;FAIL&quot;</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="tangelo-py.html#tangelo.restful" title="tangelo.restful"><code class="xref py py-func docutils literal"><span class="pre">tangelo.restful()</span></code></a> decorator is used to explicitly mark the
+functions that are part of the RESTful interface so as to avoid (1) restricting
+REST verbs to just the set of commonly used ones and (2) exposing every function
+in the service as part of a REST interface (since some of those could simply be
+helper functions).</p>
+<p>Bear in mind that a function named <code class="docutils literal"><span class="pre">run()</span></code> will always take precedence over
+any functions marked with <code class="docutils literal"><span class="pre">&#64;tangelo.restful</span></code>.  This is because <code class="docutils literal"><span class="pre">run()</span></code> is
+meant to be agnostic to the HTTP method that was used to invoke it, and as such,
+has higher precedence when Tangelo is looking for a function to invoke.</p>
+</div>
+<div class="section" id="configuring-web-services">
+<span id="configuration"></span><h2>Configuring Web Services<a class="headerlink" href="#configuring-web-services" title="Permalink to this headline">¶</a></h2>
+<p>You can optionally include a configuration file alongside the service itself.
+For instance, suppose the following service is implemented in <cite>autodestruct.py</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo</span>
+<span class="kn">import</span> <span class="nn">starship</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">officer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">countdown</span><span class="o">=</span><span class="mi">20</span><span class="o">*</span><span class="mi">60</span><span class="p">):</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">tangelo</span><span class="o">.</span><span class="n">config</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">officer</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">code</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&quot;status&quot;</span><span class="p">:</span> <span class="s">&quot;failed&quot;</span><span class="p">,</span>
+                <span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;missing officer or code argument&quot;</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">officer</span> <span class="o">!=</span> <span class="n">config</span><span class="p">[</span><span class="s">&quot;officer&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&quot;status&quot;</span><span class="p">:</span> <span class="s">&quot;failed&quot;</span><span class="p">,</span>
+                <span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;unauthorized&quot;</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">code</span> <span class="o">!=</span> <span class="n">config</span><span class="p">[</span><span class="s">&quot;code&quot;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">&quot;status&quot;</span><span class="p">:</span> <span class="s">&quot;failed&quot;</span><span class="p">,</span>
+                <span class="s">&quot;reason&quot;</span><span class="p">:</span> <span class="s">&quot;incorrect code&quot;</span><span class="p">}</span>
+
+    <span class="n">starship</span><span class="o">.</span><span class="n">autodestruct</span><span class="p">(</span><span class="n">countdown</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s">&quot;status&quot;</span><span class="p">:</span> <span class="s">&quot;complete&quot;</span><span class="p">,</span>
+            <span class="s">&quot;message&quot;</span><span class="p">:</span> <span class="s">&quot;Auto destruct in </span><span class="si">%d</span><span class="s"> seconds!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">countdown</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>Via the <a class="reference internal" href="tangelo-py.html#tangelo.config" title="tangelo.config"><code class="xref py py-func docutils literal"><span class="pre">tangelo.config()</span></code></a> function, this service attempts to match the
+input data against credentials stored in the module level configuration, which
+is stored in <cite>autodestruct.yaml</cite> a YAML file containing an associative array
+(i.e., a key-value store) at its top level:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">officer</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">picard</span>
+<span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">echo november golf alpha golf echo four seven enable</span>
+</pre></div>
+</div>
+<p>The two files must have the same base name (<cite>autodestruct</cite> in this case) and be
+in the same location. Any time the module for a service is loaded, the
+configuration file will be parsed and loaded as well.  Changing either file will
+cause the module to be reloaded the next time it is invoked.  The
+<code class="docutils literal"><span class="pre">tangelo.config()</span></code> function returns a copy of the configuration dictionary, to
+prevent an errant service from updating the configuration in a persistent way.
+For this reason, it is advisable to only call this function once, capturing the
+result in a variable, and retrieving values from it as needed.</p>
+</div>
+<div class="section" id="persistent-storage-for-web-services">
+<h2>Persistent Storage for Web Services<a class="headerlink" href="#persistent-storage-for-web-services" title="Permalink to this headline">¶</a></h2>
+<p>In contrast to the read-only service configuration, each service also has access
+to a <em>persistent data store</em> that remembers changes made to it from invocation
+to invocation.  This may be accessed by invoking <code class="docutils literal"><span class="pre">tangelo.store()</span></code> within a
+service function.  Like <code class="docutils literal"><span class="pre">tangelo.config()</span></code>, the store is a Python dictionary,
+but anything stored in it will be accessible from a subsequent invocation of the
+service.</p>
+<p>A very simple example would increment <code class="docutils literal"><span class="pre">tangelo.store()[&quot;count&quot;]</span></code> on each
+invocation, allowing the service to &#8220;know&#8221; how many times it has been invoked
+before.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tangelo Web Services</a><ul>
+<li><a class="reference internal" href="#general-services">General Services</a><ul>
+<li><a class="reference internal" href="#return-types">Return Types</a></li>
+<li><a class="reference internal" href="#specifying-a-custom-return-type-converter">Specifying a Custom Return Type Converter</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#http-status-codes">HTTP Status Codes</a></li>
+<li><a class="reference internal" href="#restful-services">RESTful Services</a></li>
+<li><a class="reference internal" href="#configuring-web-services">Configuring Web Services</a></li>
+<li><a class="reference internal" href="#persistent-storage-for-web-services">Persistent Storage for Web Services</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="basic-usage.html"
+                        title="previous chapter">Basic Usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plugins.html"
+                        title="next chapter">Tangelo Plugins</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/python-services.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="plugins.html" title="Tangelo Plugins"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="basic-usage.html" title="Basic Usage"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

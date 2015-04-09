@@ -2,4 +2,7 @@
 *.png
 *.swp
 *.pyc
+json/
+data/
 .DS_STORE
+__MACOSX/

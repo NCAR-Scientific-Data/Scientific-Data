@@ -1,0 +1,371 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tangelo Plugins &mdash; Tangelo Web Framework 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/tangelo.ico"/>
+    <link rel="top" title="Tangelo Web Framework 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="tangelo" href="tangelo-manpage.html" />
+    <link rel="prev" title="Tangelo Web Services" href="python-services.html" />
+<link rel=stylesheet type=text/css href=_static/tangelo-sphinx.css />
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tangelo-manpage.html" title="tangelo"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="python-services.html" title="Tangelo Web Services"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tangelo-plugins">
+<span id="plugins"></span><h1>Tangelo Plugins<a class="headerlink" href="#tangelo-plugins" title="Permalink to this headline">¶</a></h1>
+<p>Tangelo&#8217;s capabilities can be extended by creating <em>plugins</em> to serve custom
+content and services from a canonical URL, extend Tangelo&#8217;s Python runtime
+environment, and perform specialized setup and teardown actions to support new
+behaviors.  Tangelo ships with several bundled plugins that implement useful
+features and provide examples of how the plugin system can add value to your
+Tangelo setup.</p>
+<div class="section" id="structure-and-content">
+<h2>Structure and Content<a class="headerlink" href="#structure-and-content" title="Permalink to this headline">¶</a></h2>
+<p>A plugin is simply a directory containing a mix of content, documentation, and
+control directives.  Together, these elements determine what services and
+features the plugin provides to a Tangelo server instance, and how those
+services and features are prepped and cleaned up.  A configuration file supplied
+to Tangelo at startup time controls which plugins are loaded.</p>
+<p>An example plugin&#8217;s file contents might be as follows:</p>
+<div class="highlight-none"><div class="highlight"><pre>foobar/
+    control.py
+    config.yaml
+    requirements.txt
+    info.txt
+    python/
+        __init__.py
+        helper.py
+    web/
+        foobar.js
+        foobar.py
+        example/
+            index.html
+            index.js
+</pre></div>
+</div>
+<p>We can examine the contents piece by piece.</p>
+<div class="section" id="web-content">
+<h3>Web Content<a class="headerlink" href="#web-content" title="Permalink to this headline">¶</a></h3>
+<p>The directory <code class="docutils literal"><span class="pre">foobar/web</span></code> behaves much like any other static and dynamic
+content served by Tangelo.  Content in this directory is served from a base URL
+of <code class="docutils literal"><span class="pre">/plugin/foobar/</span></code> (where, <code class="docutils literal"><span class="pre">foobar</span></code> is the name of this plugin; however,
+see <a class="reference internal" href="#plugin-config"><em>Plugin Configuration</em></a>).  For example, <code class="docutils literal"><span class="pre">/plugin/foobar/foobar.js</span></code> refers to the
+file of the same name in the <code class="docutils literal"><span class="pre">web</span></code> directory; this URL could be used by a web
+application to include this file in a <code class="docutils literal"><span class="pre">&lt;script&gt;</span></code> tag, etc. (see
+<a class="reference internal" href="basic-usage.html#web-content"><em>Serving Web Content</em></a> for more information).</p>
+<p>Dynamic web services also behave as elsewhere:  the URL
+<code class="docutils literal"><span class="pre">/plugin/foobar/foobar</span></code> will cause Tangelo to run the code found in
+<code class="docutils literal"><span class="pre">foobar.py</span></code> and return it to the client, etc. (see <a class="reference internal" href="python-services.html#web-services"><em>Tangelo Web Services</em></a> for
+more information).</p>
+</div>
+<div class="section" id="python-content">
+<h3>Python Content<a class="headerlink" href="#python-content" title="Permalink to this headline">¶</a></h3>
+<p>A plugin may also wish to export some Python code for use in web services.  In
+the foobar plugin example, such content appears in
+<code class="docutils literal"><span class="pre">foobar/python/__init__.py</span></code>.  This file, for example, might contain the
+following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">helper</span>
+
+<span class="k">def</span> <span class="nf">even</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>When the foobar plugin is loaded by Tangelo, the contents of
+<code class="docutils literal"><span class="pre">python/__init__.py</span></code> are placed in a virtual package named
+<code class="docutils literal"><span class="pre">tangelo.plugin.foobar</span></code>.  This enables web services to use the <code class="docutils literal"><span class="pre">even()</span></code>
+functions as in the following example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo</span>
+<span class="kn">import</span> <span class="nn">tangelo.plugin.foobar</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">tangelo</span><span class="o">.</span><span class="n">content_type</span><span class="p">(</span><span class="s">&quot;text/plain&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;even&quot;</span> <span class="k">if</span> <span class="n">tangelo</span><span class="o">.</span><span class="n">plugin</span><span class="o">.</span><span class="n">foobar</span><span class="o">.</span><span class="n">even</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">else</span> <span class="s">&quot;odd&quot;</span>
+</pre></div>
+</div>
+<p>To export &#8220;submodules&#8221; that will appear in the <code class="docutils literal"><span class="pre">tangelo.plugin.foobar</span></code>
+namespace, note that <code class="docutils literal"><span class="pre">__init__.py</span></code> uses the <code class="docutils literal"><span class="pre">import</span></code> statement to cause the
+<code class="docutils literal"><span class="pre">helper</span></code> module to appear within its scope; this module can now be addressed
+with <code class="docutils literal"><span class="pre">tangelo.plugin.foobar.helper</span></code>, and any functions and data exported by
+<code class="docutils literal"><span class="pre">helper</span></code> will become available for use in web services as well.</p>
+<p>The bundled <em>bokeh</em> plugin contains an example of exporting a decorator function
+using this technique.</p>
+</div>
+</div>
+<div class="section" id="setup-and-teardown">
+<h2>Setup and Teardown<a class="headerlink" href="#setup-and-teardown" title="Permalink to this headline">¶</a></h2>
+<p>The file <code class="docutils literal"><span class="pre">foobar/control.py</span></code> defines <em>setup</em> and <em>teardown</em> actions for each
+plugin.  For example, the contents of that file might be as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+    <span class="n">tangelo</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;FOOBAR&quot;</span><span class="p">,</span> <span class="s">&quot;Setting up foobar plugin!&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+    <span class="n">tangelo</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;FOOBAR&quot;</span><span class="p">,</span> <span class="s">&quot;Tearing down foobar plugin!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Whenever Tangelo loads (unloads) the foobar plugin, it will import
+<code class="docutils literal"><span class="pre">control.py</span></code> as a module and execute any <code class="docutils literal"><span class="pre">setup()</span></code> (<code class="docutils literal"><span class="pre">teardown()</span></code>) function
+it finds, passing the configuration and persistent storage (see
+<a class="reference internal" href="#plugin-config"><em>Plugin Configuration</em></a>) to it as arguments.  If during setup the function raises
+any exception, the exception will be printed to the log, and Tangelo will
+abandon loading the plugin and move to the next one.</p>
+<p>The <code class="docutils literal"><span class="pre">setup()</span></code> function can also cause arbitrary CherryPy applications to be
+mounted in the plugin&#8217;s URL namespace.  <code class="docutils literal"><span class="pre">setup()</span></code> can optionally return a list
+of 3-tuples describing the applications to mount.  Each 3-tuple should contain a
+CherryPy application object, an optional configuration object associated with
+the application, and a string describing where to mount the application.  This
+string will automatically be prepended with the base URL of the plugin being set
+up.  For instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">tangelo.plugin.foobar</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">tangelo</span><span class="o">.</span><span class="n">plugin</span><span class="o">.</span><span class="n">foobar</span><span class="o">.</span><span class="n">make_cherrypy_app</span><span class="p">()</span>
+    <span class="n">appconf</span> <span class="o">=</span> <span class="n">tangelo</span><span class="o">.</span><span class="n">plugin</span><span class="o">.</span><span class="n">foobar</span><span class="o">.</span><span class="n">make_config</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">[(</span><span class="n">app</span><span class="p">,</span> <span class="n">appconf</span><span class="p">,</span> <span class="s">&quot;/superapp&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>When the <code class="docutils literal"><span class="pre">foobar</span></code> plugin is loaded, the URL <code class="docutils literal"><span class="pre">/plugin/foobar/superapp</span></code> will
+serve the CherryPy application implemented in <code class="docutils literal"><span class="pre">app</span></code>.  Any such applications
+are also unmounted when the plugin is unloaded.</p>
+</div>
+<div class="section" id="plugin-configuration">
+<span id="plugin-config"></span><h2>Plugin Configuration<a class="headerlink" href="#plugin-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Plugin configuration comes in two parts:  specifying which plugins to load, and
+specifying particular behavior for each plugin.</p>
+<div class="section" id="enabling-plugins">
+<h3>Enabling Plugins<a class="headerlink" href="#enabling-plugins" title="Permalink to this headline">¶</a></h3>
+<p>The Tangelo configuration file supports an option <code class="docutils literal"><span class="pre">plugin</span></code> that specifies a
+plugin configuration.  The option&#8217;s value should be a YAML expression consisting
+of a list of objects, one for each plugin under consideration.  The objects
+themselves are relatively simple:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">foobar</span>
+  <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/path/to/foobar/plugin</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">quux</span>
+  <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">path/to/quux</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">docs</span>
+</pre></div>
+</div>
+<p>Each contains a required <code class="docutils literal"><span class="pre">name</span></code> property and an optional <code class="docutils literal"><span class="pre">path</span></code> property
+describing where to find the plugin materials (i.e., the example directory shown
+above).</p>
+<p>Note that you can enable a bundled plugin (see <a class="reference internal" href="bundled-plugins.html#bundled"><em>Bundled Plugins</em></a>) by omitting the
+<code class="docutils literal"><span class="pre">path</span></code> property.  In this case, Tangelo searches for a plugin by the given
+name in the plugins that come bundled with Tangelo.  In the example above, the
+<em>docs</em> plugin will be enabled.  This is useful for enabling a &#8220;standard&#8221; plugin
+without having to know where Tangelo keeps it.</p>
+<p>The <code class="docutils literal"><span class="pre">plugins</span></code> option can simply be omitted when you do not wish to load any
+plugins.</p>
+<p>When Tangelo is started with a <code class="docutils literal"><span class="pre">plugins</span></code> option in its configuration file,
+each plugin listed will be loaded before Tangelo begins serving content to the
+web.  Because it is assumed that any plugins specified are necessary for the
+Tangelo application being launched, any error in loading any of the plugins will
+result in aborting the startup process (logging errors as they occur).</p>
+<p>Inversely, when Tangelo is shut down, each plugin will be unloaded in turn
+(enabling, e.g., cleanup actions such as flushing buffers to disk, committing
+pending database transactions, closing connections, etc.).  In this case, if a
+plugin cannot be unloaded for any reason, Tangelo&#8217;s shutdown will continue, and
+you should clean up after the faulty plugin manually.</p>
+</div>
+<div class="section" id="plugin-setup">
+<h3>Plugin Setup<a class="headerlink" href="#plugin-setup" title="Permalink to this headline">¶</a></h3>
+<p>Some plugins may need to be set up before they can be properly used.  Plugin
+setup consists of two steps:  installing Python dependencies, if any, and
+consulting any informational messages supplied by the plugin.</p>
+<p>In the example <em>foobar</em> plugin, note that the root directory includes a
+<code class="docutils literal"><span class="pre">requirements.txt</span></code> file.  This is simply a <a class="reference external" href="https://pip.pypa.io/en/latest/user_guide.html#requirements-files">pip requirements file</a> declaring
+what Python packages the plugin needs to run.  You can install these with a
+command similar to <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">foobar/requirements.txt</span></code>.</p>
+<p>Secondly, some plugins may require some other action to be taken before they
+work.  The plugin authors can describe any such instructions in the <code class="docutils literal"><span class="pre">info.txt</span></code>
+file.  After installing the requirements, you should read this file to see if
+anything else is required.  For instance, a package may need to bootstrap after
+it&#8217;s installed by fetching further resources or updates from the web; in this
+case, <code class="docutils literal"><span class="pre">info.txt</span></code> would explain just how to accomplish this bootstrapping.</p>
+<p>These steps constitute a standard procedure when retrieving a new plugin for use
+with your local Tangelo installation.  For instance, if the <em>foobar</em> plugin
+resides in a GitHub repository, you would first find a suitable location on your
+local computer to clone that repository.  Then you would invoke <code class="docutils literal"><span class="pre">pip</span></code> to
+install the required dependencies, then take any action specified by
+<code class="docutils literal"><span class="pre">info.txt</span></code>, and finally create an entry in the Tangelo plugin configuration
+file.  When Tangelo is started (or when the plugin registry is refreshed), the
+new plugin will be running.</p>
+</div>
+<div class="section" id="configuring-plugin-behavior">
+<h3>Configuring Plugin Behavior<a class="headerlink" href="#configuring-plugin-behavior" title="Permalink to this headline">¶</a></h3>
+<p>The file <code class="docutils literal"><span class="pre">foobar/config.yaml</span></code> describes a YAML associative array representing
+the plugin&#8217;s configuration data.  This is the same format as web service
+configurations (see <a class="reference internal" href="python-services.html#configuration"><em>Configuring Web Services</em></a>), and can be read with the function
+<code class="docutils literal"><span class="pre">tangelo.plugin_config()</span></code>.</p>
+<p>Similarly, plugins also have a editable persistent store, accessed with the
+<code class="docutils literal"><span class="pre">tangelo.plugin_store()</span></code> function.</p>
+<p>Both the configuration and the persistent store and passed as arguments to
+<code class="docutils literal"><span class="pre">setup()</span></code> and <code class="docutils literal"><span class="pre">teardown()</span></code> in the control module.</p>
+</div>
+</div>
+<div class="section" id="loading-and-unloading">
+<h2>Loading and Unloading<a class="headerlink" href="#loading-and-unloading" title="Permalink to this headline">¶</a></h2>
+<p>When plugins are loaded or unloaded, Tangelo takes a sequence of particular
+steps to accomplish the effect.</p>
+<div class="section" id="loading-a-plugin">
+<h3>Loading a Plugin<a class="headerlink" href="#loading-a-plugin" title="Permalink to this headline">¶</a></h3>
+<p>Loading a plugin consists of the following actions:</p>
+<ol class="arabic simple">
+<li>The configuration is loaded from <code class="docutils literal"><span class="pre">config.yaml</span></code>.</li>
+<li>An empty persistent store is created.</li>
+<li>Any python content is set up by creating a virtual package called
+<code class="docutils literal"><span class="pre">tangelo.plugin.&lt;pluginname&gt;</span></code>, and exporting the contents of
+<code class="docutils literal"><span class="pre">python/__init__.py</span></code> to it.</li>
+<li>The <code class="docutils literal"><span class="pre">control.py</span></code> module is loaded, and <code class="docutils literal"><span class="pre">control.setup()</span></code> is invoked,
+passing the configuration and fresh persistent store to it.</li>
+<li>If <code class="docutils literal"><span class="pre">setup()</span></code> returns a result, the list of CherryPy apps expressed in the
+<code class="docutils literal"><span class="pre">&quot;apps&quot;</span></code> property of it are mounted.</li>
+</ol>
+<p>Steps 3, 4, and 5 are not taken if the corresponding content is not present.  If
+any of those steps raises an exception, the error will be logged and the Tangelo
+startup process will abort.</p>
+</div>
+<div class="section" id="unloading-a-plugin">
+<h3>Unloading a Plugin<a class="headerlink" href="#unloading-a-plugin" title="Permalink to this headline">¶</a></h3>
+<p>Unloading a plugins consists of the follow actions (which serve to undo the
+corresponding setup actions):</p>
+<ol class="arabic simple">
+<li>Any python content present in <code class="docutils literal"><span class="pre">tangelo.plugin.&lt;pluginname&gt;</span></code> is torn down by
+deleting the virtual package from the runtime.</li>
+<li>Any CherryPy applications are unmounted.</li>
+<li>If the control module contains a <code class="docutils literal"><span class="pre">teardown()</span></code> function, it is invoked,
+passing the configuration and persistent store to it.</li>
+</ol>
+<p>If an exception occurs during step 3, the <code class="docutils literal"><span class="pre">teardown()</span></code> function will not
+finish executing, but Tangelo shutdown will continue with the unloading of
+the rest of the plugins and eventual exiting of the Tangelo process.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tangelo Plugins</a><ul>
+<li><a class="reference internal" href="#structure-and-content">Structure and Content</a><ul>
+<li><a class="reference internal" href="#web-content">Web Content</a></li>
+<li><a class="reference internal" href="#python-content">Python Content</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#setup-and-teardown">Setup and Teardown</a></li>
+<li><a class="reference internal" href="#plugin-configuration">Plugin Configuration</a><ul>
+<li><a class="reference internal" href="#enabling-plugins">Enabling Plugins</a></li>
+<li><a class="reference internal" href="#plugin-setup">Plugin Setup</a></li>
+<li><a class="reference internal" href="#configuring-plugin-behavior">Configuring Plugin Behavior</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#loading-and-unloading">Loading and Unloading</a><ul>
+<li><a class="reference internal" href="#loading-a-plugin">Loading a Plugin</a></li>
+<li><a class="reference internal" href="#unloading-a-plugin">Unloading a Plugin</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="python-services.html"
+                        title="previous chapter">Tangelo Web Services</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tangelo-manpage.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">tangelo</span></code></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/plugins.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tangelo-manpage.html" title="tangelo"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="python-services.html" title="Tangelo Web Services"
+             >previous</a> |</li>
+        <li><a href="index.html">Tangelo Web Framework 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Kitware, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

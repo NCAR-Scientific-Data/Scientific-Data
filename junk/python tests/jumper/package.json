@@ -1,0 +1,20 @@
+{
+  "name": "csci-4448-semester-project",
+  "version": "1.0.0",
+  "description": "The semester project for CSCI 4448 - Object-Oriented Analysis/Design",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node-dev app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OOGroup/jumper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OOGroup/jumper/issues"
+  },
+  "homepage": "https://github.com/OOGroup/jumper"
+}
