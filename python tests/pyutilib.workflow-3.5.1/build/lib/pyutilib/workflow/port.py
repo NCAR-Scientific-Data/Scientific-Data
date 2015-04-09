@@ -297,5 +297,3 @@ class OutputPorts(Ports):
         """Constructor."""
         Ports.__init__(self, task)
         self._outputs=True
-
-

@@ -27,7 +27,7 @@ def addTask(task, links, workflow):
 
 # Build a workflow from json file with id workflowID
 def deserialize(workflowID):
-	with open('json/'+workflowID+'.json') as data_file:    
+	with open('/data/'+workflowID+'.json') as data_file:    
 		data = json.load(data_file)
 
 	# Create temp workflow
@@ -49,7 +49,7 @@ def deserialize(workflowID):
 
 # Serialize workflow into json file with UID as filename
 def serialize(workflow):
-	with open('json/'+workflow.workflowID+'.json', 'w') as outfile:
+	with open('/data/'+workflow.workflowID+'.json', 'w') as outfile:
 		json.dump(workflow.__dict__(), outfile)
 
 # Call this function to add a new task to a workflow
