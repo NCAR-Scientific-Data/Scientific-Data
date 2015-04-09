@@ -2,31 +2,34 @@
 
 function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm) {
     "use strict";
-    simulationType = "simulationType=" + simulationType;
-    variable = "&variable=" + variable;
-    swlat = "&swlat=" + swlat;
-    swlon = "&swlon=" + swlon;
-    nelat = "&nelat=" + nelat;
-    nelon = "&nelon=" + nelon;
-    timestart = "&timeStart=" + timestart;
-    timeend = "&timeEnd=" + timeend;
-    rcm = "&rcm=" + rcm;
-    gcm = "&gcm=" + gcm;
 
-    var url = "python/grabNetcdf?" + simulationType + variable + swlat + swlon + nelat + nelon + timestart + timeend + rcm + gcm;
+    var basicString = "http://tds.ucar.edu/thredds/dodsC/narccap.",
+        modelString = rcm + "." + gcm + simulationType + "." + variable.substring(0,6),
+        version = urlCatalog.urlCatalog[modelString],
+        modelString += variable.substring(6);
 
-    $("<p>Subsetting. Please Wait.</p>").insertAfter($(".form-inline"));
-
-    $.getJSON(url, function (data) {
-        if (data.subset) {
-            $("p").html("Subset Succesful!");
-            localStorage.subset = data.subset;
-
+        if (version == 0) {
+            version = ".aggregation";
         } else {
-            $("p").html("Subset Failed.<br>" + data.error);
-            localStorage.subset = "";
+            version = "." + String(version) + ".aggregation";
         }
-    });
+
+    var url = basicString + modelString + version;
+
+    var inputs = {
+        "url" : url,
+        "variable" : variable.substring(7),
+        "swlat" : swlat,
+        "swlon" : swlon,
+        "nelat" : nelat,
+        "nelon" : nelon,
+        "startdate" : timestart,
+        "enddate" : timeend
+    };
+
+    inputs = JSON.stringify(inputs);
+
+    addTask("TaskSubset", inputs);
 }
 
 function callSubset() {
