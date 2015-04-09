@@ -7,7 +7,7 @@ def serialize(workflow):
 		json.dump(workflow.__dict__(), outfile)
 
 def run():
-	uid = uuid.uuid4()
+	uid = str(uuid.uuid4())
 	w = pyutilib.workflow.Workflow()
 	w.setWorkflowID(uid)
 	serialize(w)
