@@ -61,16 +61,17 @@ function getIndexMap(workflow) {
 */
 function generateData(workflow, indexMap) {
     "use strict";
-    var data = { nodes: [], links: []};
+    var data = { nodes: [], links: [], uids: []};
 
     workflow.forEach(function (nodeProperties) {
         var nodeType = nodeProperties[0],
             nodeIndex = nodeProperties[1],
             nodeLinks = nodeProperties[2],
+            nodeUID = nodeProperties[3],
             nodeName = nodeProperties[0] + nodeProperties[1],
             sourceIndex;
 
-        data.nodes.push({type: nodeType, name: nodeName});
+        data.nodes.push({type: nodeType, name: nodeName, uid: nodeUID});
 
         sourceIndex = nodeIndex;
 
@@ -354,6 +355,8 @@ function addTask(task_Type, links) {
     $.getJSON(url, function (results) {
         if (results.workflow) {
             var data = formatWorkflow(results.workflow);
+            
+            localStorage.nodes = data;
 
             $("#workflow").nodelink({
                 data: data,
