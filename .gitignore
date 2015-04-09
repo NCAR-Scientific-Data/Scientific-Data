@@ -4,3 +4,4 @@
 *.pyc
 "python test/json"
 .DS_STORE
+_MACOSX/
