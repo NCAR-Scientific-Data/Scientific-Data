@@ -275,6 +275,7 @@ function readjustColumns(data, numberOfColumns) {
         <formatWorkflow>
 */
 function assignYValue(data) {
+    "use strict";
     var nodesInColumns = {},
         height = $("#workflow").height();
 
@@ -284,9 +285,9 @@ function assignYValue(data) {
         } else {
             nodesInColumns[node.x] = [data.nodes.indexOf(node)];
         }
-    })
+    });
 
-    for (nodeX in nodesInColumns) {
+    for (var nodeX in nodesInColumns) {
         if (nodesInColumns.hasOwnProperty(nodeX)) {
             var nodeList = nodesInColumns[nodeX],
                 offset = 0;
@@ -343,12 +344,12 @@ function formatWorkflow(workflow) {
 
         <formatWorkflow>
 */
-function addTask(taskType, links) {
+function addTask(task_Type, links) {
     "use strict";
-    var taskType = "taskType=" + taskType,
-        links = "&links=" + links,
+    var taskType = "taskType=" + task_Type,
+        inputs = "&links=" + links,
         workflowid = "&workflowID=" + localStorage.uid,
-        url = "python/addTask?" + taskType + links + workflowid;
+        url = "python/addTask?" + taskType + inputs + workflowid;
 
     $.getJSON(url, function (results) {
         if (results.workflow) {
@@ -364,22 +365,4 @@ function addTask(taskType, links) {
             });
         }
     });
-};
-
-/*
-    Function: Create a Workflow
-    Create a workflow with a unique id.
-
-    See Also:
-
-        <addTask>
-*/
-window.onload = function () {
-    "use strict";
-
-    $.getJSON("python/createWorkflow", function (results) {
-        if (results.uid) {
-            localStorage.uid = results.uid;
-        }
-    }
 }

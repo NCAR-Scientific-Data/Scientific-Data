@@ -1,4 +1,6 @@
-urlCatalog = {}
+"use strict";
+
+var urlCatalog = {};
 
 urlCatalog["crcm.ccsm-current.table1"] = 1;
 urlCatalog["crcm.ccsm-current.table2"] = 4;
@@ -133,4 +135,4 @@ urlCatalog["wrfg.cgcm3-future.table5"] = 1;
 urlCatalog["wrfg.ncep.table1"] = 3;
 urlCatalog["wrfg.ncep.table2"] = 2;
 urlCatalog["wrfg.ncep.table3"] = 5;
-urlCatalog["wrfg.ncep.table5"] = 4
+urlCatalog["wrfg.ncep.table5"] = 4;
