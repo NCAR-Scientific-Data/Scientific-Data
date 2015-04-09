@@ -13,6 +13,7 @@ __all__ = ['Task', 'EmptyTask', 'Component']
 
 import argparse
 import pprint
+import re
 from pyutilib.workflow import globals
 from pyutilib.misc import Options
 from pyutilib.workflow import port 
@@ -47,6 +48,7 @@ class Task(object):
         self.debug = False
         # Robert Crimi
         self.workflowID = None
+        self.uid = None
 
     def add_resource(self, resource):
         """Add a resource that is required for this task to execute."""
@@ -87,6 +89,10 @@ class Task(object):
     # Robert Crimi
     def setWorkflowID(self, workflow):
         self.workflowID = workflow
+
+    # Robert Crimi
+    def setUID(self, uid):
+        self.uid = uid
            
     def execute(self, debug=False):
         """Execute this task."""
@@ -228,6 +234,63 @@ class Task(object):
         tmp['OutputControls'] = self.output_controls._repn_()
         return tmp 
 
+    # Robert Crimi
+    # Return dictionary for serialization of workflows
+    def __dict__(self, workflow):
+        tmp = {}
+        tmp['Type'] = self.__class__.__name__
+        tmp['Inputs'] = {}
+        # Create dictionary of instances inputs
+        dictionary = self.inputs._repn_()
+        for key in dictionary:
+            # Find the actual input values of the instance
+            if not key in ['A_TYPE','Name','Mode','Owner']:
+                val = dictionary[key]
+                # Value is number
+                if re.match("[-+]?\d*\.\d+|\d+",val['Value']):
+                    val = [float(val['Value'])]
+                # TODO:
+                # handle files or other strings input into tasks
+                # Value is string
+                elif(".nc" in val['Value']):
+                    val = [val['Value']]
+
+                # Value is port
+                else:
+                    # Get the port connections
+                    connection = dictionary[key]['Connections']['Inputs'][0]
+                    link = re.findall("[-+]?\d*\.\d+|\d+", connection)
+                    # Map strings to ints
+                    link = list(map(int, link))
+                    # Find UIDS of tasks with ids in link
+                    newLinks = workflow._dfs_([workflow._start_task.id], lambda t: t.getUIDWithID(link[0]))
+                    # Set val to ['Port', UID, output]
+                    val = ['Port', newLinks[0][0], newLinks[0][1][0]]
+
+                # Set inputs value to the link
+                tmp['Inputs'][key] = val
+        # If instance is not EmptyTask
+        if not type(self) == EmptyTask:
+            # Set unique identifier for this task
+            tmp['UID'] = str(self.uid)
+        return tmp
+
+    # Robert Crimi
+    def getTaskWithID(self, uid):
+        if self.uid == uid:
+            return self
+
+    # Robert Crimi
+    def getUIDWithID(self, uid):
+        if self.id == uid:
+            # Get outputs
+            os = []
+            for key in self.outputs:
+                if not key in ['A_TYPE','Name','Mode','Owner']:
+                    os.append(key)
+            # return [UID, outputs]
+            return [self.uid, os]
+
     def __repr__(self):
         """Return a string representation for this task."""
         return pprint.pformat(self._repn_(), 2)
@@ -238,7 +301,7 @@ class Task(object):
 
     # Robert Crimi
     def __list__(self):
-        return [self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices()))] 
+        return [self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices())), self.uid] 
 
     def reset(self):
         #print "RESETING "+self.name
@@ -260,7 +323,16 @@ class Task(object):
             self.inputs[i].set_ready()
         for i in self.input_controls:
             self.input_controls[i].reset_all()
-            self.input_controls[i].set_ready()        
+            self.input_controls[i].set_ready()
+
+    # Robert Crimi
+    def reset_all_outputs(self):
+        for i in self.outputs:
+            self.outputs[i].reset_all()
+            self.outputs[i].set_ready()
+        for i in self.output_controls:
+            self.output_controls[i].reset_all()
+            self.output_controls[i].set_ready()                
 
     def set_ready(self):
         for i in self.outputs:

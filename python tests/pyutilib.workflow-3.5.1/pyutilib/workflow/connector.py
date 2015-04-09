@@ -38,7 +38,9 @@ class Connector(object):
         """Return a string representation for this connection."""
         return "%s: from=(%s) to=(%s) %s" % (str(self.__class__.__name__), str(self.from_port.task().id), str(self.to_port.task().id), self.ready())
 
-
+    # Robert Crimi
+    def fromTaskWithID(self):
+        return self.from_port.task().uid
 #class UnknownConnector(Connector):
 
 #    def __init__(self, from_port=None, to_port=None):

@@ -148,7 +148,14 @@ class Port(object):
         tmp['Connections']['Outputs'] = []
         for c in self.output_connections:
             tmp['Connections']['Outputs'].append(repr(c))
+
+        # Robert Crimi
+        tmp['IConnections'] = {}
+        for c in self.input_connections:
+            tmp['IConnections'] = c.fromTaskWithID()
         return tmp
+
+
 
     def __repr__(self):
         return str(self)    #pragma:nocover
