@@ -88,7 +88,7 @@ class Task(object):
 
     # Robert Crimi
     def setWorkflowID(self, workflow):
-        self.workflowID = workflow
+        self.workflowID = workflow.id
 
     # Robert Crimi
     def setUID(self, uid):

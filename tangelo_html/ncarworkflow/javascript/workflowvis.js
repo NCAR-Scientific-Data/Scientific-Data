@@ -347,11 +347,11 @@ function formatWorkflow(workflow) {
 */
 function addTask(task_Type, links) {
     "use strict";
-    alert("making a task");
+
     var url = "python/addTask",
         stuffToPass = {
             "taskType" : task_Type,
-            "links" : links,
+            "links" : JSON.stringify(links),
             "workflowID" : localStorage.uid,
         };
 

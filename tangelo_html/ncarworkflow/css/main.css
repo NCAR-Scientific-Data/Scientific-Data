@@ -12,9 +12,10 @@ main {
 	font-family: 'Source Sans Pro', sans-serif;
 	font-size: 16px; 
 	padding:25px;
-	width: 75%;
+	width: 53%;
 	color: black;
 	margin:auto;
+	margin-top:50px;
 }
 
 section{
@@ -131,7 +132,7 @@ button {
 }
 
 #main-wrapper {
-	margin-left:310px;
+	/*margin-left:310px;*/
 }
 
 button.choose {
@@ -251,6 +252,17 @@ div.form-inline {
 	right: 0%;
 	bottom: 0%;
 }*/
+
+#helpboxleft {
+	float:left;
+	margin-right:80px;
+	margin-left:20px;
+}
+
+#searchbox {
+	text-align: center;
+	margin-right:50px;
+}
 
 #miniMenu {
     position: fixed;
