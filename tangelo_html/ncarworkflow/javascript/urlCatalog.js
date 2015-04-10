@@ -1,6 +1,6 @@
 "use strict";
 
-var urlCatalog = {};
+window.urlCatalog = {};
 
 urlCatalog["crcm.ccsm-current.table1"] = 1;
 urlCatalog["crcm.ccsm-current.table2"] = 4;

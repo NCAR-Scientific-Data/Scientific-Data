@@ -347,12 +347,15 @@ function formatWorkflow(workflow) {
 */
 function addTask(task_Type, links) {
     "use strict";
-    var taskType = "taskType=" + task_Type,
-        inputs = "&links=" + links,
-        workflowid = "&workflowID=" + localStorage.uid,
-        url = "python/addTask?" + taskType + inputs + workflowid;
+    alert("making a task");
+    var url = "python/addTask",
+        stuffToPass = {
+            "taskType" : task_Type,
+            "links" : links,
+            "workflowID" : localStorage.uid,
+        };
 
-    $.getJSON(url, function (results) {
+    $.getJSON(url, stuffToPass, function (results) {
         if (results.workflow) {
             var data = formatWorkflow(results.workflow);
             

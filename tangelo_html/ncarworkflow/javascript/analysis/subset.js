@@ -5,7 +5,7 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
 
     var basicString = "http://tds.ucar.edu/thredds/dodsC/narccap.",
         modelString = rcm + "." + gcm + simulationType + "." + variable.substring(0,6),
-        version = urlCatalog.urlCatalog[modelString];
+        version = window.urlCatalog[modelString];
 
         modelString += variable.substring(6);
 
@@ -28,9 +28,9 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
         "enddate" : timeend
     };
 
-    inputs = JSON.stringify(inputs);
+    //inputs = JSON.stringify(inputs);
 
-    addTask("TaskSubset", inputs);
+    addTask("taskSubset", inputs);
 }
 
 function callSubset() {
