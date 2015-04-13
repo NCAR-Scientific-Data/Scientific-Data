@@ -26,8 +26,8 @@ class taskSubset(pyutilib.workflow.Task):
         endDate = "endDate=\"{0}\"".format(self.enddate)
         filename = "filename=\"{0}\"".format(self.url)
         v = "variable=\"{0}\"".format(self.variable)
-        wid = "wid={0}".format(self.workflowID)
-        tid = "tid={0}".format(self.id)
+        wid = "wid=\"{0}\"".format(self.workflowID)
+        tid = "tid=\"{0}\"".format(self.id)
         
         args = ['ncl', '-n', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, 'ncl/subset_time_latlon.ncl']
         args = filter(None,args)
@@ -120,8 +120,8 @@ class taskAggregate(pyutilib.workflow.Task):
                 sOuttime = "outtime=\"{0}\"".format(self.outtime)
         sCyclic = "cyclic={0}".format(self.cyclic)
         sVariable = "variable=\"{0}\"".format(self.variable)
-        wid = "wid={0}".format(self.workflowID)
-        tid = "tid={0}".format(self.uid)
+        wid = "wid=\"{0}\"".format(self.workflowID)
+        tid = "tid=\"{0}\"".format(self.uid)
 
         args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sInterval, sMethod, sOuttime, sCyclic, 'ncl/aggregate.ncl']
         args = filter(None,args)
@@ -171,8 +171,8 @@ class taskUnitConversion(pyutilib.workflow.Task):
             sFilename = "filename=\"{0}\"".format(self.filename)
             sVariable = "variable=\"{0}\"".format(self.variable)
             sOutunit = "outunit=\"{0}\"".format(self.outunit)
-            wid = "wid={0}".format(self.workflowID)
-            tid = "tid={0}".format(self.uid)
+            wid = "wid=\"{0}\"".format(self.workflowID)
+            tid = "tid=\"{0}\"".format(self.uid)
             
             args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sOutunit, 'ncl/unit_conversion.ncl']
             args = filter(None,args)
@@ -252,8 +252,8 @@ class taskPlot(pyutilib.workflow.Task):
                 plotScript = 'ncl/plot_native.ncl'
         else:
                 plotScript = 'ncl/plot.ncl'
-        wid = "wid={0}".format(self.workflowID)
-        tid = "tid={0}".format(self.id)
+        wid = "wid=\"{0}\"".format(self.workflowID)
+        tid = "tid=\"{0}\"".format(self.id)
 
         args = ['ncl', '-n','-Q', wid, tid, sFilename, sTimeindex, plotScript]
         args = filter(None,args)
