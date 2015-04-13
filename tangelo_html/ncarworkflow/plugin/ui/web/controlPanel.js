@@ -12,7 +12,7 @@
         button = d3.select(buttonsel);
 
         // Initially, the panel is open.
-        state = "uncollapsed";
+        state = "collapsed";
 
         // The glyphicon halfings are around 20 pixels tall.
         iconheight = "20px";
@@ -66,6 +66,21 @@
         };
     }
 
+    // function drawerResize(divsel) {
+    //     var div = $(divsel);
+    //     var styleheight = div.height(),
+    //             fullheight;
+
+    //         div.height(null);
+    //         fullheight = div.height();
+
+    //         if (fullheight > $(window).height() / 2) {
+    //             fullheight = $(window).height() / 2;
+    //         }
+
+    //         div.height(fullheight);
+    // }
+
     $.fn.controlPanel = function () {
         var toggle,
             s,
@@ -94,6 +109,9 @@
         s.style("position", "fixed")
             .style("bottom", "0px")
             .style("width", "100%")
+            .style("height", "20px")
+            .style("overflow", "scroll")
+            .style("max-height", $(window).height() + "px")
             .insert("div", ":first-child")
             .attr("id", "tangelo-drawer-handle-" + tag)
             .style("text-align", "center")
@@ -109,10 +127,13 @@
             .append("span")
             .attr("id", "tangelo-drawer-icon-" + tag)
             .classed("glyphicon", true)
-            .classed("glyphicon-chevron-down", true);
+            .classed("glyphicon-chevron-up", true);
 
         toggle = drawerToggle("#" + id, "#tangelo-drawer-icon-" + tag);
         d3.select("#tangelo-drawer-handle-" + tag)
             .on("click", toggle);
+
+        // resize = drawerResize();
+        // $("#" + id).resize(drawerResize("#" + id));
     };
 }(window.tangelo, window.jQuery, window.d3, window._));

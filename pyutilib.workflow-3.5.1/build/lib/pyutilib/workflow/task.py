@@ -240,6 +240,7 @@ class Task(object):
         tmp = {}
         tmp['Type'] = self.__class__.__name__
         tmp['Inputs'] = {}
+        tmp['WorkflowID'] = self.workflowID
         # Create dictionary of instances inputs
         dictionary = self.inputs._repn_()
         for key in dictionary:

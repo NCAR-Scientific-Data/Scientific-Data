@@ -61,16 +61,17 @@ function getIndexMap(workflow) {
 */
 function generateData(workflow, indexMap) {
     "use strict";
-    var data = { nodes: [], links: []};
+    var data = { nodes: [], links: [], uids: []};
 
     workflow.forEach(function (nodeProperties) {
         var nodeType = nodeProperties[0],
             nodeIndex = nodeProperties[1],
             nodeLinks = nodeProperties[2],
+            nodeUID = nodeProperties[3],
             nodeName = nodeProperties[0] + nodeProperties[1],
             sourceIndex;
 
-        data.nodes.push({type: nodeType, name: nodeName});
+        data.nodes.push({type: nodeType, name: nodeName, uid: nodeUID});
 
         sourceIndex = nodeIndex;
 
@@ -258,6 +259,48 @@ function readjustColumns(data, numberOfColumns) {
 }
 
 /*
+    Function: assignYValue
+    Assigns a Y value to each node.
+
+    Parameters:
+
+        data - an object containing all nodes and links.
+
+    Returns:
+
+        Nothing
+
+    See Also:
+
+        <assignXValue>
+        <formatWorkflow>
+*/
+function assignYValue(data) {
+    "use strict";
+    var nodesInColumns = {},
+        height = $("#workflow").height();
+
+    data.nodes.forEach(function (node) {
+        if (nodesInColumns.hasOwnProperty(node.x)) {
+            nodesInColumns[node.x].push(data.nodes.indexOf(node));
+        } else {
+            nodesInColumns[node.x] = [data.nodes.indexOf(node)];
+        }
+    });
+
+    for (var nodeX in nodesInColumns) {
+        if (nodesInColumns.hasOwnProperty(nodeX)) {
+            var nodeList = nodesInColumns[nodeX],
+                offset = 0;
+            for (var i = 0; i < nodeList.length; i += 1) {
+                data.nodes[nodeList[i]].y = (height/nodeList.length/2) + offset;
+                offset += height/nodeList.length;
+            }
+        }
+    }
+}
+
+/*
     Function: formatWorkflow
     Formats a workflow object into an object easily parsed by nodelink.
 
@@ -289,25 +332,34 @@ function formatWorkflow(workflow) {
         parentsOfTargetNodes = listParentsOfTargetNode(data.links),
         numberOfColumns = assignXValue(data, parentsOfTargetNodes);
     readjustColumns(data, numberOfColumns);
+    assignYValue(data);
 
     return data;
 }
 
 /*
-    Function: unnamedFunction
-    Draws a workflow.
+    Function: addTask
+    Run and then draw a workflow.
 
     See Also:
 
         <formatWorkflow>
 */
-window.onload = function () {
+function addTask(task_Type, links) {
     "use strict";
-    var url = "python/workflowTwo";
 
-    $.getJSON(url, function (results) {
+    var url = "python/addTask",
+        stuffToPass = {
+            "taskType" : task_Type,
+            "links" : JSON.stringify(links),
+            "workflowID" : localStorage.uid,
+        };
+
+    $.getJSON(url, stuffToPass, function (results) {
         if (results.workflow) {
             var data = formatWorkflow(results.workflow);
+            
+            localStorage.nodes = data;
 
             $("#workflow").nodelink({
                 data: data,
@@ -319,4 +371,4 @@ window.onload = function () {
             });
         }
     });
-};
+}
