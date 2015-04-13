@@ -307,6 +307,7 @@ class taskThreshold(pyutilib.workflow.Task):
         self.inputs.declare('field')
         self.inputs.declare('lower')
         self.inputs.declare('upper')
+        self.outputs.declare('returnvalue')
 
     def execute(self):
         # Check if user entered lowerlimit and upperlimit, if not
@@ -315,11 +316,11 @@ class taskThreshold(pyutilib.workflow.Task):
         upperlimit = str(self.upper) if self.upper else "max"
 
         # Import the R script so we can use its function
-        scriptname = "tangelo_html/demo/r/calculate_threshold.R"
+        scriptname = "r/calculate_threshold.R"
         ro.r['source'](scriptname)
 
         # Call the function that does the calculation
-        value = ro.r['rfunc'](self.filename, self.field, lowerlimit, upperlimit)
+        self.returnvalue = ro.r['rfunc'](self.filename, self.field, lowerlimit, upperlimit)
 
 #   Class: taskPlot
 #   A task that plots.
