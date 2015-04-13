@@ -1,7 +1,15 @@
 ##########################################################
 #
-#    Name:    calculate_threshold.R
-#    Summary: This scripts calculate number of days that
+#    Name:    calculationModule.R
+#    Summary: This scripts are a collection of R functions
+#			   that does some calculations
+#
+##########################################################
+
+##########################################################
+#
+#    Name:    daysWithinThreshold
+#    Summary: Calculate number of days that
 #             a specific field is within a specific range.
 #             Now this script only takes days as frequency
 #             and it only works with daily data for proof-of-concept.
@@ -51,6 +59,16 @@ daysWithinThreshold <- function(filename, field, lower, upper){
 	return(numDaysWithinThreshold)
 }
 
+##########################################################
+#
+#    Name:    ncdfDelta
+#    Summary: Calculates delta between two subsets and output
+#				to a new NetCDF file
+#
+#    Parameters: Name of first file name, name of second file name
+#					name of the output file, filed to be calculatedS
+#
+##########################################################
 ncdfDelta <- function(filename1, filename2, outputfname, field){
 	library(ncdf)	
 
