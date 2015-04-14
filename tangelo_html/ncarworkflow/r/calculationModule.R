@@ -2,7 +2,7 @@
 #
 #    Name:    calculationModule.R
 #    Summary: This scripts are a collection of R functions
-#			   that does some calculations
+#			   that does some data analysis operations
 #
 ##########################################################
 
@@ -16,18 +16,23 @@
 #
 #    Parameters: Subset file name, the field needs to be calculated
 #                Lower limit of the threshold, upper limit of the threshold
+#				 output file name
 #
 ##########################################################
-daysWithinThreshold <- function(filename, field, lower, upper){
+daysWithinThreshold <- function(filename, field, lower, upper, outputFname){
 	# Import required libraries
 	library(ncdf)
 
 	# Open the NetCDF file
 	nc = open.ncdf(filename)
 
-	# Read the field data off the NetCDF file
-	field_data = get.var.ncdf(nc, field)	
-	
+	# Read the field data and its dimension off the NetCDF file
+	field_data = get.var.ncdf(nc, field)
+	field_dimsize = length(dim(field_data))
+
+	# Read off the time dimension
+	time = nc$dim$time$vals
+
 	# If user didn't specify a lower limit or upper limit
 	#     then set the lower limit to min or set the upper limit to max
 	if (lower == "min") {
@@ -49,14 +54,23 @@ daysWithinThreshold <- function(filename, field, lower, upper){
 	#    in that time, if the value is 0, it means on that day the field is
 	#    not in the threshold, if the value is > 0, it means that day is
 	#    with in the threshold.
-	#
-	#    Then get the number of the elements has value of 0, subtract that number
-	#    from the total number of days to get the final result.
-	climatology <- apply(field_data, c(length(dim(field_data))), function(x){sum(x>=lower & x <=upper)})
-	time <- nc$dim$tim$vals
-	totalDays <- dim(time)
-	numDaysWithinThreshold <- totalDays - sum(climatology == 0)
-	return(numDaysWithinThreshold)
+	climatology <- apply(field_data, c(field_dimsize), function(x){sum(x>=lower & x <=upper)})
+
+	# Subset the field, time variables and then output to a new netcdf file
+	index = which(climatology != 0)
+	time_sub <- time[index]
+	field_sub <- subset(field_data, time %in% time_sub, drop=FALSE)
+
+	# After subset() the field lost all the dimensions, need to change
+	# the subset back to its old dimension
+	field_sub_dim = dim(field_data)
+	field_sub_dim[field_dimsize] = length(time_sub)
+	dim(field_sub) <- field_sub_dim
+
+	# Open the output NetCDF file and then write the subsets to a new netcdf file
+	nc_out = open.ncdf(outputFname, write=TRUE)
+	put.var.ncdf(nc_out, field, field_sub)
+	put.var.ncdf(nc_out, "time", time_sub)
 }
 
 ##########################################################
@@ -69,7 +83,7 @@ daysWithinThreshold <- function(filename, field, lower, upper){
 #					name of the output file, filed to be calculatedS
 #
 ##########################################################
-ncdfDelta <- function(filename1, filename2, outputfname, field){
+ncdfDelta <- function(filename1, filename2, outputFname, field){
 	library(ncdf)	
 
 	nc1 = open.ncdf(filename1)
@@ -80,6 +94,6 @@ ncdfDelta <- function(filename1, filename2, outputfname, field){
 
 	field_delta = abs(field1 - field2)
 
-	nc3 = open.ncdf(outputfname, write=TRUE)
+	nc3 = open.ncdf(outputFname, write=TRUE)
 	put.var.ncdf(nc3, field, field_delta)
 }

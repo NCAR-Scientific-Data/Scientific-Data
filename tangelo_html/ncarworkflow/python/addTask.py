@@ -307,9 +307,20 @@ class taskThreshold(pyutilib.workflow.Task):
         self.inputs.declare('field')
         self.inputs.declare('lower')
         self.inputs.declare('upper')
-        self.outputs.declare('returnvalue')
+        self.outputs.declare('result')
 
     def execute(self):
+        # Check if workflow directory exists, if not create one
+        wid = self.workflowID
+        tid = self.id
+
+        workflowDirName = "/data/" + wid + "/"
+        if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
+
+        # Uniquely name output file by task id
+        outputFname = workflowDirName + tid + "_threshold.nc"
+        if os.path.exists(outputFname): os.system("rm -rf " + outputFname)
+
         # Check if user entered lowerlimit and upperlimit, if not
         #   Set lower to min or upper to max
         lowerlimit = str(self.lower) if self.lower else "min"
@@ -321,10 +332,15 @@ class taskThreshold(pyutilib.workflow.Task):
 
         # Get path to the netcdf file
         fname = "/home/project/Scientific-Data/junk/netCDF/" + self.filename
-        # Call the function that does the calculation
-        self.returnvalue = ro.r['rfunc'](fname, self.field, lowerlimit, upperlimit)
 
-        print self.returnvalue
+        # R is inefficient when output to new NetCDF file
+        command = "cp " + fname + " " + outputFname
+        os.system(command)
+
+        # Call the function that does the calculation
+        ro.r['rfunc'](fname, self.field, lowerlimit, upperlimit, outputFname)
+
+        self.result = "data/{0}/{1}_threshold.nc".format(wid,tid)
 
 #   Class: taskDelta
 #   Task that calculate the delta between two subsets
