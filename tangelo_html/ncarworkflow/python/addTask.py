@@ -316,11 +316,15 @@ class taskThreshold(pyutilib.workflow.Task):
         upperlimit = str(self.upper) if self.upper else "max"
 
         # Import the R script so we can use its function
-        scriptname = "r/calculate_threshold.R"
+        scriptname = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/r/calculationModule.R"
         ro.r['source'](scriptname)
 
+        # Get path to the netcdf file
+        fname = "/home/project/Scientific-Data/junk/netCDF/" + self.filename
         # Call the function that does the calculation
-        self.returnvalue = ro.r['rfunc'](self.filename, self.field, lowerlimit, upperlimit)
+        self.returnvalue = ro.r['rfunc'](fname, self.field, lowerlimit, upperlimit)
+
+        print self.returnvalue
 
 #   Class: taskDelta
 #   Task that calculate the delta between two subsets
