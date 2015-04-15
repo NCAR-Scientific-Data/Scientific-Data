@@ -356,10 +356,13 @@ function addTask(task_Type, links) {
         };
 
     $.getJSON(url, stuffToPass, function (results) {
-        if (results.workflow) {
+        if (results.result) {
+            alert("Output: " + results.result "");
             var data = formatWorkflow(results.workflow);
-            
-            localStorage.nodes = data;
+            if (localStorage.nodes.workflowID == localStorage.uid) {
+                localStorage.nodes[results.taskID] = 
+            }
+            localStorage.nodes;
 
             $("#workflow").nodelink({
                 data: data,
@@ -369,6 +372,8 @@ function addTask(task_Type, links) {
                 nodeColor: tangelo.accessor({field: "type"}),
                 nodeLabel: tangelo.accessor({field: "name"})
             });
+        } else {
+            alert(results);
         }
     });
 }

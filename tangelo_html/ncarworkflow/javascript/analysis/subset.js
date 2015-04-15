@@ -15,6 +15,7 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
             version = "." + String(version) + ".aggregation";
         }
 
+
     var url = basicString + modelString + version;
 
     var inputs = {
@@ -44,7 +45,19 @@ function callSubset() {
         timestart = $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#startDay option:selected").val(),
         timeend = $("#endYear option:selected").val() + "-" + $("#endMonth option:selected").val() + "-" + $("#endDay option:selected").val(),
         rcm = $("input[name='rcm']:checked").val(),
-        gcm = $("input[name='gcm']:checked").val();
+        gcm = $("input[name='gcm']:checked").val(),
+        repopulateVals;
+
+    repopulateVals = {
+        "#simulationType" : simulationType,
+        "input[name='variable'][value='" + variable+ "']" : true,
+        "#swlat" : swlat,
+        "#swlon" : swlon,
+        "#nelat" : nelat,
+        "#nelon" : nelon,
+        "#startYear" :  $("#startYear option:selected").val(),
+        "#startMonth" : $("#startMonth option:selected").val()
+    }
 
     subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm);
 }
