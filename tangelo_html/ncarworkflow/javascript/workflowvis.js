@@ -68,7 +68,7 @@ function generateData(workflow, indexMap) {
             nodeIndex = nodeProperties[1],
             nodeLinks = nodeProperties[2],
             nodeUID = nodeProperties[3],
-            nodeName = nodeProperties[0] + nodeProperties[1],
+            nodeName = nodeType + nodeIndex,
             sourceIndex;
 
         data.nodes.push({type: nodeType, name: nodeName, uid: nodeUID});
@@ -345,7 +345,7 @@ function formatWorkflow(workflow) {
 
         <formatWorkflow>
 */
-function addTask(task_Type, links) {
+function addTask(task_Type, links, repopulateVals) {
     "use strict";
 
     var url = "python/addTask",
@@ -357,12 +357,17 @@ function addTask(task_Type, links) {
 
     $.getJSON(url, stuffToPass, function (results) {
         if (results.result) {
-            alert("Output: " + results.result "");
-            var data = formatWorkflow(results.workflow);
-            if (localStorage.nodes.workflowID == localStorage.uid) {
-                localStorage.nodes[results.taskID] = 
-            }
-            localStorage.nodes;
+            $("[id^='tangelo-drawer-icon-']").trigger("click");
+            $("#HTMLLoadSection").empty();
+            $("#HTMLLoadSection").text("<h1>NCAR Scientific Workflows</h1>");
+            alert("Output: " + results.result + "");
+            var data = formatWorkflow(results.workflow),
+                tid = results.taskID,
+                nodes = JSON.parse(localStorage.nodes);
+
+                nodes[tid] = repopulateVals;
+                
+            localStorage.nodes = JSON.stringify(nodes);
 
             $("#workflow").nodelink({
                 data: data,
@@ -370,8 +375,10 @@ function addTask(task_Type, links) {
                 linkSource: tangelo.accessor({field: "source"}),
                 linkTarget: tangelo.accessor({field: "target"}),
                 nodeColor: tangelo.accessor({field: "type"}),
-                nodeLabel: tangelo.accessor({field: "name"})
+                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeUID: tangelo.accessor({field: "uid"})
             });
+
         } else {
             alert(results);
         }
