@@ -331,7 +331,31 @@
         },
 
         _click: function (node) {
-            alert("Clicked!");
+            var nodes = JSON.parse(localStorage.nodes);
+            
+            if (nodes[node.uid]) {
+                var nodeInfo = nodes[node.uid];
+                $("#HTMLLoadSection").load(nodeInfo.html);
+
+                for (var elementKey in nodeInfo.values) {
+                    alert(elementKey);
+                    if (nodeInfo.values.hasOwnProperty(elementKey)) {
+                        alert("updating");
+                        var elementValue = nodeInfo.values[elementKey];
+
+                        if (elementValue == true) {
+                            $(elementKey).prop("checked", elementValue);
+                        } else {
+                            $(elementKey).val(elementValue);
+                        }
+                    }
+                }
+
+                $("[id^='tangelo-drawer-icon-']").trigger("click");
+
+            } else {
+                alert("ERROR: Node could not be generated.");
+            }
         }
     });
 }(window.tangelo, window.jQuery, window.d3));

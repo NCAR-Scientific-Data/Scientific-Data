@@ -13,6 +13,7 @@ function createWorkflow() {
     $.getJSON("python/createWorkflow", function (results) {
         if (results.uid) {
             localStorage.uid = results.uid;
+            localStorage.nodes = JSON.stringify({ "workflowID" : results.uid});
             $(location).attr("href","workflow-builder.html");
         } else {
             alert("This site is experiencing technical difficulties. Check back later.");

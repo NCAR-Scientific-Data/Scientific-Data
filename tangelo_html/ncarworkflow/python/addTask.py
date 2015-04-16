@@ -24,7 +24,7 @@ def addTask(task, links, workflow):
         # TODO:
         # Better checking
         else:
-            task.inputs[i] = links[i][0]
+            task.inputs[i] = links[i]
 
     # Add updated task to workflow and return new workflow
     workflow.add(task)
@@ -82,16 +82,13 @@ def run(taskType, links, workflowID):
     splitOutput = output.split(',')
     result = []
     for o in splitOutput:
-        if(".nc" in o):
-            keyVal = o.split(": ")
-            val = keyVal[1]
-            val = val[1:len(val)-1]
-            result.append(val)
-        else:
-            result.append(re.findall("[-+]?\d*\.\d+|\d+", output)[0])
+        keyVal = o.split(": ")
+        val = keyVal[1]
+        val = val[1:len(val)-1]
+        result.append(val)
 
     # Return the result, list representation of the workflow, and UID of the added task
-    return {"result":result, "list":workflow.__list__(), "taskID": task.uid}
+    return {"result":result, "workflow":workflow.__list__(), "taskID": task.uid}
 
 class taskSubset(pyutilib.workflow.Task):
     def __init__(self,*args,**kwds):
