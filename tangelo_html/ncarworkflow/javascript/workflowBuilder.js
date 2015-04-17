@@ -10,7 +10,13 @@
 function createWorkflow() {
     "use strict";
 
-    $.getJSON("python/createWorkflow", function (results) {
+    var args = {
+        "function" : "createWorkflow",
+        "workflowID" : " ",
+        "args" : "{}"
+    }
+
+    $.getJSON("python/updateWorkflow", args, function (results) {
         if (results.uid) {
             localStorage.uid = results.uid;
             localStorage.nodes = JSON.stringify({ "workflowID" : results.uid});

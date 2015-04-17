@@ -25,3 +25,6 @@ plugins:
 
     - name: vis
       path: plugin/vis
+
+    - name: workflow
+      path: plugin/workflow

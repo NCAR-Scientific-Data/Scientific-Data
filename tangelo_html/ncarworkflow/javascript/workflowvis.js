@@ -348,11 +348,11 @@ function formatWorkflow(workflow) {
 function addTask(task_Type, links, repopulateVals) {
     "use strict";
 
-    var url = "python/addTask",
+    var url = "python/updateWorkflow",
         stuffToPass = {
-            "taskType" : task_Type,
-            "links" : JSON.stringify(links),
+            "function" : "addTask",
             "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([task_Type, JSON.stringify(links)])
         };
 
     $.getJSON(url, stuffToPass, function (results) {
@@ -380,7 +380,7 @@ function addTask(task_Type, links, repopulateVals) {
             });
 
         } else {
-            alert(results);
+            alert(JSON.stringify(results));
         }
     });
 }
