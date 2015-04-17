@@ -1,3 +1,5 @@
+/*global alert*/
+
 (function (tangelo, $, d3) {
     "use strict";
 
@@ -338,12 +340,10 @@
                 $("#HTMLLoadSection").load(nodeInfo.html);
 
                 for (var elementKey in nodeInfo.values) {
-                    alert(elementKey);
                     if (nodeInfo.values.hasOwnProperty(elementKey)) {
-                        alert("updating");
                         var elementValue = nodeInfo.values[elementKey];
 
-                        if (elementValue == true) {
+                        if (elementValue === true) {
                             $(elementKey).prop("checked", elementValue);
                         } else {
                             $(elementKey).val(elementValue);
