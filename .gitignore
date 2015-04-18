@@ -2,6 +2,7 @@
 *.png
 *.swp
 *.pyc
-"python test/json"
+json/
+data/
 .DS_STORE
-_MACOSX/
+__MACOSX/

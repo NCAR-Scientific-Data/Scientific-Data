@@ -1,3 +1,5 @@
+/*global alert*/
+
 (function (tangelo, $, d3) {
     "use strict";
 
@@ -59,11 +61,11 @@
             //         .range([50, width - 100]);
             // }
 
-            if (this.options.nodeY && !this.options.nodeY.undefined) {
-                this.yScale = d3.scale.linear()
-                    .domain(d3.extent(this.options.data.nodes, this.options.nodeY))
-                    .range([height - 100, 50]);
-            }
+            // if (this.options.nodeY && !this.options.nodeY.undefined) {
+            //     this.yScale = d3.scale.linear()
+            //         .domain(d3.extent(this.options.data.nodes, this.options.nodeY))
+            //         .range([height - 100, 50]);
+            // }
 
             this.force.linkDistance(this.options.linkDistance)
                 .charge(this.options.nodeCharge)
@@ -114,6 +116,12 @@
                 })
                 .attr("x2", function (d, i) {
                     return d.target.x;
+                })
+                .attr("y1", function (d, i) {
+                    return d.source.y;
+                })
+                .attr("y2", function (d, i) {
+                    return d.target.y;
                 });
 
             this.node = this.svg.selectAll(".node")
@@ -122,6 +130,7 @@
             this.node.enter()
                 .append("circle")
                 .classed("node", true)
+                .on("click", that._click)
                 .call(this.force.drag)
                 .append("title");
 
@@ -131,6 +140,9 @@
                 })
                 .attr("cx", function (d, i) {
                     return d.x;
+                })
+                .attr("cy", function (d, i) {
+                    return d.y;
                 })
                 .style("fill", function (d, i) {
                     return that.colorScale(that.options.nodeColor(d, i));
@@ -148,6 +160,9 @@
                     .text(this.options.nodeLabel)
                     .attr("x", function (d, i) {
                         return d.x - that.options.nodeSize(d, i);
+                    })
+                    .attr("y", function (d, i) {
+                        return d.y + that.options.nodeSize(d, i) + 15;
                     });
             }
 
@@ -169,11 +184,11 @@
             // }
             
 
-            if (this.options.nodeY && !that.options.nodeY.undefined) {
-                that.options.data.nodes.forEach(function (d, i) {
-                    d.y = that.yScale(that.options.nodeY(d, i));
-                });
-            }
+            // if (this.options.nodeY && !that.options.nodeY.undefined) {
+            //     that.options.data.nodes.forEach(function (d, i) {
+            //         d.y = that.yScale(that.options.nodeY(d, i));
+            //     });
+            // }
 
             if (that.options.dynamicLabels) {
                 nodeLabels = that._nodeLabels();
@@ -185,9 +200,9 @@
                     /*.attr("x", function (d) {
                         return d.x;
                     })*/
-                    .attr("y", function (d) {
+                    /*.attr("y", function (d) {
                         return d.y;
-                    })
+                    })*/
                     .style("font-size", function (d) {
                         return d.count + 8;
                     })
@@ -198,30 +213,30 @@
                 /*that.label.attr("x", function (d) {
                     return d.x;
                 })*/
-                    that.label.attr("y", function (d) {
+                    /*that.label.attr("y", function (d) {
                         return d.y;
-                    });
+                    });*/
             }
 
             /*that.link.attr("x1", function (d) {
                 return d.source.x;
             })*/
-                that.link.attr("y1", function (d) {
+                /*that.link.attr("y1", function (d) {
                     return d.source.y;
-                })
+                })*/
                 /*.attr("x2", function (d) {
                     return d.target.x;
                 })*/
-                .attr("y2", function (d) {
+                /*.attr("y2", function (d) {
                     return d.target.y;
-                });
+                });*/
 
             /*that.node.attr("x", function (d) {
                 return d.x;
             })*/
-                that.node.attr("cy", function (d) {
+                /*that.node.attr("cy", function (d) {
                     return d.y;
-                });
+                });*/
         },
 
         // Compute a list of objects of the form:
@@ -316,5 +331,31 @@
 
             return label;
         },
+
+        _click: function (node) {
+            var nodes = JSON.parse(localStorage.nodes);
+            
+            if (nodes[node.uid]) {
+                var nodeInfo = nodes[node.uid];
+                $("#HTMLLoadSection").load(nodeInfo.html);
+
+                for (var elementKey in nodeInfo.values) {
+                    if (nodeInfo.values.hasOwnProperty(elementKey)) {
+                        var elementValue = nodeInfo.values[elementKey];
+
+                        if (elementValue === true) {
+                            $(elementKey).prop("checked", elementValue);
+                        } else {
+                            $(elementKey).val(elementValue);
+                        }
+                    }
+                }
+
+                $("[id^='tangelo-drawer-icon-']").trigger("click");
+
+            } else {
+                alert("ERROR: Node could not be generated.");
+            }
+        }
     });
 }(window.tangelo, window.jQuery, window.d3));

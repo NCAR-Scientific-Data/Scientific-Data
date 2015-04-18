@@ -1,76 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-    <meta charset=utf-8>
+	<head>
+        <meta charset=utf-8>
 
-    <style>
-        html, body, #content, #workflow {
-            position: relative;
-            height: 100%;
-        }
+        <!-- Tangelo Styling -->
+        <link href=http://code.jquery.com/ui/1.9.1/themes/smoothness/jquery-ui.css rel=stylesheet>
+        <link href=http://bootswatch.com/cosmo/bootstrap.min.css rel=stylesheet type=text/css>
+        <link href=//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css rel=stylesheet>
+        <!-- End Tangelo Styling -->
 
-        body {
-            padding-top: 50px;
-        }
+        <!-- Tangelo Scripts -->
+        <script src=http://code.jquery.com/jquery-1.9.1.js></script>
+        <script src=http://code.jquery.com/ui/1.9.1/jquery-ui.js></script>
+        <script src=http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js></script>
+        <script src=//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js></script>
+        <script src=plugin/tangelo/tangelo.js></script>
+        <!-- End Tangelo Scripts -->
 
-        
-        #StepMaker {
-            background: white;
-        }
-    </style>
+        <!-- NCAR Scientific Data Styling -->
+        <link type="text/css" rel="stylesheet" href="css/main.css">
+        <!-- End NCAR Scientific Data Styling  -->
 
-    <link href=http://code.jquery.com/ui/1.9.1/themes/smoothness/jquery-ui.css rel=stylesheet>
-    <link href=http://bootswatch.com/cosmo/bootstrap.min.css rel=stylesheet type=text/css>
-    <link href=//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css rel=stylesheet>
+        <!-- NCAR Scientific Data Scripts -->
+        <script type = "text/javascript" src="javascript/workflowBuilder.js"></script>
+        <!-- End NCAR Scientific Data Scripts -->
+	</head>
+	
+	<body>
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class=navbar-header>
+                <a class=navbar-brand href=/>NCAR</a>
+            </div>
 
-    <script src=http://d3js.org/d3.v3.min.js></script>
-    <script src=http://code.jquery.com/jquery-1.9.1.js></script>
-    <script src=http://code.jquery.com/ui/1.9.1/jquery-ui.js></script>
-    <script src=http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js></script>
-    <script src=//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js></script>
-    <script src=plugin/tangelo/tangelo.js></script>
-    <script src=plugin/vis/nodelink.js></script>
-    <script src=plugin/ui/controlPanel.js></script>
-    <script src=javascript/workflowvis.js></script>
-    <script src=javascript/minimenu.js></script>
-    <link type="text/css" rel="stylesheet" href="css/main.css">
-</head>
-<body>
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div class=navbar-header>
-            <a class=navbar-brand href=/>NCAR</a>
+            <ul class="nav navbar-nav">
+                <li class="active"> <a>Workflow Visualization</a>
+                <li><a style=cursor:pointer data-toggle=modal data-target=#info-panel><span class="glyphicon glyphicon-info-sign"></span> Info</a>
+            </ul>
         </div>
+		
+		<div id="main-wrapper">
+			<main>
 
-        <ul class="nav navbar-nav">
-            <li class="active"> <a>Workflow Visualization</a>
-            <li><a style=cursor:pointer data-toggle=modal data-target=#info-panel><span class="glyphicon glyphicon-info-sign"></span> Info</a>
-        </ul>
-    </div>
-    <div id="content">
-        <div id="workflow">
-        </div>
+            <h1>NCAR Easy Climate Model Analysis</h1>
+            <br><br>
+            <h2>Explanation of some sort. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin Pharetra a lectus lobortis commodo. Proin tristique velit eros, in aliquet ligula pharetra eu. Vestibulum in est nisl. Sed nec felis laoreet, dapibus eros ornare, laoreet turpis. Nunc aliquet arcu in ante varius, id dignissim odio posuere.</h2>
+            <br><br><br>
+            <div id = "helpbox">
+                <div id = "helpboxleft">
+                    <h2>Not sure where to begin? View the <a href="url">Quick-Start Guide</a></h2>
+                </div>
+                <div id = "helpboxright">
+                    <h2>Learn more about <a href="http://ncar.ucar.edu/">NCAR</a> and <a href="http://www.narccap.ucar.edu/">NARCCAP</a></h2>
+                </div>
+            </div>
+            <br><br><br>
+            <div id="buttonContainer">
+                <button class = "choose" onclick="createWorkflow()">Start a New Workflow</button><br>
+                <button class = "choose" onclick="location.href = 'loadWorkflow.html';">Load an Old Workflow</button>
+            </div>
 
-        <div id="miniMenu">
-            <svg width="150" height="200">
-                <rect x="50" y="150" width="50" height="50" fill="grey" onclick="toggleMiniMenu()" />
-                <text x="62.5" y="187.5" font-size="40px" fill="black" onclick="toggleMiniMenu()">+</text>
 
-                <rect class="miniMenuOption" x="25" y="0" width="100" height="125" fill="white" stroke="black" />
-                <text class="miniMenuOption" x="45" y="25" font-size="18px" fill="black" onclick="newSubset()">Subset</text>
-                <text class="miniMenuOption" x="40" y="50" font-size="18px" fill="black" onclick="newAnalysis()">Analysis</text>
-                <text class="miniMenuOption" x="55" y="75" font-size="18px" fill="black" onclick="newPlot()">Plot</text>
-                <text class="miniMenuOption" x="35" y="100" font-size="18px" fill="black" onclick="newDownload()">Download</text>
-            </svg>
-        </div>
-    </div>
+			</main>
+		</div>
 
-    <div id="StepMaker">
-        <h1>Hello World</h1>
-    </div>
-
-    <script type="text/javascript">
-        $("#StepMaker").controlPanel();
-        $(".miniMenuOption").hide();
-    </script>
-</body>
+		
+	</body>
 </html>
