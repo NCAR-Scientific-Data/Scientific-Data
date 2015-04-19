@@ -360,12 +360,12 @@ function addTask(task_Type, links, repopulateVals) {
             $("[id^='tangelo-drawer-icon-']").trigger("click");
             $("#HTMLLoadSection").empty();
             $("#HTMLLoadSection").text("<h1>NCAR Scientific Workflows</h1>");
-            alert("Output: " + results.result + "");
+            
             var data = formatWorkflow(results.workflow),
                 tid = results.taskID,
                 nodes = JSON.parse(localStorage.nodes);
 
-                nodes[tid] = repopulateVals;
+            nodes[tid] = repopulateVals;
                 
             localStorage.nodes = JSON.stringify(nodes);
 
@@ -378,6 +378,15 @@ function addTask(task_Type, links, repopulateVals) {
                 nodeLabel: tangelo.accessor({field: "name"}),
                 nodeUID: tangelo.accessor({field: "uid"})
             });
+
+            var re = new RegExp(".+\..+")
+            if (re.test(results.result)) {
+                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
+
+                if (download) {
+                    window.open("python/" + results.result);
+                }
+            }
 
         } else {
             alert(JSON.stringify(results));
