@@ -34,10 +34,3 @@ function newPlot() {
     toggleMiniMenu();
     openClosedDrawer();
 }
-
-function newDownload() {
-    "use strict";
-    //Load Goes Here
-    toggleMiniMenu();
-    openClosedDrawer();
-}

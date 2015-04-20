@@ -27,41 +27,29 @@
 	</head>
 	
 	<body>
-        <div class="navbar navbar-default navbar-fixed-top">
+        <header class="navbar navbar-default navbar-fixed-top">
             <div class=navbar-header>
                 <a class=navbar-brand href=/>NCAR</a>
             </div>
 
             <ul class="nav navbar-nav">
-                <li class="active"> <a>Workflow Visualization</a>
-                <li><a style=cursor:pointer data-toggle=modal data-target=#info-panel><span class="glyphicon glyphicon-info-sign"></span> Info</a>
+                <li class="active"> <a>Workflow Visualization</a></li>
+                <li><a style=cursor:pointer data-toggle=modal data-target=#info-panel><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
             </ul>
-        </div>
-		
-		<div id="main-wrapper">
-			<main>
+        </header>
 
-            <h1>NCAR Easy Climate Model Analysis</h1>
-            <br><br>
-            <h2>Explanation of some sort. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin Pharetra a lectus lobortis commodo. Proin tristique velit eros, in aliquet ligula pharetra eu. Vestibulum in est nisl. Sed nec felis laoreet, dapibus eros ornare, laoreet turpis. Nunc aliquet arcu in ante varius, id dignissim odio posuere.</h2>
-            <br><br><br>
-            <div id = "helpbox">
-                <div id = "helpboxleft">
-                    <h2>Not sure where to begin? View the <a href="url">Quick-Start Guide</a></h2>
-                </div>
-                <div id = "helpboxright">
-                    <h2>Learn more about <a href="http://ncar.ucar.edu/">NCAR</a> and <a href="http://www.narccap.ucar.edu/">NARCCAP</a></h2>
-                </div>
+		<main>
+            <h1>NCAR Climate Model Analysis</h1>
+            <p>The NCAR Climate Analysis Web App allows you to easily analyse workflows via a simple interface.</p>
+            <div class="left">
+                <p>Not sure where to begin? View the <a href="url">Quick-Start Guide</a></p>
             </div>
-            <br><br><br>
-            <div id="buttonContainer">
-                <button class = "choose" onclick="createWorkflow()">Start a New Workflow</button><br>
-                <button class = "choose" onclick="location.href = 'loadWorkflow.html';">Load an Old Workflow</button>
+            <div class="right">
+                <p>Learn more about <a href="http://ncar.ucar.edu/">NCAR</a> and <a href="http://www.narccap.ucar.edu/">NARCCAP</a></p>
             </div>
-
-
-			</main>
-		</div>
+            <button onclick="createWorkflow()">Start a New Workflow</button><br>
+            <button onclick="location.href = 'loadWorkflow.html';">Load an Old Workflow</button>
+		</main>
 
 		
 	</body>
