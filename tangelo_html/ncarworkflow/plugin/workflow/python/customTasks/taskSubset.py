@@ -18,14 +18,14 @@ class taskSubset(pyutilib.workflow.Task):
         self.outputs.declare('subset')
 
     def execute(self):
-        swLat = "swLat={0}".format(self.swlat)
-        swLon = "swLon={0}".format(self.swlon)
-        neLat = "neLat={0}".format(self.nelat)
-        neLon = "neLon={0}".format(self.nelon)
-        startDate = "startDate=\"{0}\"".format(self.startdate)
-        endDate = "endDate=\"{0}\"".format(self.enddate)
-        filename = "filename=\"{0}\"".format(self.url)
-        v = "variable=\"{0}\"".format(self.variable)
+        swLat = "swLat={0}".format(str(self.swlat))
+        swLon = "swLon={0}".format(str(self.swlon))
+        neLat = "neLat={0}".format(str(self.nelat))
+        neLon = "neLon={0}".format(str(self.nelon))
+        startDate = "startDate=\"{0}\"".format(str(self.startdate))
+        endDate = "endDate=\"{0}\"".format(str(self.enddate))
+        filename = "filename=\"{0}\"".format(str(self.url))
+        v = "variable=\"{0}\"".format(str(self.variable))
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.id)
         

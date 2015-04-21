@@ -1,6 +1,7 @@
 import tangelo
 import pyutilib.workflow
 import json
+import unicodedata
 from customTasks import  *
 
 # Add task with linkks to workflow
@@ -43,6 +44,8 @@ def deserialize(workflowString):
             t.setUID(task['UID'])
             t.setWorkflowID(task['WorkflowID'])
             # Add task t to workflow q with proper inputs
+            for key, value in task["Inputs"].iteritems():
+                task["Inputs"][key] = value[0].encode("ascii", "ignore")
             addTask(t, task['Inputs'], q)
     return q
 
@@ -60,6 +63,8 @@ def getInstance(taskType):
         return taskUnitConversion()
     elif taskType == "taskThreshold":
         return taskThreshold()
+    elif taskType == "taskPlot":
+        return taskPlot()
     else:
         return None
 
