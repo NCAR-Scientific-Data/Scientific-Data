@@ -89,7 +89,7 @@ begin
   end if
 
   ;Uniquely name output file by task id
-  filename_out = directory + tid + "_subset.nc"
+  filename_out = directory + tid + "_subset_" + variable + ".nc"
   if(isfilepresent(filename_out)) then
     system("rm -rf " + filename_out)
   end if

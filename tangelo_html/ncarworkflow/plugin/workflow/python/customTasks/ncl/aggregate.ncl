@@ -101,6 +101,9 @@ if(cyclic .and. interval .eq. "day") then
 end if
 
 f = addfile(filename, "r")
+filename = str_sub_str(filename,".nc","")
+fileVar = str_split(filename, "_")
+variable = fileVar(2)
 
 time = f->time
 nt = dimsizes(time)
@@ -342,7 +345,7 @@ if (echo .eq. "notfound") then
 end if
 
 ;Uniquely name output file by task id
-filename_out = directory + tid + "_aggregate.nc"
+filename_out = directory + tid + "_aggregate_" + variable + ".nc"
 if(isfilepresent(filename_out)) then
   system("rm -rf " + filename_out)
 end if

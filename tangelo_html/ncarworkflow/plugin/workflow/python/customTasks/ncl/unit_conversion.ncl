@@ -5,10 +5,9 @@
 
 begin
     f = addfile(filename,"r")
-
-    if (.not.isvar("variable")) then
-        status_exit(2)
-    end if
+    filename = str_sub_str(filename,".nc","")
+    fileVar = str_split(filename, "_")
+    variable = fileVar(2)
 
     if (.not. isfilevar(f, variable)) then
         status_exit(5)
@@ -65,7 +64,7 @@ begin
     end if
 
     ;Uniquely name output file by task id
-    filename_out = directory + tid + "_unitconv.nc"
+    filename_out = directory + tid + "_unitconv_" + variable + ".nc"
     if(isfilepresent(filename_out)) then
         system("rm -rf " + filename_out)
     end if

@@ -9,10 +9,12 @@
 
 begin
   f        = addfile(filename,"r")
-  varnames = getfilevarnames(f)
+  filename = str_sub_str(filename,".nc","")
+  fileVar = str_split(filename, "_")
+  variable = fileVar(2)
 
 ;---Read some data off the file, including map projection information.
-  varname       = f->$varnames(0)$
+  varname  = f->$variable$
   proj     = f->polar_stereographic
   lat2d    = f->lat
   lon2d    = f->lon
@@ -36,7 +38,7 @@ begin
   end if
   
   ;Uniquely name output file by task id
-  filename_out = directory + tid + "_nativeplot"
+  filename_out = directory + tid + "_nativeplot_" + variable
   if(isfilepresent(filename_out)) then
     system("rm -rf " + filename_out)
   end if
