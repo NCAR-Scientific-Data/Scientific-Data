@@ -5,9 +5,7 @@
 
 begin
     f = addfile(filename,"r")
-    filename = str_sub_str(filename,".nc","")
-    fileVar = str_split(filename, "_")
-    variable = fileVar(2)
+    variable = f@MainVariable
 
     if (.not. isfilevar(f, variable)) then
         status_exit(5)
@@ -57,14 +55,14 @@ begin
     end if
 
     ;Check if workflow directory exists, if not create one
-    directory = "/data/" + wid + "/"
+    directory = "data/" + wid + "/"
     echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
     if (echo .eq. "notfound") then
         system("mkdir " + directory)
     end if
 
     ;Uniquely name output file by task id
-    filename_out = directory + tid + "_unitconv_" + variable + ".nc"
+    filename_out = directory + tid + "_unitconv.nc"
     if(isfilepresent(filename_out)) then
         system("rm -rf " + filename_out)
     end if
@@ -77,6 +75,7 @@ begin
     do i = 0, dimsizes(att_names)-1
         fout@$att_names(i)$ = f@$att_names(i)$
     end do
+    fout@MainVariable = variable
     
     ; copy over other variables
     var_names = getfilevarnames(f)

@@ -8,9 +8,7 @@
 
 begin
   f        = addfile(filename,"r")
-  filename = str_sub_str(filename,".nc","")
-  fileVar = str_split(filename, "_")
-  variable = fileVar(2)
+  variable = f@MainVariable
 ;---Read some data off the file, including map projection information.
   varname       = f->$variable$
   varname@lat2d = f->lat
@@ -27,14 +25,14 @@ begin
 
 ;---The graphics section
   ;Check if workflow directory exists, if not create one
-  directory = "/data/" + wid + "/"
+  directory = "data/" + wid + "/"
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
   if (echo .eq. "notfound") then
       system("mkdir " + directory)
   end if
 
   ;Uniquely name output file by task id
-  filename_out = directory + tid + "_plot_" + variable
+  filename_out = directory + tid + "_plot"
   if(isfilepresent(filename_out)) then
     system("rm -rf " + filename_out)
   end if

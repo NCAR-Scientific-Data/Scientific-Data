@@ -89,7 +89,7 @@ begin
   end if
 
   ;Uniquely name output file by task id
-  filename_out = directory + tid + "_subset_" + variable + ".nc"
+  filename_out = directory + tid + "_subset.nc"
   if(isfilepresent(filename_out)) then
     system("rm -rf " + filename_out)
   end if
@@ -100,7 +100,7 @@ begin
   do i=0, dimsizes(att_names)-1
     fout@$att_names(i)$ = f@$att_names(i)$
   end do
-
+  fout@MainVariable = variable
   var_names = getfilevarnames(f)
 
   do i=0, dimsizes(var_names)-1

@@ -101,9 +101,7 @@ if(cyclic .and. interval .eq. "day") then
 end if
 
 f = addfile(filename, "r")
-filename = str_sub_str(filename,".nc","")
-fileVar = str_split(filename, "_")
-variable = fileVar(2)
+variable = f@MainVariable
 
 time = f->time
 nt = dimsizes(time)
@@ -338,14 +336,14 @@ outdata@cell_methods = cmstring
 
 ;; Create output file
 ;;Check if workflow directory exists, if not create one
-directory = "/data/" + wid + "/"
+directory = "data/" + wid + "/"
 echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
 if (echo .eq. "notfound") then
   system("mkdir " + directory)
 end if
 
 ;Uniquely name output file by task id
-filename_out = directory + tid + "_aggregate_" + variable + ".nc"
+filename_out = directory + tid + "_aggregate.nc"
 if(isfilepresent(filename_out)) then
   system("rm -rf " + filename_out)
 end if
@@ -360,7 +358,7 @@ att_names = getvaratts(f)
 do i = 0,dimsizes(att_names)-1
   fout@$att_names(i)$ = f@$att_names(i)$
 end do
-
+fout@MainVariable = variable
 ;; copy over other variables
 
 var_names = getfilevarnames(f) ;
