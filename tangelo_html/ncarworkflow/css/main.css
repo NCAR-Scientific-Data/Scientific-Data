@@ -16,6 +16,14 @@ main {
 	top: 50px;
 }
 
+#analysisWrapper main {
+	display:inline-block;
+	position:static; /*Override main styling*/
+	width:570px;
+	background-color:white;
+
+}
+
 button {
     color: #F4F4F4;
     background-color: #4AAAA5;
@@ -116,4 +124,12 @@ label {
 
 .inputs {
 	clear: both;
+}
+
+#analysisWrapper {
+	background-color: #1C262B;
+}
+
+#minimumHeight {
+	height: 320px;
 }
