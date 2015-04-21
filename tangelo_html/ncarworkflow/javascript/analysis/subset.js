@@ -31,7 +31,7 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
 
     //inputs = JSON.stringify(inputs);
 
-    addTask("taskSubset", inputs, repopulateVals);
+    addTask("taskSubset", inputs, repopulateVals, "subset");
 }
 
 function callSubset() {
