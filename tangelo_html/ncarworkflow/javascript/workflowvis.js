@@ -61,7 +61,7 @@ function getIndexMap(workflow) {
 */
 function generateData(workflow, indexMap) {
     "use strict";
-    var data = { nodes: [], links: [], uids: []};
+    var data = { nodes: [], links: []};
 
     workflow.forEach(function (nodeProperties) {
         var nodeType = nodeProperties[0],
@@ -345,7 +345,7 @@ function formatWorkflow(workflow) {
 
         <formatWorkflow>
 */
-function addTask(task_Type, links, repopulateVals) {
+function addTask(task_Type, links, repopulateVals, outputName) {
     "use strict";
 
     var url = "python/updateWorkflow",
@@ -359,13 +359,29 @@ function addTask(task_Type, links, repopulateVals) {
         if (results.result) {
             $("[id^='tangelo-drawer-icon-']").trigger("click");
             $("#HTMLLoadSection").empty();
-            $("#HTMLLoadSection").text("<h1>NCAR Scientific Workflows</h1>");
+            $("#HTMLLoadSection").html("<h1>NCAR Scientific Workflows</h1>");
             
             var data = formatWorkflow(results.workflow),
                 tid = results.taskID,
                 nodes = JSON.parse(localStorage.nodes);
 
-            nodes[tid] = repopulateVals;
+            var n = data.nodes;
+
+            for (var i = 0; i < n.length; i += 1) {
+                var taskid = n[i].uid,
+                    name = n[i].name;
+
+                if (nodes.hasOwnProperty(taskid)) {
+                    nodes[taskid]["name"] = name;
+                } else {
+                    nodes[taskid] = {};
+                    nodes[taskid]["name"] = name;
+                }
+                
+            }
+
+            nodes[tid]["repop"] = repopulateVals;
+            nodes[tid]["output"] = outputName;
                 
             localStorage.nodes = JSON.stringify(nodes);
 
@@ -379,7 +395,7 @@ function addTask(task_Type, links, repopulateVals) {
                 nodeUID: tangelo.accessor({field: "uid"})
             });
 
-            var re = new RegExp(".+\..+")
+            var re = new RegExp("(.+)(\.)(.+)")
             if (re.test(results.result)) {
                 var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
 

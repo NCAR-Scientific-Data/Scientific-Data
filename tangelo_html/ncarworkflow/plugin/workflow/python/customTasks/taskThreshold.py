@@ -2,6 +2,8 @@ import pyutilib.workflow
 import rpy2.robjects as ro
 import os
 
+#   Class: taskThreshold
+#   A task that calculates threshold.
 class taskThreshold(pyutilib.workflow.Task):
     def __init__(self, *args, **kwds):
         """Constructor."""

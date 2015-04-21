@@ -283,7 +283,7 @@ class Task(object):
 
     # Robert Crimi
     def getTaskWithID(self, uid):
-        if self.uid == uid:
+        if str(self.uid) == uid:
             return self
 
     # Robert Crimi

@@ -11,7 +11,7 @@ class taskPlot(pyutilib.workflow.Task):
         self.inputs.declare('filename')
         self.inputs.declare('timeindex')
         self.inputs.declare('native')
-        self.outputs.declare('result')
+        self.outputs.declare('plot')
         
     def execute(self):
         sFilename = "filename=\"{0}\"".format(self.filename)
@@ -20,9 +20,9 @@ class taskPlot(pyutilib.workflow.Task):
         else:
                 sTimeindex = "timeindex={0}".format(self.timeindex)
         if self.native:
-                plotScript = 'ncl/plot_native.ncl'
+                plotScript = '../plugin/workflow/python/customTasks/ncl/plot_native.ncl'
         else:
-                plotScript = 'ncl/plot.ncl'
+                plotScript = '../plugin/workflow/python/customTasks/ncl/plot.ncl'
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.id)
 
@@ -60,6 +60,6 @@ class taskPlot(pyutilib.workflow.Task):
                 error = "NCL Error: Please check input parameters."
                 nclError = True
         if nclError or sysError:
-                self.result = error
+                self.plot = error
         else:
-                self.result = result
+                self.plot = result
