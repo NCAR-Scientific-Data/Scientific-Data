@@ -1,33 +1,16 @@
 import pyutilib.workflow
 import uuid
 import sys
-sys.path.insert(1,'C:/Users/Hannah/Documents/Scientific-Data/tangelo_html/ncarworkflow/python')
-from TaskSubset import taskSubset
-from TaskAggregate import taskAggregate
-
+sys.path.insert(1,'/home/project/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/')
+from taskThreshold import taskThreshold
 
 def createWorkflow():
-	A = taskSubset()
-	B = taskAggregate()
+	A = taskThreshold()
 	w = pyutilib.workflow.Workflow()
-	A.inputs.url = "tmin.CRCM.ncep.dayavg.native.nc"
-	A.inputs.variable = "tmin"
-	A.inputs.swlat = 35
-	A.inputs.swlon = 255
-	A.inputs.nelat = 45
-	A.inputs.nelon = 265
-	A.inputs.startdate = "1990-01-01"
-	A.inputs.enddate = "2000-01-01"
-	B.inputs.filename = A.outputs.subset
-	B.inputs.variable = "tmin"
-	B.inputs.interval = "month"
-	B.inputs.method = "mean"
-	B.inputs.outtime = "start"
-	B.inputs.cyclic = False
-	A.setWorkflowID(2222)
-	B.setWorkflowID(2222)
+	A.inputs.filename = "tmin_subset_time_latlon.nc"
+	A.inputs.lower = "25"
+	A.inputs.upper = "27"
 	w.add(A)
-	w.add(B)
-	w.setWorkflowID(2222)
+	#w.setWorkflowID(423)
 	test = w()
 createWorkflow()
