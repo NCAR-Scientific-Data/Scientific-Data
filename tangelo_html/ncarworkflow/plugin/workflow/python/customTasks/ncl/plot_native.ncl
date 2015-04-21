@@ -9,13 +9,10 @@
 
 begin
   f        = addfile(filename,"r")
-
-  if (.not. isfilevar(f, variable)) then
-    status_exit(5)
-  end if
+  varnames = getfilevarnames(f)
 
 ;---Read some data off the file, including map projection information.
-  varname       = f->$variable$
+  varname       = f->$varnames(0)$
   proj     = f->polar_stereographic
   lat2d    = f->lat
   lon2d    = f->lon

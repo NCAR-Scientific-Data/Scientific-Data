@@ -7,7 +7,7 @@ import os
 #
 #   Attributes:
 #   
-#       filename - the name of the netCDF file to aggregate.
+#       filename - the name of the NetCDF file to aggregate.
 #       variable - the variable to aggregate.
 #       interval - the time interval to aggregate over.
 #       method - the method of aggregation.
@@ -23,7 +23,7 @@ class taskAggregate(pyutilib.workflow.Task):
     #
     #       self - a reference to the object.
     #       *args - a list of arguments
-    #       **kwds - the number of arguments?
+    #       **kwds - a list of keyword arguments.
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)

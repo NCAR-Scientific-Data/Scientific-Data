@@ -2,7 +2,25 @@ import subprocess
 import pyutilib.workflow
 import os
 
+#   Class: taskUnitConversion
+#   A task class that converts temperature units
+#
+#   Attributes:
+#
+#       filename - the name of the NetCDF file to convert.
+#       variable - the variable to convert.
+#       outunit - the unit to convert the output to.
+#       result - the resulting NetCDF file with new units.
 class taskUnitConversion(pyutilib.workflow.Task):
+
+    #   Constructor: __init__
+    #   Creates a UnitConversion task.
+    #
+    #   Parameters:
+    #
+    #       self - a reference to the object
+    #       *args - a list of arguments
+    #       **kwds - a list of keyword arguments
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
@@ -11,6 +29,16 @@ class taskUnitConversion(pyutilib.workflow.Task):
         self.inputs.declare('outunit')
         self.outputs.declare('result')
 
+    #   Function: execute
+    #   Calls the NCL script to convert the units of the data.
+    #
+    #   Parameters:
+    #
+    #       self - a reference to the object.
+    #
+    #   Returns:
+    #
+    #       The path of the resulting NetCDF file with converted units.
     def execute(self):
             sFilename = "filename=\"{0}\"".format(self.filename)
             sVariable = "variable=\"{0}\"".format(self.variable)
