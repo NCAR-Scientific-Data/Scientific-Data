@@ -1,10 +1,15 @@
 import pyutilib.workflow
 import rpy2.robjects as ro
 import os
+import tangelo
 
 #   Class: taskDelta
 #   Task that calculate the delta between two subsets
-class taskDelta(pyutilib.workflow.Task):
+class PluginTaskDelta(pyutilib.workflow.TaskPlugin):
+    
+    pyutilib.component.core.alias("taskDelta")
+    alias = "taskDelta"
+
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
@@ -13,12 +18,12 @@ class taskDelta(pyutilib.workflow.Task):
 	self.outputs.declare('result')
     def execute(self):
 
-	infile1 = self.filename1
-	infile2 = self.filename2
+	infile1 = "filename=\"{0}\"".format(self.filename1) 
+	infile2 = "filename=\"{0}\"".format(self.filename2)
 
     	# Check if workflow directory exists, if not create one
-    	wid = "421"
-    	tid = "1020"
+    	wid = "filename=\"{0}\"".format(self.workflowID)
+    	tid = "filename=\"{0}\"".format(self.uid)
 
     	workflowDirName = "/data/" + wid + "/"
     	if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)

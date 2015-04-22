@@ -2,6 +2,7 @@ import pyutilib.workflow
 import uuid
 import rpy2.robjects as ro
 import os
+import tangelo
 
 #   Class: taskThreshold
 #   A task that calculates threshold.
@@ -25,14 +26,14 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
         ro.r['source'](scriptname)
 
         # Check if workflow directory exists, if not create one
-        wid = self.workflowID
-        tid = self.uid
+        wid = "wid=\"{0}\"".format(self.workflowID)
+        tid = "tid=\"{0}\"".format(self.id)
 
         workflowDirName = "/data/" + wid + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
 
         # Get path to the netcdf file
-        infile = self.filename
+        infile = "filename=\"{0}\"".format(self.filename)
 
         # Uniquely name output file by task id
         outfile = workflowDirName + tid + "_threshold.nc"
@@ -43,8 +44,10 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
 
         # Check if user entered lowerlimit and upperlimit, if not
         #   Set lower to min or upper to max
-        lowerlimit = str(self.lower) if self.lower else "min"
-        upperlimit = str(self.upper) if self.upper else "max"
+	low = "filename=\"{0}\"".format(self.lower)
+	up = "filename=\"{0}\"".format(self.upper)
+        lowerlimit = str(low) if self.lower else "min"
+        upperlimit = str(up) if self.upper else "max"
 
         # Call the function that does the calculation
         value = ro.r['daysWithinThreshold'](infile, outfile, field, lowerlimit, upperlimit)
