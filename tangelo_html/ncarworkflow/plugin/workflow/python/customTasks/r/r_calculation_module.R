@@ -2,7 +2,7 @@
 #
 #    Name:    calculationModule.R
 #    Summary: This scripts are a collection of R functions
-#			   that does some data analysis operations
+#             that does some data analysis operations
 #
 ##########################################################
 
@@ -15,8 +15,8 @@
 #             and it only works with daily data for proof-of-concept.
 #
 #    Parameters: Subset file name, the field needs to be calculated
-#                Lower limit of the threshold, upper limit of the threshold
-#				 output file name
+#                lower limit of the threshold, upper limit of the threshold
+#                output file name
 #
 ##########################################################
 daysWithinThreshold <- function(infile, outfile, field, lower, upper){
@@ -83,10 +83,10 @@ daysWithinThreshold <- function(infile, outfile, field, lower, upper){
 #
 #    Name:    ncdfDelta
 #    Summary: Calculates delta between two subsets and output
-#				to a new NetCDF file
+#             to a new NetCDF file
 #
 #    Parameters: Name of first file name, name of second file name
-#					name of the output file, filed to be calculatedS
+#                name of the output file, filed to be calculatedS
 #
 ##########################################################
 ncdfDelta <- function(filename1, filename2, outputFname, field){
@@ -102,16 +102,20 @@ ncdfDelta <- function(filename1, filename2, outputFname, field){
 
 	nc3 = open.ncdf(outputFname, write=TRUE)
 	put.var.ncdf(nc3, field, field_delta)
+
+	close.ncdf(nc3)
+	close.ncdf(nc1)
+	close.ncdf(nc2)
 }
 
 ##########################################################
 #
 #    Name:    ncdfDelta
 #    Summary: Calculates delta between two subsets and output
-#				to a new NetCDF file
+#             to a new NetCDF file
 #
 #    Parameters: Name of first file name, name of second file name
-#					name of the output file, filed to be calculatedS
+#                name of the output file, filed to be calculatedS
 #
 ##########################################################
 timePercentile <- function(inputfname, outputfname, field, percentile){

@@ -3,13 +3,22 @@ import uuid
 import sys
 sys.path.insert(1,'/home/project/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/')
 from taskThreshold import taskThreshold
+from taskDelta import taskDelta
 
 def createWorkflow():
-	A = taskThreshold()
 	w = pyutilib.workflow.Workflow()
+
+	# Test threshold
+	A = taskThreshold()
 	A.inputs.filename = "tmin_subset_time_latlon.nc"
 	A.inputs.lower = "25"
 	A.inputs.upper = "27"
+	
+	# Test delta
+	A = taskDelta()
+	A.inputs.filename1 = "tmin_subset_time_latlon.nc"
+	A.inputs.filename2 = "tmin_subset_time_latlon.nc"	
+
 	w.add(A)
 	#w.setWorkflowID(423)
 	test = w()
