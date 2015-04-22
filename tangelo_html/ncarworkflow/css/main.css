@@ -1,260 +1,97 @@
-/*!
-* CSS
-*/
-
 * {
 	padding: 0;
 	margin: 0;
 }
 
+body {
+	text-align: center;
+}
+
+header {
+
+}
+
 main {
 	position: relative;
-	font-family: 'Source Sans Pro', sans-serif;
-	font-size: 16px; 
-	padding:25px;
-	width: 75%;
-	color: black;
-	margin:auto;
+	top: 50px;
 }
 
-section{
-	padding:10px;
-	margin-left:-40px;
-}
+#analysisWrapper main {
+	display:inline-block;
+	position:static; /*Override main styling*/
+	width:570px;
+	background-color:white;
 
-
-.radio-selection {
-	display: block;
-}
-
-.label {
-	width: 30%;
-}
-
-.choice {
-	width: 70%;
-}
-
-.container {
-	display: inline-flex;
-	justify-content: space-between;
-	align-items: baseline;
-	width: 100%;
-	margin: 10px auto;
-}
-
-input {
-	margin: 5px 5px 0px 0px;
-}
-
-#subsetter {
-	padding: 20px 0px;
-}
-
-h1 {
-	font-size:50px;
-	font-weight:300;
-	padding:3px;
-	margin:auto;
-	text-align:center;
-}
-
-h2{
-	display:inline;
-	font-size:22px;
-	font-weight:300;
-}
-
-h3{
-	display:inline;
-	font-size:16px;
-	font-style:italic;
-	margin-left:8px;
-}
-
-a {
-	padding:5px;
-}
-
-a.tooltip {
-	outline:none; 
-} 
-a.tooltip strong {
-	line-height:30px;
-} 
-a.tooltip:hover {
-	text-decoration:none;
-} 
-a.tooltip span { 
-	z-index:10;display:none; 
-	padding:14px 20px; 
-	margin-top:-30px;
-	margin-left:28px;
-	width:300px;
-	line-height:16px;
-} 
-a.tooltip:hover span { 
-	display:inline; 
-	position:absolute; 
-	color:#111; 
-	border:1px solid #DCA; 
-	background:#fffAF0;
-} 
-
-.callout {
-	z-index:20;
-	position:absolute;
-	top:30px;
-	border:0;
-	left:-12px;
-} 
-
-input:disabled + label{
-	color: #CCCCCC;
-}
-
-span.radioButton {
-	font-size:16px;
-	/*font-weight:600;*/
-}
-
-span.textbox {
-	font-size:16px;
-}
-
-#buttonContainer {
-	text-align:center;
 }
 
 button {
-	margin:30px;
-}
-
-#main-wrapper {
-	margin-left:310px;
-}
-
-button.choose {
     color: #F4F4F4;
-    background: none repeat scroll 0% 0% #4AAAA5;
+    background-color: #4AAAA5;
     font-weight: 600;
     padding: 8px 25px;
     font-family: 'Source Sans Pro', sans-serif;
     font-size:18px;
     border-width: 0px 0px 2px;
     border-style: solid;
-    border-color: #E3EDF4 #E3EDF4 #3A9A95;;
+    border-color: #E3EDF4 #E3EDF4 #3A9A95;
     border-radius: 4px;
     cursor:pointer;
+    margin: 10px;
 }
 
-button.delete {
-    color: #F4F4F4;
-    background: none repeat scroll 0% 0% #4AAAA5;
-    font-weight: 600;
-    padding: 4px 12px;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size:18px;
-    border-width: 0px 0px 2px;
-    border-style: solid;
-    border-color: #E3EDF4 #E3EDF4 #3A9A95;;
-    border-radius: 4px;
-    cursor:pointer;
-    margin:15px;
-    
+
+h1 {
+	font-size: 50px;
 }
 
-button.subset {
-    color: #F4F4F4;
-    background: none repeat scroll 0% 0% #4AAAA5;
-    font-weight: 600;
-    padding: 4px 12px;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size:18px;
-    border-width: 0px 0px 2px;
-    border-style: solid;
-    border-color: #E3EDF4 #E3EDF4 #3A9A95;;
-    border-radius: 4px;
-    cursor:pointer;
-    margin:15px;
-    margin-left:-30px;
-    
+h2 {
+	font-size: 22px;
+	display: inline-block;
 }
 
-#simulationType {
-	margin-left:60px;
+h3 {
+	font-size: 18px;
+	display: inline-block;
+	font-style: italic;
 }
 
-div.form-inline {
-	margin-left:50px;
+section {
+	width: 100%;
+	clear: both;
 }
 
-#radioButtonContainerLeft {
-	float:left;
-	margin-right:30px;
-	margin-left:60px;
+input {
+	margin: 2px;
+	padding: 2px;
 }
 
-#radioButtonContainerRight {
-	margin-left:10px;
+input:disabled + label{
+	color: #CCCCCC;
 }
 
-#regionSelect {
-	margin-left:60px;
+select {
+	margin: 2px;
+	padding: 2px;
 }
 
-#latlonContainer {
-	margin-left:50px;
+label {
+	margin: 2px;
+	padding: 2px;
 }
 
-#latlonLabel {
-	float:left;
-	margin-right:8px;
+.left {
+	float: left;
+	width: 50%;
 }
 
-#timeSelect {
-	margin-left:60px;
+.right {
+	float: right;
+	width: 50%;
 }
-
-#regionalCliModSelectLeft {
-	float:left;
-	margin-right:60px;
-	margin-left:60px;
-}
-
-#globalCliModSelectLeft {
-	float:left;
-	margin-right:60px;
-	margin-left:60px;
-}
-
-#analysisType {
-	margin-left:60px;
-}
-
-#interval {
-	margin-left:60px;
-}
-
-#outtime {
-	margin-left:60px;
-}
-
-#qunit {
-	margin-left: 310px;
-}
-
-/*#miniMenu {
-	position: fixed;
-	top: 90%;
-	left: 90%;
-	right: 0%;
-	bottom: 0%;
-}*/
 
 #miniMenu {
     position: fixed;
-    right: 0px;
+    right: 100px;
     top: 50px;
     width: 150px;
     height: 200px;
@@ -263,4 +100,36 @@ div.form-inline {
 .miniMenuOption {
 	cursor: pointer;
 
+}
+
+#save {
+	position: fixed;
+	right: 25px;
+	top: 55px;
+}
+
+#HTMLLoadSection {
+	width: 900px;
+	margin: auto;
+	text-align: justify;
+}
+
+#HTMLLoadSection h1 {
+	text-align: center;
+}
+
+.title {
+	clear: both;
+}
+
+.inputs {
+	clear: both;
+}
+
+#analysisWrapper {
+	background-color: #1C262B;
+}
+
+#minimumHeight {
+	height: 320px;
 }

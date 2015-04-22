@@ -61,14 +61,14 @@ function getIndexMap(workflow) {
 */
 function generateData(workflow, indexMap) {
     "use strict";
-    var data = { nodes: [], links: [], uids: []};
+    var data = { nodes: [], links: []};
 
     workflow.forEach(function (nodeProperties) {
         var nodeType = nodeProperties[0],
             nodeIndex = nodeProperties[1],
             nodeLinks = nodeProperties[2],
             nodeUID = nodeProperties[3],
-            nodeName = nodeProperties[0] + nodeProperties[1],
+            nodeName = nodeType + nodeIndex,
             sourceIndex;
 
         data.nodes.push({type: nodeType, name: nodeName, uid: nodeUID});
@@ -345,21 +345,45 @@ function formatWorkflow(workflow) {
 
         <formatWorkflow>
 */
-function addTask(task_Type, links) {
+function addTask(task_Type, links, repopulateVals, outputName) {
     "use strict";
-    alert("making a task");
-    var url = "python/addTask",
+
+    var url = "python/updateWorkflow",
         stuffToPass = {
-            "taskType" : task_Type,
-            "links" : links,
+            "function" : "addTask",
             "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([task_Type, JSON.stringify(links)])
         };
 
     $.getJSON(url, stuffToPass, function (results) {
-        if (results.workflow) {
-            var data = formatWorkflow(results.workflow);
+        if (results.result) {
+            $("[id^='tangelo-drawer-icon-']").trigger("click");
+            $("#HTMLLoadSection").empty();
+            $("#HTMLLoadSection").html("<h1>NCAR Scientific Workflows</h1>");
             
-            localStorage.nodes = data;
+            var data = formatWorkflow(results.workflow),
+                tid = results.taskID,
+                nodes = JSON.parse(localStorage.nodes);
+
+            var n = data.nodes;
+
+            for (var i = 0; i < n.length; i += 1) {
+                var taskid = n[i].uid,
+                    name = n[i].name;
+
+                if (nodes.hasOwnProperty(taskid)) {
+                    nodes[taskid]["name"] = name;
+                } else {
+                    nodes[taskid] = {};
+                    nodes[taskid]["name"] = name;
+                }
+                
+            }
+
+            nodes[tid]["repop"] = repopulateVals;
+            nodes[tid]["output"] = outputName;
+                
+            localStorage.nodes = JSON.stringify(nodes);
 
             $("#workflow").nodelink({
                 data: data,
@@ -367,8 +391,21 @@ function addTask(task_Type, links) {
                 linkSource: tangelo.accessor({field: "source"}),
                 linkTarget: tangelo.accessor({field: "target"}),
                 nodeColor: tangelo.accessor({field: "type"}),
-                nodeLabel: tangelo.accessor({field: "name"})
+                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeUID: tangelo.accessor({field: "uid"})
             });
+
+            var re = new RegExp("(.+)(\.)(.+)")
+            if (re.test(results.result)) {
+                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
+
+                if (download) {
+                    window.open("python/" + results.result);
+                }
+            }
+
+        } else {
+            alert(JSON.stringify(results));
         }
     });
 }

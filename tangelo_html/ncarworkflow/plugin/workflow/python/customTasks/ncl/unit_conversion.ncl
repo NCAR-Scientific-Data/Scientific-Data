@@ -5,10 +5,7 @@
 
 begin
     f = addfile(filename,"r")
-
-    if (.not.isvar("variable")) then
-        status_exit(2)
-    end if
+    variable = f@MainVariable
 
     if (.not. isfilevar(f, variable)) then
         status_exit(5)
@@ -58,7 +55,7 @@ begin
     end if
 
     ;Check if workflow directory exists, if not create one
-    directory = "/data/" + wid + "/"
+    directory = "data/" + wid + "/"
     echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
     if (echo .eq. "notfound") then
         system("mkdir " + directory)
@@ -78,6 +75,7 @@ begin
     do i = 0, dimsizes(att_names)-1
         fout@$att_names(i)$ = f@$att_names(i)$
     end do
+    fout@MainVariable = variable
     
     ; copy over other variables
     var_names = getfilevarnames(f)

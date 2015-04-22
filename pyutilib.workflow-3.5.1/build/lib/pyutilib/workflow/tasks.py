@@ -33,6 +33,10 @@ class TaskPlugin(Plugin, task.Task):
     def __repr__(self):
         return task.Task.__repr__(self)     #pragma:nocover
 
+    #Hannah T
+    def _dict_(self, workflow):
+        return task.Task._dict_(self, workflow)
+
 
 class WorkflowPlugin(Plugin, workflow.Workflow):
 

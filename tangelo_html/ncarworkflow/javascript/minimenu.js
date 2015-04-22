@@ -30,14 +30,8 @@ function newAnalysis() {
 
 function newPlot() {
     "use strict";
-    //Load Goes Here
-    toggleMiniMenu();
-    openClosedDrawer();
-}
-
-function newDownload() {
-    "use strict";
-    //Load Goes Here
+    $("#HTMLLoadSection").empty();
+    $("#HTMLLoadSection").load("stepHTML/plot.html");
     toggleMiniMenu();
     openClosedDrawer();
 }

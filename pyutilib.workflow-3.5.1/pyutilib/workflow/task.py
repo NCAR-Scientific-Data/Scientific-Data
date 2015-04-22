@@ -236,36 +236,42 @@ class Task(object):
 
     # Robert Crimi
     # Return dictionary for serialization of workflows
-    def __dict__(self, workflow):
+    def _dict_(self, workflow):
         tmp = {}
-        tmp['Type'] = self.__class__.__name__
+        tmp['Type'] = self.alias if hasattr(self, "alias") else self.__class__.__name__
         tmp['Inputs'] = {}
+        tmp['WorkflowID'] = self.workflowID
         # Create dictionary of instances inputs
         dictionary = self.inputs._repn_()
         for key in dictionary:
             # Find the actual input values of the instance
             if not key in ['A_TYPE','Name','Mode','Owner']:
                 val = dictionary[key]
+
                 # Value is number
-                if re.match("[-+]?\d*\.\d+|\d+",val['Value']):
-                    val = [float(val['Value'])]
-                # TODO:
-                # handle files or other strings input into tasks
-                # Value is string
-                elif(".nc" in val['Value']):
-                    val = [val['Value']]
+                # if re.match("^-?(\d*\.?\d+$)",val['Value']):
+                #     val = [float(val['Value'])]
+                # # TODO:
+                # # handle files or other strings input into tasks
+                # # Value is string
+                # elif(".nc" in val['Value']):
+                #     val = [val['Value']]
 
                 # Value is port
-                else:
+                if val["Value"] == "None":
                     # Get the port connections
                     connection = dictionary[key]['Connections']['Inputs'][0]
-                    link = re.findall("[-+]?\d*\.\d+|\d+", connection)
+                    link = re.findall("-?(\d*\.?\d+)", connection)
                     # Map strings to ints
                     link = list(map(int, link))
+
                     # Find UIDS of tasks with ids in link
+                    
                     newLinks = workflow._dfs_([workflow._start_task.id], lambda t: t.getUIDWithID(link[0]))
                     # Set val to ['Port', UID, output]
                     val = ['Port', newLinks[0][0], newLinks[0][1][0]]
+                else:
+                    val = [val["Value"]]
 
                 # Set inputs value to the link
                 tmp['Inputs'][key] = val
@@ -277,7 +283,7 @@ class Task(object):
 
     # Robert Crimi
     def getTaskWithID(self, uid):
-        if self.uid == uid:
+        if str(self.uid) == uid:
             return self
 
     # Robert Crimi
@@ -301,7 +307,7 @@ class Task(object):
 
     # Robert Crimi
     def __list__(self):
-        return [self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices())), self.uid] 
+        return [self.alias if hasattr(self, "alias") else self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices())), self.uid] 
 
     def reset(self):
         #print "RESETING "+self.name

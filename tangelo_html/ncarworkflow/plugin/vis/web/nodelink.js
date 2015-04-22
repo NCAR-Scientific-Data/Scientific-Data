@@ -1,3 +1,5 @@
+/*global alert*/
+
 (function (tangelo, $, d3) {
     "use strict";
 
@@ -331,7 +333,28 @@
         },
 
         _click: function (node) {
-            alert("Clicked!");
+            var nodes = JSON.parse(localStorage.nodes);
+            if (nodes[node.uid]["repop"]) {
+                
+                var nodeInfo = nodes[node.uid]["repop"];
+
+                $("#HTMLLoadSection").load(nodeInfo.html, function () {
+                    for (var elementKey in nodeInfo.values) {
+                        if (nodeInfo.values.hasOwnProperty(elementKey)) {
+                            var elementValue = nodeInfo.values[elementKey];
+                            if (elementValue === true) {
+                                $(elementKey).prop("checked", elementValue);
+                            } else {
+                                $(elementKey).attr("value", elementValue);
+                            }
+                        }
+                    }
+                });
+                
+                $("[id^='tangelo-drawer-icon-']").trigger("click");
+            } else {
+                alert("ERROR: Node could not be generated.");
+            }
         }
     });
 }(window.tangelo, window.jQuery, window.d3));
