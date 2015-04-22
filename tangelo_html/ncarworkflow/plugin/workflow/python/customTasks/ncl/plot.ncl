@@ -8,9 +8,9 @@
 
 begin
   f        = addfile(filename,"r")
-  varnames = getfilevarnames(f)
+  variable = f@MainVariable
 ;---Read some data off the file, including map projection information.
-  varname       = f->$varnames(0)$
+  varname       = f->$variable$
   varname@lat2d = f->lat
   varname@lon2d = f->lon
 
@@ -25,7 +25,7 @@ begin
 
 ;---The graphics section
   ;Check if workflow directory exists, if not create one
-  directory = "/data/" + wid + "/"
+  directory = "data/" + wid + "/"
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
   if (echo .eq. "notfound") then
       system("mkdir " + directory)

@@ -4,7 +4,11 @@ import os
 
 #   Class: taskPlot
 #   A task that plots.
-class taskPlot(pyutilib.workflow.Task):
+class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
+
+    pyutilib.component.core.alias("taskPlot")
+    alias = "taskPlot"
+
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self, *args, **kwds)
@@ -43,21 +47,21 @@ class taskPlot(pyutilib.workflow.Task):
         if not sysError:
             if status:
                 if status == 2:
-                    error = "NCL Error: Missing input parameter"
+                    error = "NCL Error - Missing input parameter"
                 elif status == 3:
-                    error = "NCL Error: Lat/Lon values out of range"
+                    error = "NCL Error - Lat/Lon values out of range"
                 elif status == 4:
-                    error = "NCL Error: Date value out of range"
+                    error = "NCL Error - Date value out of range"
                 elif status == 5:
-                    error = "NCL Error: Invalid parameter value"
+                    error = "NCL Error - Invalid parameter value"
                 elif status == 6:
-                    error = "NCL Error: Conversion error"
+                    error = "NCL Error - Conversion error"
                 else:
-                    error = "NCL Error: Error with NCL script"
+                    error = "NCL Error - Error with NCL script"
                 nclError = True
         if not sysError or not nclError:
             if not os.path.isfile(result):
-                error = "NCL Error: Please check input parameters."
+                error = "NCL Error - Please check input parameters."
                 nclError = True
         if nclError or sysError:
                 self.plot = error
