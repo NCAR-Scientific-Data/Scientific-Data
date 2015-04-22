@@ -26,27 +26,22 @@ class taskThreshold(pyutilib.workflow.Task):
         workflowDirName = "/data/" + wid + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
 
+        # Get path to the netcdf file
+        infile = self.filename
+
         # Uniquely name output file by task id
-        outputFname = workflowDirName + tid + "_threshold.nc"
-        if os.path.exists(outputFname): os.system("rm -rf " + outputFname)
+        outfile = workflowDirName + tid + "_threshold.nc"
+        if os.path.exists(outfile): os.system("rm " + outfile)
 
         # Get field based on file name
-        field = self.filename.rsplit('_')[0]
-	print "field is: " + field
+        field = infile.rsplit('_')[0]
+
         # Check if user entered lowerlimit and upperlimit, if not
         #   Set lower to min or upper to max
         lowerlimit = str(self.lower) if self.lower else "min"
         upperlimit = str(self.upper) if self.upper else "max"
 
-        # Get path to the netcdf file
-        fname = "/data/" + self.filename
-
-        # R is inefficient when output to new NetCDF file
-        command = "cp " + fname + " " + outputFname
-        os.system(command)
-
         # Call the function that does the calculation
-        value = ro.r['daysWithinThreshold'](fname, field, lowerlimit, upperlimit, outputFname)
+        value = ro.r['daysWithinThreshold'](infile, outfile, field, lowerlimit, upperlimit)
 
         self.result = "data/{0}/{1}_threshold.nc".format(wid,tid)
-	print "value is: " + str(value)
