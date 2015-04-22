@@ -11,8 +11,10 @@ import os
 #       variable - the variable to convert.
 #       outunit - the unit to convert the output to.
 #       result - the resulting NetCDF file with new units.
-class taskUnitConversion(pyutilib.workflow.Task):
+class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
 
+    pyutilib.component.core.alias("taskUnitConversion")
+    alias = "taskUnitConversion"
     #   Constructor: __init__
     #   Creates a UnitConversion task.
     #

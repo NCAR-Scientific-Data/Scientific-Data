@@ -100,7 +100,7 @@ begin
   do i=0, dimsizes(att_names)-1
     fout@$att_names(i)$ = f@$att_names(i)$
   end do
-
+  fout@MainVariable = variable
   var_names = getfilevarnames(f)
 
   do i=0, dimsizes(var_names)-1

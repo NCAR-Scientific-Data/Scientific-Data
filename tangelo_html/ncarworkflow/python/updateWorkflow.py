@@ -37,13 +37,12 @@ def addTask(taskType, links, workflow, workflowID):
 def getOutput(workflow):
     # Get output of workflow
     output = workflow().__str__()
-    splitOutput = output.split(',')
-    result = []
-    for o in splitOutput:
-        keyVal = o.split(": ")
-        val = keyVal[1]
-        val = val[1:len(val)-1]
-        result.append(val)
+    output = output.replace(" ", "")
+    output = output.replace("'", "")
+
+    resultList = [tuple(u.split(':')) for u in output.split("\n")]
+
+    result = resultList[0][1]
     return result
 
 def run(function, workflowID, args):
@@ -63,4 +62,4 @@ def run(function, workflowID, args):
             result = getOutput(w)
             return {"result":result, "workflow":w.__list__(), "taskID": tid}
     else:
-        return {"Error": "Error: Could Not Update Workflow"}
+        return {"Error": "Error - Could Not Update Workflow"}

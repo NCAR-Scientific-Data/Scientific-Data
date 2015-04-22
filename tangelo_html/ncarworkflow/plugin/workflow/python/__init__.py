@@ -29,6 +29,7 @@ def addTask(task, links, workflow):
 def deserialize(workflowString): 
     data = json.loads(workflowString)
 
+    taskList = []
     # Create temp workflow
     q = pyutilib.workflow.Workflow()
     for task in data:
@@ -45,8 +46,16 @@ def deserialize(workflowString):
             t.setWorkflowID(task['WorkflowID'])
             # Add task t to workflow q with proper inputs
             for key, value in task["Inputs"].iteritems():
-                task["Inputs"][key] = value[0].encode("ascii", "ignore")
-            addTask(t, task['Inputs'], q)
+                if value[0] != "Port":
+                    task["Inputs"][key] = value[0].encode("ascii", "ignore")
+                else:
+                    task["Inputs"][key] = ["Port", value[1].encode("ascii", "ignore"), value[2].encode("ascii", "ignore")]
+
+            taskList.append((t, task["Inputs"]))
+    
+    for task in taskList:
+        addTask(task[0], task[1], q)
+
     return q
 
 # Serialize workflow into json file with UID as filename
@@ -55,18 +64,7 @@ def serialize(workflow):
     return json.dumps(workflow.__dict__())
 
 def getInstance(taskType):
-    if taskType == "taskSubset":
-        return taskSubset()
-    elif taskType == "taskAggregate":
-        return taskAggregate()
-    elif taskType == "taskUnitConversion":
-        return taskUnitConversion()
-    elif taskType == "taskThreshold":
-        return taskThreshold()
-    elif taskType == "taskPlot":
-        return taskPlot()
-    else:
-        return None
+    return pyutilib.workflow.TaskFactory(taskType)
 
 def createWorkflow():
     return pyutilib.workflow.Workflow()
