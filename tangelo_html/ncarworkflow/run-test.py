@@ -15,16 +15,20 @@ def createWorkflow():
 	A.inputs.upper = "27"
 	
 	# Test delta
-	A = taskDelta()
-	A.inputs.filename1 = "tmin_subset_time_latlon.nc"
-	A.inputs.filename2 = "tmin_subset_time_latlon.nc"	
+	#A = taskDelta()
+	#A.inputs.filename1 = "tmin_subset_time_latlon.nc"
+	#A.inputs.filename2 = "tmin_subset_time_latlon.nc"	
 
 	# Test percentile
-	A = taskPercentile()
-	A.inputs.filename = "tmin_subset_time_latlon.nc"
-	A.inputs.percentile = 75
+	#A = taskPercentile()
+	#A.inputs.filename = "tmin_subset_time_latlon.nc"
+	#A.inputs.percentile = 75
 
+	setUID(2015422)
+	w.setWorkflowID(2015422)
+	A.setWorkflowID(2015422)
 	w.add(A)
+	#w.setWorkflowID(2015422)
 	#w.setWorkflowID(423)
 	test = w()
 createWorkflow()

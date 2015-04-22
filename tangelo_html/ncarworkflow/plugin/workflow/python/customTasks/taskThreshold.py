@@ -1,4 +1,5 @@
 import pyutilib.workflow
+import uuid
 import rpy2.robjects as ro
 import os
 
@@ -20,8 +21,8 @@ class taskThreshold(pyutilib.workflow.Task):
         ro.r['source'](scriptname)
 
         # Check if workflow directory exists, if not create one
-        wid = str(421)
-        tid = str(100)
+        wid = self.workflowID
+        tid = self.uid
 
         workflowDirName = "/data/" + wid + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
