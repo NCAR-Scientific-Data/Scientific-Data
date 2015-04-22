@@ -4,10 +4,10 @@ import ast
 import tangelo
 
 def createWorkflow():
-	uid = uuid.uuid4()
-	w = tangelo.plugin.workflow.createWorkflow()
-	w.setWorkflowID(uid)
-	return (w, uid)
+    uid = uuid.uuid4()
+    w = tangelo.plugin.workflow.createWorkflow()
+    w.setWorkflowID(uid)
+    return (w, uid)
 
 
 # Call this function to add a new task to a workflow
@@ -35,32 +35,31 @@ def addTask(taskType, links, workflow, workflowID):
     return (workflow, task.uid)
 
 def getOutput(workflow):
-	# Get output of workflow
+    # Get output of workflow
     output = workflow().__str__()
-    splitOutput = output.split(',')
-    result = []
-    for o in splitOutput:
-        keyVal = o.split(": ")
-        val = keyVal[1]
-        val = val[1:len(val)-1]
-        result.append(val)
+    output = output.replace(" ", "")
+    output = output.replace("'", "")
+
+    resultList = [tuple(u.split(':')) for u in output.split("\n")]
+
+    result = resultList[0][1]
     return result
 
 def run(function, workflowID, args):
-	w = None
-	args = ast.literal_eval(args)
-	if function == "createWorkflow":
-		(w, uid) = createWorkflow()
-		tangelo.store()[str(uid)] = tangelo.plugin.workflow.serialize(w)
-		return {"uid": str(uid)}
-	elif workflowID in tangelo.store():
+    w = None
+    args = ast.literal_eval(args)
+    if function == "createWorkflow":
+        (w, uid) = createWorkflow()
+        tangelo.store()[str(uid)] = tangelo.plugin.workflow.serialize(w)
+        return {"uid": str(uid)}
+    elif workflowID in tangelo.store():
 
-		w = tangelo.plugin.workflow.deserialize(tangelo.store()[workflowID])
+        w = tangelo.plugin.workflow.deserialize(tangelo.store()[workflowID])
 
-		if function == "addTask":
-			(w, tid) = addTask(args[0], args[1], w, workflowID)
-			tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
-			result = getOutput(w)
-			return {"result":result, "workflow":w.__list__(), "taskID": tid}
-	else:
-		return {"Error": "Error: Could Not Update Workflow"}
+        if function == "addTask":
+            (w, tid) = addTask(args[0], args[1], w, workflowID)
+            tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
+            result = getOutput(w)
+            return {"result":result, "workflow":w.__list__(), "taskID": tid}
+    else:
+        return {"Error": "Error - Could Not Update Workflow"}

@@ -236,9 +236,9 @@ class Task(object):
 
     # Robert Crimi
     # Return dictionary for serialization of workflows
-    def __dict__(self, workflow):
+    def _dict_(self, workflow):
         tmp = {}
-        tmp['Type'] = self.__class__.__name__
+        tmp['Type'] = self.alias if hasattr(self, "alias") else self.__class__.__name__
         tmp['Inputs'] = {}
         tmp['WorkflowID'] = self.workflowID
         # Create dictionary of instances inputs
@@ -283,7 +283,7 @@ class Task(object):
 
     # Robert Crimi
     def getTaskWithID(self, uid):
-        if self.uid == uid:
+        if str(self.uid) == uid:
             return self
 
     # Robert Crimi
@@ -307,7 +307,7 @@ class Task(object):
 
     # Robert Crimi
     def __list__(self):
-        return [self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices())), self.uid] 
+        return [self.alias if hasattr(self, "alias") else self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices())), self.uid] 
 
     def reset(self):
         #print "RESETING "+self.name

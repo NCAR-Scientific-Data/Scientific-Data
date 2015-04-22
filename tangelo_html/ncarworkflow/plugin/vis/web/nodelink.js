@@ -334,9 +334,9 @@
 
         _click: function (node) {
             var nodes = JSON.parse(localStorage.nodes);
-            if (nodes[node.uid]) {
+            if (nodes[node.uid]["repop"]) {
                 
-                var nodeInfo = nodes[node.uid];
+                var nodeInfo = nodes[node.uid]["repop"];
 
                 $("#HTMLLoadSection").load(nodeInfo.html, function () {
                     for (var elementKey in nodeInfo.values) {
