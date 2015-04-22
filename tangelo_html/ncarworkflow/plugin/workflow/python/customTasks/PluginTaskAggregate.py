@@ -14,8 +14,10 @@ import os
 #       outtime - the outtime
 #       cyclic - whatever that means
 #       result - the resulting output.
-class taskAggregate(pyutilib.workflow.Task):
+class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
 
+    pyutilib.component.core.alias("taskAggregate")
+    alias = "taskAggregate"
     #   Constructor: __init__
     #   Creates an Aggregation task.
     #

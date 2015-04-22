@@ -17,8 +17,10 @@ import tangelo
 #       startdate - the beginning date to subset data over.
 #       enddate - the final date to subset data over.
 #       result - the output subsetted NetCDF file.
-class taskSubset(pyutilib.workflow.Task):
+class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
 
+    pyutilib.component.core.alias("taskSubset")
+    alias = "taskSubset"
     #   Constructor: __init__
     #   Creates a Subset task
     #
@@ -75,22 +77,22 @@ class taskSubset(pyutilib.workflow.Task):
         if not sysError:
             if status:
                 if status == 2:
-                    error = "NCL Error: Missing input parameter"
+                    error = "NCL Error - Missing input parameter"
                 elif status == 3:
-                    error = "NCL Error: Lat/Lon values out of range"
+                    error = "NCL Error - Lat/Lon values out of range"
                 elif status == 4:
-                    error = "NCL Error: Date value out of range"
+                    error = "NCL Error - Date value out of range"
                 elif status == 5:
-                    error = "NCL Error: Invalid parameter value"
+                    error = "NCL Error - Invalid parameter value"
                 elif status == 6:
-                    error = "NCL Error: Conversion error"
+                    error = "NCL Error - Conversion error"
                 else:
-                    error = "NCL Error: Error with NCL script"
+                    error = "NCL Error - Error with NCL script"
                 nclError = True
-        result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.id)
+        result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.id, self.variable)
         if not sysError or not nclError:
             if not os.path.isfile(result):
-                error = "NCL Error: Error with NCL script"
+                error = "NCL Error - Error with NCL script"
                 nclError = True
         if nclError or sysError:
             self.subset = error

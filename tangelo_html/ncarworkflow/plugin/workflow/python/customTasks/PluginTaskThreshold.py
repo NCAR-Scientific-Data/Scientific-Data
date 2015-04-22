@@ -3,7 +3,11 @@ import rpy2.robjects as ro
 
 #   Class: taskThreshold
 #   A task that calculates threshold.
-class taskThreshold(pyutilib.workflow.Task):
+class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
+
+    pyutilib.component.core.alias("taskThreshold")
+    alias="taskThreshold"
+
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
