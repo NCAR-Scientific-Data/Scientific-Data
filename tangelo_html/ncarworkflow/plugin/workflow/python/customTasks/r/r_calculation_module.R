@@ -118,22 +118,33 @@ ncdfDelta <- function(filename1, filename2, outputFname, field){
 #                name of the output file, filed to be calculatedS
 #
 ##########################################################
-timePercentile <- function(inputfname, outputfname, field, percentile){
+timePercentile <- function(infile, outfile, field, percentile){
 	library(ncdf)	
 
-	nc = open.ncdf(inputfname)
+	nc = open.ncdf(infile)
 
 	field_data = get.var.ncdf(nc, field)
-
 	time_data = nc$dim$time$vals
 
 	percentage = percentile/100
 
-	time_sub_close = quantile(time, probs=c(percentage))
+	time_sub_close = quantile(time_data, probs=c(percentage))
+	time_sub = which.min(abs(time_data - time_sub_close))+ min(time_data)
 
-	time_sub = which.min(abs(time - time_sub))+ min(time)
+	index = which(time_data == time_sub)
 
-	index = which(time == time_sub)
+	field_sub = field_data[,,index]
 
-	tmin_sub = tmin[,,index]
+	# Copy input file to output file
+	step = 0
+	dimension = gsub(" ", "", paste("time",",",step))
+	command = paste("ncks -d ",dimension,infile,outfile)
+	system(command)
+
+	nc_out = open.ncdf(outfile, write=TRUE)
+	put.var.ncdf(nc_out, "time", time_sub)
+	put.var.ncdf(nc_out, field, field_sub)
+
+	close.ncdf(nc_out)
+	close.ncdf(nc)
 }
