@@ -43,7 +43,7 @@
     <!-- End NCAR Scientific Data Scripts -->
 
     <!-- NCAR Scientific Data Styling -->
-    <link href="css/sidebar.css" rel="stylesheet">
+    <link type="text/css" href="css/sidebar.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="css/main.css">
     <!-- End NCAR Scientific Data Styling -->
 </head>
@@ -60,6 +60,7 @@
             <li><a style=cursor:pointer data-toggle=modal data-target=#info-panel><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
         </ul>
     </div>
+
     <div id="content">
         <div id="workflow">
         </div>
@@ -83,8 +84,7 @@
     </div>
 
     <div id="StepMaker">
-        
-        <div id="HTMLLoadSection" style="overflow:scroll;">
+        <div id ="analysisWrapper" style="overflow:scroll;">
             <h1>Start a Workflow</h1>
         </div>
     </div>
@@ -92,7 +92,7 @@
     <script type="text/javascript">
         $("#StepMaker").controlPanel();
         $(".miniMenuOption").hide();
-        $("#HTMLLoadSection").css("max-height", $(window).height()/2);
+        $("#analysisWrapper").css("max-height", $(window).height()/2);
         $("#wid").text(localStorage.uid);
     </script>
 </body>

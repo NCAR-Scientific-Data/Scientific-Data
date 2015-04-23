@@ -337,8 +337,8 @@
             if (nodes[node.uid]["repop"]) {
                 
                 var nodeInfo = nodes[node.uid]["repop"];
-                $("#HTMLLoadSection").empty();
-                $("#HTMLLoadSection").load(nodeInfo.html, function () {
+                $("#analysisWrapper").empty();
+                $("#analysisWrapper").load(nodeInfo.html, function () {
                     for (var elementKey in nodeInfo.values) {
                         if (nodeInfo.values.hasOwnProperty(elementKey)) {
                             var elementValue = nodeInfo.values[elementKey];
