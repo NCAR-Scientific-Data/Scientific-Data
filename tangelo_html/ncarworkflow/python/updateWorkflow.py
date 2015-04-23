@@ -38,7 +38,7 @@ def deleteTask(taskUID, workflowID):
     # Build workflow with filename workflowUID.json
     # Don't add task with UID = taskUID
     w = tangelo.plugin.workflow.deleteTask(taskUID, workflowID)
-    return {"workflow:", w.__list__()}
+    return w
 
 def getOutput(workflow):
     # Get output of workflow
@@ -69,7 +69,7 @@ def run(function, workflowID, args):
             return {"result":result, "workflow":w.__list__(), "taskID": tid}
 
         if function == "deleteTask":
-            (w, tid) = deleteTask(tid, workflowID)
+            (w) = deleteTask(args[0], workflowID)
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
             result = getOutput(w)
             return {"result":result, "workflow":w.__list__()}
