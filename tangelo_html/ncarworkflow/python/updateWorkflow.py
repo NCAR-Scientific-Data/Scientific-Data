@@ -34,6 +34,12 @@ def addTask(taskType, links, workflow, workflowID):
     # Return the result, list representation of the workflow, and UID of the added task
     return (workflow, task.uid)
 
+def deleteTask(taskUID, workflowID):
+    # Build workflow with filename workflowUID.json
+    # Don't add task with UID = taskUID
+    w = tangelo.plugin.workflow.deleteTask(taskUID, workflowID)
+    return {"workflow:", w.__list__()}
+
 def getOutput(workflow):
     # Get output of workflow
     output = workflow().__str__()
