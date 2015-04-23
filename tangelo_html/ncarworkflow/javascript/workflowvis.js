@@ -355,11 +355,13 @@ function addTask(task_Type, links, repopulateVals, outputName) {
             "args" : JSON.stringify([task_Type, JSON.stringify(links)])
         };
 
+    console.log(url.args);
+
     $.getJSON(url, stuffToPass, function (results) {
         if (results.result) {
             $("[id^='tangelo-drawer-icon-']").trigger("click");
-            $("#HTMLLoadSection").empty();
-            $("#HTMLLoadSection").html("<h1>NCAR Scientific Workflows</h1>");
+            $("#analysisWrapper").empty();
+            $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
             
             console.log(results.workflow);
             

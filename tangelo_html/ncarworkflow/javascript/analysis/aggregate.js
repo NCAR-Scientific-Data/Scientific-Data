@@ -5,13 +5,15 @@ function aggregate(filename, calc, interval, out, cyclic, repopulateVals) {
 
     var inputs = {
         "filename" : filename,
-        "calc" : calculation,
+        "method" : calc,
         "interval" : interval,
-        "out" : out,
+        "outtime" : out,
         "cyclic" : cyclic
     };
 
-    addTask("taskAggregate", inputs, repopulateVals, "aggregate");
+    console.log(inputs)
+
+    addTask("taskAggregate", inputs, repopulateVals, "result");
 }
 
 //Parse values from form
@@ -21,7 +23,7 @@ function callAggregate() {
     var allNodes = JSON.parse(localStorage.nodes),
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
-        calculation = $("#calc option:selected").val(),
+        calculation = $("#method option:selected").val(),
         interval = $("#interval option:selected").val(),
         out = $("#outtime option:selected").val(),
         cyclic = $("input[name='cyclic']:checked").val();
@@ -39,7 +41,8 @@ function callAggregate() {
     var cyclicSelector = "input[name='" + cyclic + "']";
 
     repopulateVals.values[cyclicSelector] = true;
-    aggregate(filename, calc, interval, out, repopulateVals);
+
+    aggregate(filename, calculation, interval, out, cyclic, repopulateVals);
 }
 
 function generateNodeSelect(){
