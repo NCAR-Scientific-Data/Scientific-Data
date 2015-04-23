@@ -28,8 +28,8 @@
 
 		<!-- Section Inputs -->
 		<div class="inputs">
-			<select id="aggregateType">
-				<option value="mean">Average</option>
+			<select id="method">
+				<option value="mean" selected>Average</option>
 				<option value="min">Find Minimum</option>
 				<option value="max">Find Maximum</option>
 			</select>
@@ -48,7 +48,7 @@
 		<!-- Section Inputs -->
 		<div class="inputs">
 			<select id="interval">
-				<option value="day">Daily</option>
+				<option value="day" selected>Daily</option>
 				<option value="month">Monthly</option>
 				<option value="year">Yearly</option>
 				<option value="season">Seasonally</option>
@@ -62,14 +62,13 @@
 		<!-- Section Title -->
 		<div class="title">
 			<h2>Output Date</h2>
-			<h3>The date of which to set aggregate values.</h3>
-			<label>Ex: If the output date is set to "start" for a monthly aggregate, the aggregate values will be set at the first over every month in the output data.</label>
+			<h3>The date of which to set aggregate values. Ex: If the output date is set to "start" for a monthly aggregate, the aggregate values will be set at the first over every month in the output data.</h3>
 		</div>
 
 		<!-- Section Inputs -->
 		<div class="inputs">
 			<select id="outtime">
-				<option value="start">Beginning</option>
+				<option value="start" selected>Beginning</option>
 				<option value="mid">Middle</option>
 				<option value="end">End</option>
 			</select>
@@ -97,7 +96,7 @@
 	<!--Submit Section-->
 	<section>
 		<!--Always have all three buttons.-->
-		<button onclick="callAggregat()">Add New Task</button>
+		<button onclick="callAggregate()">Add New Task</button>
 		<button onclick="updateYourAnalysis()">Update</button>
 		<button onclick="deleteTask()">Delete Task</button>
 	</section>
