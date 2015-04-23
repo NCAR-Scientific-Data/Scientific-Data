@@ -16,14 +16,6 @@ main {
 	top: 50px;
 }
 
-#analysisWrapper main {
-	display:inline-block;
-	position:static; /*Override main styling*/
-	width:570px;
-	background-color:white;
-
-}
-
 button {
     color: #F4F4F4;
     background-color: #4AAAA5;
@@ -108,13 +100,12 @@ label {
 	top: 55px;
 }
 
-#HTMLLoadSection {
-	width: 900px;
-	margin: auto;
+#analysisWrapper {
 	text-align: justify;
+	background-color: white;
 }
 
-#HTMLLoadSection h1 {
+#analysisWrapper h1 {
 	text-align: center;
 }
 
@@ -124,10 +115,6 @@ label {
 
 .inputs {
 	clear: both;
-}
-
-#analysisWrapper {
-	background-color: #1C262B;
 }
 
 #minimumHeight {

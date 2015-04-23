@@ -2,18 +2,6 @@ body {
   margin: 0;
 }
 
-#wrapper {
-    padding-left: 0;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
-
-#wrapper.toggled {
-    padding-left: 25%;
-}
-
 #sidebar-wrapper {
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 300;
@@ -23,27 +11,13 @@ body {
     /*z-index: 1000;*/
     /*position: absolute;*/
     /*left: 250px;*/
-    width: 0;
+    width: 25%;
     height: 100%;
     /*margin-left: -250px;*/
     overflow-y: auto;
     background: #1C262B;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-    display: inline-block;
     vertical-align: top; /*http://stackoverflow.com/a/13390336*/
-}
-
-#wrapper.toggled #sidebar-wrapper {
-    width: 250px;
-}
-
-
-#wrapper.toggled #page-content-wrapper {
-    position: absolute;
-    margin-right: -250px;
+    float: left;
 }
 
 /* Sidebar Styles */
@@ -95,30 +69,19 @@ body {
     background: none;
 }
 
-@media(min-width:768px) {
-    #wrapper {
-        padding-left: 25%;
-    }
+#analysisHTMLLoadSection {
+    float: right;
+    width: 75%;
+}
 
-    #wrapper.toggled {
-        padding-left: 0;
-    }
+/*@media(min-width:768px) {
 
     #sidebar-wrapper {
         width: 310px;
-    }
-
-    #wrapper.toggled #sidebar-wrapper {
-        width: 0;
     }
 
     #page-content-wrapper {
         padding: 20px;
         position: relative;
     }
-
-    #wrapper.toggled #page-content-wrapper {
-        position: relative;
-        margin-right: 0;
-    }
-}
+}*/
