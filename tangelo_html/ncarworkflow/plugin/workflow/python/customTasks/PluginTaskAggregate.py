@@ -30,7 +30,6 @@ class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
         self.inputs.declare('filename')
-        self.inputs.declare('variable')
         self.inputs.declare('interval')
         self.inputs.declare('method')
         self.inputs.declare('outtime')
@@ -59,11 +58,10 @@ class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
         else:
                 sOuttime = "outtime=\"{0}\"".format(self.outtime)
         sCyclic = "cyclic={0}".format(self.cyclic)
-        sVariable = "variable=\"{0}\"".format(self.variable)
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
 
-        args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sInterval, sMethod, sOuttime, sCyclic, 'ncl/aggregate.ncl']
+        args = ['ncl', '-n', '-Q', wid, tid, sFilename, sInterval, sMethod, sOuttime, sCyclic, '../plugin/workflow/python/customTasks/ncl/aggregate.ncl']
         args = filter(None,args)
         sysError = False
         nclError = False
@@ -76,22 +74,22 @@ class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
         if not sysError:
             if status:
                 if status == 2:
-                    error = "NCL Error: Missing input parameter"
+                    error = "NCL Error - Missing input parameter"
                 elif status == 3:
-                    error = "NCL Error: Lat/Lon values out of range"
+                    error = "NCL Error - Lat/Lon values out of range"
                 elif status == 4:
-                    error = "NCL Error: Date value out of range"
+                    error = "NCL Error - Date value out of range"
                 elif status == 5:
-                    error = "NCL Error: Invalid parameter value"
+                    error = "NCL Error - Invalid parameter value"
                 elif status == 6:
-                    error = "NCL Error: Conversion error"
+                    error = "NCL Error - Conversion error"
                 else:
-                    error = "NCL Error: Error with NCL script"
+                    error = "NCL Error - Error with NCL script"
                 nclError = True
-        result = "/data/{0}/{1}_aggregate.nc".format(self.workflowID,self.uid)
+        result = "data/{0}/{1}_aggregate.nc".format(self.workflowID,self.uid)
         if not sysError or not nclError:
             if not os.path.isfile(result):
-                error = "NCL Error: Please check input parameters."
+                error = "NCL Error - Please check input parameters."
                 nclError = True
         if nclError or sysError:
                 self.result = error
