@@ -1,4 +1,4 @@
-/*global window, $, tangelo*/
+/*global window, $, tangelo, confirm, alert*/
 
 /*
     File: workflowvis.js
@@ -361,6 +361,8 @@ function addTask(task_Type, links, repopulateVals, outputName) {
             $("#HTMLLoadSection").empty();
             $("#HTMLLoadSection").html("<h1>NCAR Scientific Workflows</h1>");
             
+            console.log(results.workflow);
+            
             var data = formatWorkflow(results.workflow),
                 tid = results.taskID,
                 nodes = JSON.parse(localStorage.nodes);
@@ -372,18 +374,20 @@ function addTask(task_Type, links, repopulateVals, outputName) {
                     name = n[i].name;
 
                 if (nodes.hasOwnProperty(taskid)) {
-                    nodes[taskid]["name"] = name;
+                    nodes[taskid].name = name;
                 } else {
                     nodes[taskid] = {};
-                    nodes[taskid]["name"] = name;
+                    nodes[taskid].name = name;
                 }
                 
             }
 
-            nodes[tid]["repop"] = repopulateVals;
-            nodes[tid]["output"] = outputName;
+            nodes[tid].repop = repopulateVals;
+            nodes[tid].output = outputName;
                 
             localStorage.nodes = JSON.stringify(nodes);
+
+            $("#workflow").empty();
 
             $("#workflow").nodelink({
                 data: data,
@@ -392,16 +396,18 @@ function addTask(task_Type, links, repopulateVals, outputName) {
                 linkTarget: tangelo.accessor({field: "target"}),
                 nodeColor: tangelo.accessor({field: "type"}),
                 nodeLabel: tangelo.accessor({field: "name"}),
-                nodeUID: tangelo.accessor({field: "uid"})
+                nodeUID: tangelo.accessor({field: "uid"}),
             });
 
-            var re = new RegExp("(.+)(\.)(.+)")
+            var re = new RegExp("^.+[.](png|nc)$");
             if (re.test(results.result)) {
                 var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
 
                 if (download) {
                     window.open("python/" + results.result);
                 }
+            } else {
+                alert("Results of Workflow:\n" + results.result)
             }
 
         } else {
