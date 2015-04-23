@@ -76,7 +76,7 @@ class Task(object):
 
     # Robert Crimi
     def next_task_names(self):
-        return set(task.name for task in self.next_tasks())
+        return set((task.alias + str(task.id)) if hasattr(task, "alias") else task.name for task in self.next_tasks())
 
     def prev_task_ids(self):
         """Return the set of ids for tasks that precede this task in the workflow."""
@@ -84,7 +84,7 @@ class Task(object):
 
     # Robert Crimi
     def prev_task_names(self):
-        return set(task.name for task in self.prev_tasks())
+        return set((task.alias + str(task.id)) if hasattr(task, "alias") else task.name for task in self.prev_tasks())
 
     # Robert Crimi
     def setWorkflowID(self, workflow):
@@ -303,7 +303,7 @@ class Task(object):
 
     def __str__(self):
         """Return a string representation for this task."""
-        return "%s prev: %s next: %s resources: %s" % (str(self.name),str(sorted(list(self.prev_task_names()))),str(sorted(list(self.next_task_names()))), str(sorted(self._resources.keys())))
+        return "%s prev: %s next: %s resources: %s" % (str((self.alias + str(self.id)) if hasattr(self, "alias") else self.name),str(sorted(list(self.prev_task_names()))),str(sorted(list(self.next_task_names()))), str(sorted(self._resources.keys())))
 
     # Robert Crimi
     def __list__(self):
@@ -335,10 +335,10 @@ class Task(object):
     def reset_all_outputs(self):
         for i in self.outputs:
             self.outputs[i].reset_all()
-            self.outputs[i].set_ready()
+            #self.outputs[i].set_ready()
         for i in self.output_controls:
             self.output_controls[i].reset_all()
-            self.output_controls[i].set_ready()                
+            #self.output_controls[i].set_ready()                
 
     def set_ready(self):
         for i in self.outputs:
