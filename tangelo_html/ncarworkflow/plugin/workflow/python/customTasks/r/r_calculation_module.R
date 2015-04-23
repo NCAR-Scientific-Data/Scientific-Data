@@ -148,3 +148,80 @@ timePercentile <- function(infile, outfile, field, percentile){
 	close.ncdf(nc_out)
 	close.ncdf(nc)
 }
+
+##########################################################
+#
+#    Name:    calculateClimatology
+#    Summary: Calculates average data for a specific monthly range
+#             over either current data(1970-2000) or future data(2040-2070)
+#             and output the result to a new netCDF file
+#
+#    Parameters: Name of the input file name, name of the output file name
+#                field to be calculated
+#
+##########################################################
+calculateClimatology <- function(infile, outfile, startmonth, endmonth, field){
+	
+	library(ncdf)
+
+	# Open NetCDF file
+	nc = open.ncdf(infile)
+
+	# Read the field
+	field_data = get.var.ncdf(nc,field)
+
+	# Read the time variable
+	time = nc$dim$time$vals
+	time_unit = nc$dim$time$unit
+
+	# Get days since
+	since = sub(".*since (.*)", "\\1", time_unit)
+
+	# Create a data frame of calendar that transfered from time
+	time_cal <- data.frame(date=as.Date(time, origin = since, by="day"))
+
+	# For each of the date, read off month of it
+	time_cal_with_month <- within(time_cal, {month <- as.numeric(format(date, "%m"))})
+
+	# Subset the list of calendar by the specifc range
+	time_cal_with_month_subset <- with(time_cal_with_month, time_cal_with_month[month>=startmonth & month<=endmonth,])
+
+	# Only keep the date part of the data frame
+	time_cal_subset <- time_cal_with_month_subset[,c(1)]
+
+	start_year = as.numeric(format(time_cal_subset[1], "%Y"))
+	end_year = as.numeric(format(time_cal_subset[length(time_cal_subset)-1], "%Y"))
+
+	# Change the calendar format back to numeric format
+	time_num_subset <- as.numeric(time_cal_subset)
+	offset <- max(time_num_subset) - max(time)
+	time_num_subset <- time_num_subset - offset
+
+	indices = which(time %in% time_num_subset)
+	field_data_sub = field_data[,,indices]
+
+	# Calculate average over multiple years
+	year_dim_length = end_year - start_year + 1
+	month_dim_length = length(time_num_subset)/year_dim_length
+
+	dim(field_data_sub) = c(dim(field_data_sub)[1], dim(field_data_sub)[2], month_dim_length, year_dim_length)
+
+	average = apply(field_data_sub, c(1,2,3), mean)
+
+	# Copy input file to output file
+	from = 0
+	to = month_dim_length - 1
+	dimension = gsub(" ", "", paste("time",",",from,",",to))
+	command = paste("ncks -d ",dimension,infile,outfile)
+	system(command)
+
+	# Open the output NetCDF file and then write the subsets to a new netcdf file
+	nc_out = open.ncdf(outfile, write=TRUE)
+	time_out = head(time, n = month_dim_length)
+
+	put.var.ncdf(nc_out, "time", time_out)
+	put.var.ncdf(nc_out, field, average)
+
+	close.ncdf(nc_out)
+	close.ncdf(nc)
+}

@@ -6,7 +6,7 @@ from PluginTaskThreshold import PluginTaskThreshold
 from PluginTaskSubset import PluginTaskSubset
 from PluginTaskDelta import PluginTaskDelta
 #from taskPercentile import taskPercentile
-#from
+from PluginTaskClimatology import PluginTaskClimatology
 def createWorkflow():
 	w = pyutilib.workflow.Workflow()
 
@@ -17,15 +17,21 @@ def createWorkflow():
 	#A.inputs.lower = "25"
 	#A.inputs.upper = "27"
 	
-	# Test delta
-	A = PluginTaskDelta()
-	A.inputs.filename1 = "tmin_subset_time_latlon.nc"
-	A.inputs.filename2 = "tmin_subset_time_latlon.nc"	
+	## Test delta
+	#A = PluginTaskDelta()
+	#A.inputs.filename1 = "tmin_subset_time_latlon.nc"
+	#A.inputs.filename2 = "tmin_subset_time_latlon.nc"	
 
 	# Test percentile
 	#A = taskPercentile()
 	#A.inputs.filename = "tmin_subset_time_latlon.nc"
 	#A.inputs.percentile = 75
+
+	# Test climatology
+	A = PluginTaskClimatology()
+	A.inputs.filename = "tmin_subset_time_latlon.nc"
+	A.inputs.startmonth = 6
+	A.inputs.endmonth = 8
 
 	#setUID(2015422)
 	#w.setWorkflowID(2015422)
