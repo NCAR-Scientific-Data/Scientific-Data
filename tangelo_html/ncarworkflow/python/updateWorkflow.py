@@ -67,5 +67,11 @@ def run(function, workflowID, args):
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
             result = getOutput(w)
             return {"result":result, "workflow":w.__list__(), "taskID": tid}
+
+        if function == "deleteTask":
+            (w, tid) = deleteTask(tid, workflowID)
+            tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
+            result = getOutput(w)
+            return {"result":result, "workflow":w.__list__()}
     else:
         return {"Error": "Error - Could Not Update Workflow"}

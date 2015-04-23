@@ -417,3 +417,75 @@ function addTask(task_Type, links, repopulateVals, outputName) {
         }
     });
 }
+
+function deleteTask() {
+    "use strict";
+
+    var url = "python/updateWorkflow",
+        stuffToPass = {
+            "function" : "deleteTask",
+            "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([localStorage.current])
+        };
+
+    console.log(url.args);
+
+    $.getJSON(url, stuffToPass, function (results) {
+        if (results.result) {
+            $("[id^='tangelo-drawer-icon-']").trigger("click");
+            $("#analysisWrapper").empty();
+            $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
+            
+            console.log(results.workflow);
+            
+            var data = formatWorkflow(results.workflow),
+                tid = results.taskID,
+                nodes = JSON.parse(localStorage.nodes);
+
+            var n = data.nodes;
+
+            for (var i = 0; i < n.length; i += 1) {
+                var taskid = n[i].uid,
+                    name = n[i].name;
+
+                if (nodes.hasOwnProperty(taskid)) {
+                    nodes[taskid].name = name;
+                } else {
+                    nodes[taskid] = {};
+                    nodes[taskid].name = name;
+                }
+                
+            }
+            delete nodes[tid];
+                
+            localStorage.nodes = JSON.stringify(nodes);
+
+            $("#workflow").empty();
+
+            $("#workflow").nodelink({
+                data: data,
+                nodeCharge: tangelo.accessor({value: -10000}),
+                linkSource: tangelo.accessor({field: "source"}),
+                linkTarget: tangelo.accessor({field: "target"}),
+                nodeColor: tangelo.accessor({field: "type"}),
+                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeUID: tangelo.accessor({field: "uid"}),
+            });
+
+
+            var re = new RegExp("^.+[.](png|nc)$");
+            if (re.test(results.result)) {
+                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
+
+                if (download) {
+                    window.open("python/" + results.result);
+                }
+            } else {
+                alert("Results of Workflow:\n" + results.result)
+            }
+
+        } else {
+            alert(JSON.stringify(results));
+        }
+    });
+}
