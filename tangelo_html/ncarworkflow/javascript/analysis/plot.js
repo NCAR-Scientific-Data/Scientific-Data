@@ -1,4 +1,4 @@
-/*global $, addTask, console*/
+/*global $, addTask*/
 
 function plot(filename, timeindex, nativeP, repopulateVals) {
     "use strict";
@@ -22,12 +22,12 @@ function callPlot() {
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
         timeindex = $("#timeindex option:selected").val(),
         nativeP = $("input[name='native']:checked").val();
-    
+
     var repopulateVals = {
-        "html" : "stepHTML/taskHTML.html",
+        "html" : "stepHTML/plot.html",
         "values" : {
             "#timeindex" : timeindex,
-            "#node" : filename[1]
+            "#node" : selectedNode
         }
     };
 
@@ -50,4 +50,6 @@ function generateNodeSelect() {
             nodeDropDown.append($("<option></option>").val(node).html(n.name));
         }
     }
+
+    $("#node:first-child").prop("selected", true);
 }

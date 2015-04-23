@@ -62,7 +62,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         filename = "filename=\"{0}\"".format(str(self.url))
         v = "variable=\"{0}\"".format(str(self.variable))
         wid = "wid=\"{0}\"".format(self.workflowID)
-        tid = "tid=\"{0}\"".format(self.id)
+        tid = "tid=\"{0}\"".format(self.uid)
         
         args = ['ncl', '-n', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl']
         args = filter(None,args)
@@ -89,7 +89,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
                 else:
                     error = "NCL Error - Error with NCL script"
                 nclError = True
-        result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.id, self.variable)
+        result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.uid)
         if not sysError or not nclError:
             if not os.path.isfile(result):
                 error = "NCL Error - Error with NCL script"

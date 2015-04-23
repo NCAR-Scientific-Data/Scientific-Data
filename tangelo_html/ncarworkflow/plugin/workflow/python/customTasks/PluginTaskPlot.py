@@ -28,7 +28,7 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
         else:
                 plotScript = '../plugin/workflow/python/customTasks/ncl/plot.ncl'
         wid = "wid=\"{0}\"".format(self.workflowID)
-        tid = "tid=\"{0}\"".format(self.id)
+        tid = "tid=\"{0}\"".format(self.uid)
 
         args = ['ncl', '-n','-Q', wid, tid, sFilename, sTimeindex, plotScript]
         args = filter(None,args)
@@ -43,7 +43,7 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
         if self.native:
                 result = "/data/{0}/{1}_nativeplot.png".format(wid,tid)
         else:
-                result = "/data/{0}/{1}_plot.png".format(self.workflowID,self.id)
+                result = "/data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
         if not sysError:
             if status:
                 if status == 2:
