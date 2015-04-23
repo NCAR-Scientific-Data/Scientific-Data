@@ -28,9 +28,6 @@
 
             this.force = d3.layout.force();
 
-            this.svg = d3.select(this.element.get(0))
-                .append("svg");
-
             this._update();
         },
 
@@ -40,6 +37,9 @@
         },
 
         _update: function () {
+            this.svg = d3.select(this.element.get(0))
+                .append("svg");
+
             var that = this,
                 nodeIdMap = {},
                 width,
@@ -212,10 +212,10 @@
             } else {
                 /*that.label.attr("x", function (d) {
                     return d.x;
-                })*/
-                    /*that.label.attr("y", function (d) {
+                })
+                .attr("y", function (d) {
                         return d.y;
-                    });*/
+                });*/
             }
 
             /*that.link.attr("x1", function (d) {
@@ -337,7 +337,7 @@
             if (nodes[node.uid]["repop"]) {
                 
                 var nodeInfo = nodes[node.uid]["repop"];
-
+                $("#HTMLLoadSection").empty();
                 $("#HTMLLoadSection").load(nodeInfo.html, function () {
                     for (var elementKey in nodeInfo.values) {
                         if (nodeInfo.values.hasOwnProperty(elementKey)) {
