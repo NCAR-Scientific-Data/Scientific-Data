@@ -1,3 +1,5 @@
+/*global alert*/
+
 (function (tangelo, $, d3) {
     "use strict";
 
@@ -26,9 +28,6 @@
 
             this.force = d3.layout.force();
 
-            this.svg = d3.select(this.element.get(0))
-                .append("svg");
-
             this._update();
         },
 
@@ -38,6 +37,9 @@
         },
 
         _update: function () {
+            this.svg = d3.select(this.element.get(0))
+                .append("svg");
+
             var that = this,
                 nodeIdMap = {},
                 width,
@@ -210,10 +212,10 @@
             } else {
                 /*that.label.attr("x", function (d) {
                     return d.x;
-                })*/
-                    /*that.label.attr("y", function (d) {
+                })
+                .attr("y", function (d) {
                         return d.y;
-                    });*/
+                });*/
             }
 
             /*that.link.attr("x1", function (d) {
@@ -331,7 +333,28 @@
         },
 
         _click: function (node) {
-            alert("Clicked!");
+            var nodes = JSON.parse(localStorage.nodes);
+            if (nodes[node.uid]["repop"]) {
+                
+                var nodeInfo = nodes[node.uid]["repop"];
+                $("#analysisWrapper").empty();
+                $("#analysisWrapper").load(nodeInfo.html, function () {
+                    for (var elementKey in nodeInfo.values) {
+                        if (nodeInfo.values.hasOwnProperty(elementKey)) {
+                            var elementValue = nodeInfo.values[elementKey];
+                            if (elementValue === true) {
+                                $(elementKey).prop("checked", elementValue);
+                            } else {
+                                $(elementKey).attr("value", elementValue);
+                            }
+                        }
+                    }
+                });
+                
+                $("[id^='tangelo-drawer-icon-']").trigger("click");
+            } else {
+                alert("ERROR: Node could not be generated.");
+            }
         }
     });
 }(window.tangelo, window.jQuery, window.d3));

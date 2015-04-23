@@ -1,0 +1,87 @@
+body {
+  margin: 0;
+}
+
+#sidebar-wrapper {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+    font-size: 32px;
+    color: #333;
+    background-color: #fff;
+    /*z-index: 1000;*/
+    /*position: absolute;*/
+    /*left: 250px;*/
+    width: 25%;
+    height: 100%;
+    /*margin-left: -250px;*/
+    overflow-y: auto;
+    background: #1C262B;
+    vertical-align: top; /*http://stackoverflow.com/a/13390336*/
+    float: left;
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+    /*position: absolute;*/
+    /*top: 0;*/
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 1.6;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #999999;
+    border-bottom: 2px solid;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: #7A8999;
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 30px;
+    line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+
+#analysisHTMLLoadSection {
+    float: right;
+    width: 75%;
+}
+
+/*@media(min-width:768px) {
+
+    #sidebar-wrapper {
+        width: 310px;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+}*/

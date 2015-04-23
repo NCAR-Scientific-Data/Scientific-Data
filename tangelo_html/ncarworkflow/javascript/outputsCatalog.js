@@ -1,11 +1,11 @@
 var outputsCatalog = {};
 
 //Subsetting
-outputsCatalog["TaskSubset"] = ["subset"];
+outputsCatalog["taskSubset"] = ["subset"];
 
 //Analysis
-outputsCatalog["TaskAggregate"] = ["result"];
-outputsCatalog["TaskUnitConversion"] = ["result"];
+outputsCatalog["taskAggregate"] = ["result"];
+outputsCatalog["taskUnitConversion"] = ["result"];
 
 //Other
-outputsCatalog["TaskPlot"] = [""];
+outputsCatalog["taskPlot"] = ["plot"];
