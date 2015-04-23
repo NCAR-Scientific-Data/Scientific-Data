@@ -14,24 +14,24 @@ function openClosedDrawer() {
 
 function newSubset() {
     "use strict";
-    $("#HTMLLoadSection").empty();
-    $("#HTMLLoadSection").load("stepHTML/subset.html");
+    $("#analysisWrapper").empty();
+    $("#analysisWrapper").load("stepHTML/subset.html");
     toggleMiniMenu();
     openClosedDrawer();
 }
 
 function newAnalysis() {
     "use strict";
-    $("#HTMLLoadSection").empty();
-    $("#HTMLLoadSection").load("stepHTML/analysis.html");
+    $("#analysisWrapper").empty();
+    $("#analysisWrapper").load("stepHTML/analysis.html");
     toggleMiniMenu();
     openClosedDrawer();
 }
 
 function newPlot() {
     "use strict";
-    $("#HTMLLoadSection").empty();
-    $("#HTMLLoadSection").load("stepHTML/plot.html");
+    $("#analysisWrapper").empty();
+    $("#analysisWrapper").load("stepHTML/plot.html");
     toggleMiniMenu();
     openClosedDrawer();
 }
