@@ -94,7 +94,7 @@ function generateData(workflow, indexMap) {
             nodeName = nodeType + nodeIndex,
             sourceIndex;
 
-        data.nodes[indexMap[nodeIndex]] = {type: nodeType, name: nodeName, uid: nodeUID}
+        data.nodes[indexMap[nodeIndex]] = {type: nodeType, name: nodeName, uid: nodeUID};
 
         sourceIndex = nodeIndex;
 
@@ -464,9 +464,38 @@ function deleteTask() {
                     window.open("python/" + results.result);
                 }
             } else {
-                alert("Results of Workflow:\n" + results.result)
+                alert("Results of Workflow:\n" + results.result);
             }
 
+        } else {
+            alert(JSON.stringify(results));
+        }
+    });
+}
+
+function saveWorkflow() {
+    "use strict";
+    var url = "python/updateWorkflow",
+        stuffToPass = {
+            "function" : "saveWorkflow",
+            "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([localStorage.nodes])
+        };
+
+    $.getJSON(url, stuffToPass, function (results) {
+        if (results.result) {
+            if (results.result === true) {
+                alert("Your Workflow Has Been Saved. You can access it again by using this serial number:\n" + localStorage.uid);
+
+                var done = confirm("Are you done working?\n Data will be removed from your local computer if you are.\n Don't worry though, your data is backed up.");
+                
+                if (done) {
+                    localStorage.clear();
+                    window.location.replace("index.html");
+                }
+            } else {
+                alert("Your workflow could not be saved to the database.\nNo worries, though, your workflow is safe in temporary storage.\nContact <person> for more information.");
+            }
         } else {
             alert(JSON.stringify(results));
         }
