@@ -69,7 +69,7 @@ def run(function, workflowID, args):
             return {"result":result, "workflow":w.__list__(), "taskID": tid}
 
         if function == "deleteTask":
-            (w) = deleteTask(args[0], workflowID, tangelo.store()[workflowID])
+            (w) = tangelo.plugin.workflow.deleteTask(args[0], workflowID, tangelo.store()[workflowID])
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
             result = getOutput(w)
             return {"result":result, "workflow":w.__list__()}
