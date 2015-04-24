@@ -68,3 +68,62 @@ def getInstance(taskType):
 
 def createWorkflow():
     return pyutilib.workflow.Workflow()
+
+# Add task with links to workflow
+# Do not set link to deleted task
+def addTaskNewLinks(task, taskUID, links, workflow):
+    for i in task.inputs:
+        # Input is Port
+        # links = ['Port', UID,] 
+        if(links[i][0] == 'Port'):
+            # Do not add link to deleted task with UID = taskUID
+            if(not taskUID == links[i][1]):
+                # Find the task in the workflow with UID in link[i]
+                t = workflow._dfs_([workflow._start_task.id], lambda t: t.getTaskWithID(links[i][1]))[0]
+                # Reset the tasks outputs
+                t.reset_all_outputs()
+                # Set the input to the outputs of found task
+
+                task.inputs[i] = t.outputs[links[i][2]]
+            else:
+                task.inputs[i] = None
+        # Input is number
+        # TODO:
+        # Better checking
+        else:
+            task.inputs[i] = links[i][0]
+
+    # Add updated task to workflow and return new workflow
+    workflow.add(task)
+    return workflow
+
+# Build a workflow from json file with id workflowID
+# Do not add task with UID = taskUID
+def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
+    data = json.loads(workflowString)
+    # Create temp workflow
+    q = pyutilib.workflow.Workflow()
+    for task in data:
+        # Dont recreate empty tasks (done for you)
+        if (task['Type'] not in ['EmptyTask']) and (task['UID'] not in [taskUID]):
+            # Create instance of specified task
+            # TODO:
+            # Make this a factory and replace with actual tasks
+            t = test.getInstance(task['Type'])
+            # Set UID to its previous instance's
+            # This is so the particular task in the workflow
+            # will always be linked properly
+            t.setUID(task['UID'])
+            t.setWorkflowID(task['WorkflowID'])
+            # Add task t to workflow q with proper inputs
+            addTaskNewLinks(t, taskUID, task['Inputs'], q)
+    return q
+
+
+def deleteTask(taskUID, workflowID, workflowString):
+    workflow = buildUpdatedWorkflow(taskUID, workflowID, workflowString)
+    workflow.setWorkflowID(workflowID)
+    serialize(workflow)
+    return workflow
+
+
