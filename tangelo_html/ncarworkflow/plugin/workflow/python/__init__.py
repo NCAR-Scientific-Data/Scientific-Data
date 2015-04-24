@@ -4,6 +4,8 @@ import json
 import unicodedata
 from customTasks import  *
 
+from pymongo import MongoClient
+
 # Add task with linkks to workflow
 def addTask(task, links, workflow):
     for i in task.inputs:
@@ -69,6 +71,23 @@ def getInstance(taskType):
 def createWorkflow():
     return pyutilib.workflow.Workflow()
 
+def loadWorkflow(workflowID):
+	# open mongodb client and database
+	client = MongoClient()
+	db = client.testdb
+	collection = db.testcollection
+	
+	document = collection.find_one({"_id": workflowID}).strip("u")
+	return {"repop": document['repop'], "data": document['data']}
+	
+def saveWorkflow(workflowID, data, repop):
+	# open mongodb client and database
+	client = MongoClient()
+	db = client.testdb
+	collection = db.testcollection
+	
+	return collection.update_one({"_id": workflowID}, {'$set': {'data': data, 'repop': repop}}, upsert = True)
+
 # Add task with links to workflow
 # Do not set link to deleted task
 def addTaskNewLinks(task, taskUID, links, workflow):
@@ -81,7 +100,7 @@ def addTaskNewLinks(task, taskUID, links, workflow):
                 # Find the task in the workflow with UID in link[i]
                 t = workflow._dfs_([workflow._start_task.id], lambda t: t.getTaskWithID(links[i][1]))[0]
                 # Reset the tasks outputs
-                t.reset_all_outputs()
+                #t.reset_all_outputs()
                 # Set the input to the outputs of found task
 
                 task.inputs[i] = t.outputs[links[i][2]]
@@ -125,5 +144,3 @@ def deleteTask(taskUID, workflowID, workflowString):
     workflow.setWorkflowID(workflowID)
     serialize(workflow)
     return workflow
-
-
