@@ -16,7 +16,11 @@ def addTask(task, links, workflow):
             # Reset the tasks outputs
             #t[0].reset_all_outputs()
             # Set the input to the outputs of found task
-            task.inputs[i] = t[0].outputs[links[i][2]]
+            if len(t) > 0:
+                task.inputs[i] = t[0].outputs[links[i][2]]
+            else :
+                task.inputs[i] = " "
+                print "Couldn't find the task...you did something horribly wrong."
         # Input is number
         # TODO:
         # Better checking
@@ -102,10 +106,10 @@ def addTaskNewLinks(task, taskUID, links, workflow):
                 # Reset the tasks outputs
                 #t.reset_all_outputs()
                 # Set the input to the outputs of found task
-
                 task.inputs[i] = t.outputs[links[i][2]]
             else:
-                task.inputs[i] = None
+                task.inputs[i] = " "
+
         # Input is number
         # TODO:
         # Better checking
@@ -128,7 +132,7 @@ def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
             # Create instance of specified task
             # TODO:
             # Make this a factory and replace with actual tasks
-            t = test.getInstance(task['Type'])
+            t = getInstance(task['Type'])
             # Set UID to its previous instance's
             # This is so the particular task in the workflow
             # will always be linked properly

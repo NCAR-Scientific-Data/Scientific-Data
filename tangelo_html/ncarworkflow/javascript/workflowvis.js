@@ -138,7 +138,6 @@ function generateData(workflow, indexMap) {
 */
 function assignXValue(data, bfsList) {
     "use strict";
-    console.log(bfsList);
 
     var width = $("#workflow").width(),
         numberOfColumns = bfsList.length;
@@ -152,7 +151,6 @@ function assignXValue(data, bfsList) {
         if (data.nodes[i].x) {
             tmpx = data.nodes[i].x + columnSize;
         }
-        console.log(tmpx);
         for (var j = 0; j < bfsList[i].length; j += 1) {
             data.nodes[bfsList[i][j]].x = tmpx;
         }
@@ -164,7 +162,6 @@ function assignXValue(data, bfsList) {
         } else {
             data.nodes[i].x = x;
         }
-        console.log(data.nodes[i].x);
     }
 
     return numberOfColumns;
@@ -416,18 +413,13 @@ function deleteTask() {
             "args" : JSON.stringify([localStorage.current])
         };
 
-    console.log(url.args);
-
     $.getJSON(url, stuffToPass, function (results) {
         if (results.result) {
             $("[id^='tangelo-drawer-icon-']").trigger("click");
             $("#analysisWrapper").empty();
             $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
             
-            console.log(results.workflow);
-            
             var data = formatWorkflow(results.workflow),
-                tid = results.taskID,
                 nodes = JSON.parse(localStorage.nodes);
 
             var n = data.nodes;
@@ -444,9 +436,12 @@ function deleteTask() {
                 }
                 
             }
-            delete nodes[tid];
+
+            delete nodes[localStorage.current];
                 
             localStorage.nodes = JSON.stringify(nodes);
+
+            delete localStorage.current;
 
             $("#workflow").empty();
 
