@@ -48,7 +48,7 @@ def getOutput(workflow):
 
     resultList = [tuple(u.split(':')) for u in output.split("\n")]
 
-    result = resultList[0][1]
+    result = resultList[0][1] if len(resultList[0]) > 1 else resultList
     return result
 
 def run(function, workflowID, args):

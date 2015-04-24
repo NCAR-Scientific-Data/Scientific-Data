@@ -100,7 +100,7 @@ def addTaskNewLinks(task, taskUID, links, workflow):
 # Build a workflow from json file with id workflowID
 # Do not add task with UID = taskUID
 def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
-    data = json.parse(workflowString)
+    data = json.loads(workflowString)
     # Create temp workflow
     q = pyutilib.workflow.Workflow()
     for task in data:
@@ -122,7 +122,7 @@ def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
 
 def deleteTask(taskUID, workflowID, workflowString):
     workflow = buildUpdatedWorkflow(taskUID, workflowID, workflowString)
-    workflow.setWorkflowID(workflowUID)
+    workflow.setWorkflowID(workflowID)
     serialize(workflow)
     return workflow
 
