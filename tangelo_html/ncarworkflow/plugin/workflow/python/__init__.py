@@ -82,7 +82,7 @@ def loadWorkflow(workflowID):
 	collection = db.testcollection
 	
 	document = collection.find_one({"_id": workflowID}).strip("u")
-	return {"repop": document['repop'], "data": document['data']}
+	return (document['repop'], document['data'])
 	
 def saveWorkflow(workflowID, data, repop):
 	# open mongodb client and database
