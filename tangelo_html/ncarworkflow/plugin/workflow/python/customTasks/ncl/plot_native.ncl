@@ -9,13 +9,10 @@
 
 begin
   f        = addfile(filename,"r")
-
-  if (.not. isfilevar(f, variable)) then
-    status_exit(5)
-  end if
+  variable = f@MainVariable
 
 ;---Read some data off the file, including map projection information.
-  varname       = f->$variable$
+  varname  = f->$variable$
   proj     = f->polar_stereographic
   lat2d    = f->lat
   lon2d    = f->lon
@@ -32,7 +29,7 @@ begin
   end if
 
   ;Check if workflow directory exists, if not create one
-  directory = "/data/" + wid + "/"
+  directory = "data/" + wid + "/"
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
   if (echo .eq. "notfound") then
       system("mkdir " + directory)

@@ -101,6 +101,7 @@ if(cyclic .and. interval .eq. "day") then
 end if
 
 f = addfile(filename, "r")
+variable = f@MainVariable
 
 time = f->time
 nt = dimsizes(time)
@@ -335,7 +336,7 @@ outdata@cell_methods = cmstring
 
 ;; Create output file
 ;;Check if workflow directory exists, if not create one
-directory = "/data/" + wid + "/"
+directory = "data/" + wid + "/"
 echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
 if (echo .eq. "notfound") then
   system("mkdir " + directory)
@@ -357,7 +358,7 @@ att_names = getvaratts(f)
 do i = 0,dimsizes(att_names)-1
   fout@$att_names(i)$ = f@$att_names(i)$
 end do
-
+fout@MainVariable = variable
 ;; copy over other variables
 
 var_names = getfilevarnames(f) ;
