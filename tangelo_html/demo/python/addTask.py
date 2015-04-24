@@ -4,7 +4,10 @@ import uuid
 import json
 import re
 
-# Add task with linkks to workflow
+from pymongo import MongoClient
+
+
+# Add task with links to workflow
 def addTask(task, links, workflow):
 	for i in task.inputs:
 		# Input is Port
@@ -27,8 +30,12 @@ def addTask(task, links, workflow):
 
 # Build a workflow from json file with id workflowID
 def deserialize(workflowID):
-	with open('json/'+workflowID+'.json') as data_file:    
-		data = json.load(data_file)
+	# open mongodb client and database
+	client = MongoClient()
+	db = client.testdb
+	collection = db.testcollection
+	
+	data = collection.find_one({"_id": workflowID})
 
 	# Create temp workflow
 	q = pyutilib.workflow.Workflow()
@@ -44,7 +51,7 @@ def deserialize(workflowID):
 			# will always be linked properly
 			t.setUID(task['UID'])
 			# Add task t to workflow q with proper inputs
-			addTask(t, task['Inputs'], q)
+			addTask(t, task['Inputs'], q) 
 	return q
 
 # Serialize workflow into json file with UID as filename
@@ -53,7 +60,7 @@ def serialize(workflow):
 		json.dump(workflow.__dict__(), outfile)
 
 # Call this function to add a new task to a workflow
-def run(taskType, links, workflowID):
+def run(taskType, links, workflowID, repop):
 	# Build workflow with filename workflowID.json
 	workflow = deserialize(workflowID)
 	# Add task to the workflow
@@ -65,6 +72,7 @@ def run(taskType, links, workflowID):
 
 	# Set UID of workflow so it lives in the same space in memory
 	workflow.setWorkflowID(workflowID)
+	
 	# Serialize the workflow into json file
 	serialize(workflow)
 	
@@ -80,6 +88,14 @@ def run(taskType, links, workflowID):
 			result.append(val)
 		else:
 			result.append(re.findall("[-+]?\d*\.\d+|\d+", output)[0])
+			
+	# open mongodb client and database
+	client = MongoClient()
+	db = client.testdb
+	collection = db.testcollection
+	
+	# either update the workflow or create it if it doesn't exist	
+	collection.update_one({'_id': workflowID}, {'$set': {'repop': repop}, {'data': workflow__list()__}}, upsert = True, multi = False)
 
 	# Return the result, list representation of the workflow, and UID of the added task
 	return {"result":result, "list":workflow.__list__(), "taskID": task.uid}
