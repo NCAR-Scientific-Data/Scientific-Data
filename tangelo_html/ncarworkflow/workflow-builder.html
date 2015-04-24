@@ -94,6 +94,24 @@
         $(".miniMenuOption").hide();
         $("#analysisWrapper").css("max-height", $(window).height()/2);
         $("#wid").text(localStorage.uid);
+
+        if (localStorage.workflow) {
+            var data = formatWorkflow(workflow);
+
+            $("#workflow").empty();
+
+            $("#workflow").nodelink({
+                data: data,
+                nodeCharge: tangelo.accessor({value: -10000}),
+                linkSource: tangelo.accessor({field: "source"}),
+                linkTarget: tangelo.accessor({field: "target"}),
+                nodeColor: tangelo.accessor({field: "type"}),
+                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeUID: tangelo.accessor({field: "uid"}),
+            });
+
+            delete localStorage.workflow;
+        }
     </script>
 </body>
 </html>
