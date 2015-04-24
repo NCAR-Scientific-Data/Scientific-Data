@@ -60,7 +60,7 @@ class Task(object):
 
     def next_tasks(self):
         """Return the set of tasks that succeed this task in the workflow."""
-        return set(t.to_port.task() for name in self.outputs for t in self.outputs[name].output_connections) | set(t.to_port.task() for name in self.output_controls for t in self.output_controls[name].output_connections)
+        return set([t.to_port.task() for name in self.outputs for t in self.outputs[name].output_connections]) | set([t.to_port.task() for name in self.output_controls for t in self.output_controls[name].output_connections])
             
     def prev_tasks(self):
         """Return the set of tasks that precede this task in the workflow."""
