@@ -12,7 +12,7 @@ def addTask(task, links, workflow):
             # Find the task in the workflow with UID in link[i]
             t = workflow._dfs_([workflow._start_task.id], lambda t: t.getTaskWithID(links[i][1]))
             # Reset the tasks outputs
-            t[0].reset_all_outputs()
+            #t[0].reset_all_outputs()
             # Set the input to the outputs of found task
             task.inputs[i] = t[0].outputs[links[i][2]]
         # Input is number

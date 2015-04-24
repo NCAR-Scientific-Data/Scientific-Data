@@ -61,7 +61,7 @@ def run(function, workflowID, args):
     elif workflowID in tangelo.store():
 
         w = tangelo.plugin.workflow.deserialize(tangelo.store()[workflowID])
-
+        
         if function == "addTask":
             (w, tid) = addTask(args[0], args[1], w, workflowID)
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)

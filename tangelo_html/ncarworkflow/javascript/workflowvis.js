@@ -25,13 +25,31 @@
 function getIndexMap(workflow) {
     "use strict";
     var indexMap = {},
-        nodeIndexForNodeLink = 0;
+        listOfNodeIndices = [];
 
     workflow.forEach(function (nodeProperties) {
         var nodeIndex = nodeProperties[1];
-        indexMap[nodeIndex] = nodeIndexForNodeLink;
-        nodeIndexForNodeLink += 1;
+        listOfNodeIndices.push(nodeIndex);
     });
+
+    if (listOfNodeIndices.length > 1) {
+        listOfNodeIndices.sort();
+
+        var lengthOfList = listOfNodeIndices.length,
+            minNode = listOfNodeIndices[0],
+            maxNode = listOfNodeIndices[lengthOfList-1],
+            minIndex = 0,
+            maxIndex = lengthOfList-1;
+
+        for (var i = 0; i < lengthOfList; i += 1) {
+            var node = listOfNodeIndices[i];
+
+            indexMap[node] = (node - minNode) / (maxNode - minNode) * (maxIndex - minIndex) + minIndex;
+        }
+    } else {
+        indexMap[listOfNodeIndices[0]] = 0;
+    }
+
     return indexMap;
 }
 
@@ -61,7 +79,12 @@ function getIndexMap(workflow) {
 */
 function generateData(workflow, indexMap) {
     "use strict";
-    var data = { nodes: [], links: []};
+    var data = { nodes: [workflow.length], links: []},
+        bfsList = [workflow.length];
+
+    for (var i = 0; i < workflow.length; i += 1) {
+        bfsList[i] = [];
+    }
 
     workflow.forEach(function (nodeProperties) {
         var nodeType = nodeProperties[0],
@@ -71,7 +94,7 @@ function generateData(workflow, indexMap) {
             nodeName = nodeType + nodeIndex,
             sourceIndex;
 
-        data.nodes.push({type: nodeType, name: nodeName, uid: nodeUID});
+        data.nodes[indexMap[nodeIndex]] = {type: nodeType, name: nodeName, uid: nodeUID}
 
         sourceIndex = nodeIndex;
 
@@ -81,65 +104,15 @@ function generateData(workflow, indexMap) {
                 var sourceNode = indexMap[sourceIndex],
                     targetNode = indexMap[linkedNodeIndex];
 
+                bfsList[sourceNode].push(targetNode);
+                
+
                 data.links.push({source: sourceNode, target: targetNode});
             }
         }
     });
-    return data;
 
-}
-
-/*
-    Function: listParentsOfTargetNode
-    Creates a JavaScript Object mapping nodes to their parent nodes.
-
-    Parameters:
-
-        listOfLinks - a list of links between nodes.
-
-    Returns:
-
-        A JavaScript Object mapping *nodes* to their *parents* by index.
-
-    Example Output:
-
-        (start code)
-        {
-            6 : [5, 4],
-            5 : [3],
-            4 : [3],
-            3 : [2, 1],
-            2 : 0
-        }
-        (end)
-
-        In this example, the nodes at indices 1 and 0 have no parents. 
-
-    See Also:
-
-        <generateData>
-
-        <formatWorkflow>
-*/
-function listParentsOfTargetNode(listOfLinks) {
-    "use strict";
-    var parentsOfTargetNodes = {};
-
-    listOfLinks.forEach(function (linkDictionary) {
-        var sourceNode = linkDictionary.source,
-            targetNode = linkDictionary.target;
-
-        if (parentsOfTargetNodes.hasOwnProperty(targetNode)) {
-
-            parentsOfTargetNodes[targetNode].push(sourceNode);
-
-        } else {
-
-            parentsOfTargetNodes[targetNode] = [sourceNode];
-
-        }
-    });
-    return parentsOfTargetNodes;
+    return [data, bfsList];
 }
 
 /*
@@ -163,29 +136,36 @@ function listParentsOfTargetNode(listOfLinks) {
 
         <formatWorkflow>
 */
-function assignXValue(data, parentsOfTargetNodes) {
+function assignXValue(data, bfsList) {
     "use strict";
+    console.log(bfsList);
 
     var width = $("#workflow").width(),
-        numberOfColumns = Object.keys(parentsOfTargetNodes).length + 1,
-        columnSize = width / numberOfColumns,
-        x = columnSize / 2;
+        numberOfColumns = bfsList.length;
 
-    for (var targetNode in parentsOfTargetNodes) {
+    var columnSize = width / numberOfColumns,
+        x = columnSize / 2,
+        startbranchx = x + columnSize;
 
-        if (parentsOfTargetNodes.hasOwnProperty(targetNode)) {
-            
-            var lengthOfParentsList = parentsOfTargetNodes[targetNode].length,
-                listOfNodesToChangeX = parentsOfTargetNodes[targetNode];
-            for (var i = 0; i < lengthOfParentsList; i += 1) {
-                data.nodes[listOfNodesToChangeX[i]].x = x;
-            }
-
-            x += columnSize;
+    for (var i = 0; i < bfsList.length; i += 1) {
+        var tmpx = startbranchx;
+        if (data.nodes[i].x) {
+            tmpx = data.nodes[i].x + columnSize;
+        }
+        console.log(tmpx);
+        for (var j = 0; j < bfsList[i].length; j += 1) {
+            data.nodes[bfsList[i][j]].x = tmpx;
         }
     }
 
-    data.nodes[data.nodes.length - 1].x = x;
+    for (var i = 0; i < bfsList.length; i += 1) {
+        if (data.nodes[i].x) {
+            
+        } else {
+            data.nodes[i].x = x;
+        }
+        console.log(data.nodes[i].x);
+    }
 
     return numberOfColumns;
 }
@@ -275,29 +255,36 @@ function readjustColumns(data, numberOfColumns) {
         <assignXValue>
         <formatWorkflow>
 */
-function assignYValue(data) {
+function assignYValue(data, bfs) {
     "use strict";
-    var nodesInColumns = {},
-        height = $("#workflow").height();
+    var height = $("#workflow").height();
 
-    data.nodes.forEach(function (node) {
-        if (nodesInColumns.hasOwnProperty(node.x)) {
-            nodesInColumns[node.x].push(data.nodes.indexOf(node));
-        } else {
-            nodesInColumns[node.x] = [data.nodes.indexOf(node)];
-        }
-    });
+    for (var i = 0; i < bfs.length; i++) {
+        var numRows = bfs[i].length,
+            rowHeight = height / numRows,
+            y = rowHeight / 2;
 
-    for (var nodeX in nodesInColumns) {
-        if (nodesInColumns.hasOwnProperty(nodeX)) {
-            var nodeList = nodesInColumns[nodeX],
-                offset = 0;
-            for (var i = 0; i < nodeList.length; i += 1) {
-                data.nodes[nodeList[i]].y = (height/nodeList.length/2) + offset;
-                offset += height/nodeList.length;
-            }
+        for (var j = 0; j < numRows; j++) {
+            data.nodes[bfs[i][j]].y = y;
+            y += rowHeight;
         }
     }
+
+    var missedList = [];
+    for (var i = 0; i < bfs.length; i += 1) {
+        if (!data.nodes[i].hasOwnProperty("y")) {
+            missedList.push(i);
+        }
+    }
+
+    var numRows = missedList.length,
+        rowHeight = height / numRows,
+        y = rowHeight / 2;
+    for (var i = 0; i < missedList.length; i += 1) {
+        data.nodes[missedList[i]].y = y;
+        y += rowHeight;
+    }
+    
 }
 
 /*
@@ -327,12 +314,17 @@ function assignYValue(data) {
 */
 function formatWorkflow(workflow) {
     "use strict";
+    if (workflow.length === 0) {
+        return { nodes : [], links : []};
+    }
+
     var indexMap = getIndexMap(workflow),
-        data = generateData(workflow, indexMap),
-        parentsOfTargetNodes = listParentsOfTargetNode(data.links),
-        numberOfColumns = assignXValue(data, parentsOfTargetNodes);
+        dataAndBFS = generateData(workflow, indexMap),
+        data = dataAndBFS[0],
+        bfs = dataAndBFS[1],
+        numberOfColumns = assignXValue(data, bfs);
     readjustColumns(data, numberOfColumns);
-    assignYValue(data);
+    assignYValue(data, bfs);
 
     return data;
 }
@@ -355,15 +347,11 @@ function addTask(task_Type, links, repopulateVals, outputName) {
             "args" : JSON.stringify([task_Type, JSON.stringify(links)])
         };
 
-    console.log(url.args);
-
     $.getJSON(url, stuffToPass, function (results) {
         if (results.result) {
             $("[id^='tangelo-drawer-icon-']").trigger("click");
             $("#analysisWrapper").empty();
             $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
-            
-            console.log(results.workflow);
             
             var data = formatWorkflow(results.workflow),
                 tid = results.taskID,
@@ -409,7 +397,7 @@ function addTask(task_Type, links, repopulateVals, outputName) {
                     window.open("python/" + results.result);
                 }
             } else {
-                alert("Results of Workflow:\n" + results.result)
+                alert("Results of Workflow:\n" + results.result);
             }
 
         } else {

@@ -37,6 +37,9 @@ class TaskPlugin(Plugin, task.Task):
     def _dict_(self, workflow):
         return task.Task._dict_(self, workflow)
 
+    def __list__(self):
+        return task.Task.__list__(self)
+
 
 class WorkflowPlugin(Plugin, workflow.Workflow):
 
