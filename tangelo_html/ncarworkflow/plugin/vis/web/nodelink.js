@@ -335,7 +335,7 @@
         _click: function (node) {
             var nodes = JSON.parse(localStorage.nodes);
             if (nodes[node.uid]["repop"]) {
-                
+                localStorage.current = node.uid;
                 var nodeInfo = nodes[node.uid]["repop"];
                 $("#analysisWrapper").empty();
                 $("#analysisWrapper").load(nodeInfo.html, function () {
