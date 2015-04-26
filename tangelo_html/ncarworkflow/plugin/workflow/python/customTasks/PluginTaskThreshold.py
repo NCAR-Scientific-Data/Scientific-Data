@@ -28,14 +28,17 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
         # Check if workflow directory exists, if not create one
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.id)
+	#wid = "426"
+	#tid = "252"
 
         workflowDirName = "/data/" + wid + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
 
         # Get path to the netcdf file
         infile = "filename=\"{0}\"".format(self.filename)
-
-        # Uniquely name output file by task id
+	#infile = "tmin_subset_time_latlon.nc"
+        
+	# Uniquely name output file by task id
         outfile = workflowDirName + tid + "_threshold.nc"
         if os.path.exists(outfile): os.system("rm " + outfile)
 

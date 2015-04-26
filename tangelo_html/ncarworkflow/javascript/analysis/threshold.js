@@ -1,4 +1,4 @@
-function threshold(filename, lower, upper) {
+function threshold(filename, lower, upper, repopulateVals) {
     "use strict";
 
     var inputs = {
@@ -9,7 +9,7 @@ function threshold(filename, lower, upper) {
 
     console.log(inputs)
 
-    addTask("taskPercentile", inputs, "result");
+    addTask("taskThreshold", inputs, repopulateVals, "result");
 }
 
 function callThreshold() {
@@ -18,8 +18,9 @@ function callThreshold() {
     var allNodes = JSON.parse(localStorage.nodes),
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
-        lower = $("#lower").val,
-        upper = $("#upper").val,
+        //filename = "tmin_subset_time_latlon.nc",
+	lower = $("#lower").val,
+        upper = $("#upper").val;
 
     var repopulateVals = {
         "html" : "stepHTML/threshold.html",
@@ -29,5 +30,5 @@ function callThreshold() {
         }
     };
 
-    percentile(filename, lower, upper);
+    threshold(filename, lower, upper, repopulateVals);
 }

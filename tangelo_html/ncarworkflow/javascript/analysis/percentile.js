@@ -1,4 +1,4 @@
-function percentile(filename, percentile) {
+function percentile(filename, percentile, repopulateVals) {
     "use strict";
 
     var inputs = {
@@ -8,7 +8,7 @@ function percentile(filename, percentile) {
 
     console.log(inputs)
 
-    addTask("taskPercentile", inputs, "result");
+    addTask("taskPercentile", inputs, repopulateVals, "result");
 }
 
 function callPercentile() {
@@ -26,5 +26,5 @@ function callPercentile() {
         }
     };
 
-    percentile(filename, percentile);
+    percentile(filename, percentile, repopulateVals);
 }
