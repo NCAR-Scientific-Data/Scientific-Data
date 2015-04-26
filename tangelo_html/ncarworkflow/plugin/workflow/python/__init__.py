@@ -6,7 +6,19 @@ from customTasks import  *
 
 from pymongo import MongoClient
 
-# Add task with linkks to workflow
+
+#   Function: addTask
+#   A function that adds a task with specified links to a workflow
+#
+#   Parameters:
+#   
+#       task - the instance of a task to add
+#       links - the inputs to the specified task
+#       workflow - the instance of the workflow to add the new task to
+#
+#   Returns:
+#
+#       workflow - An updated instance of the workflow with the new task added and linked
 def addTask(task, links, workflow):
     for i in task.inputs:
         # Input is Port
@@ -31,7 +43,17 @@ def addTask(task, links, workflow):
     workflow.add(task)
     return workflow
 
-# Build a workflow from json file with id workflowID
+
+#   Function: deserialize
+#   A function that builds a workflow from its json representation
+#
+#   Parameters:
+#   
+#       workflowString - The json dictionary representation of a workflow to be built
+#
+#   Returns:
+#
+#       q - An instance of a workflow built from its representation
 def deserialize(workflowString): 
     data = json.loads(workflowString)
 
@@ -64,7 +86,19 @@ def deserialize(workflowString):
 
     return q
 
-# Build a workflow from json file with id workflowID
+#   Function: deserializeChangeTaskLinks
+#   A function that builds a workflow from its json representation and sets inputs of
+#   specified task to new links
+#
+#   Parameters:
+#   
+#       workflowString - The json dictionary representation of a workflow to be built
+#       taskUID - the UID of the task to be modified
+#       links - the new links for the specified task
+#
+#   Returns:
+#
+#       q - A new instance of the workflow built from its representation
 def deserializeChangeTaskLinks(workflowString, taskUID, links): 
     data = json.loads(workflowString)
 
@@ -99,10 +133,6 @@ def deserializeChangeTaskLinks(workflowString, taskUID, links):
             addTask(task[0], task[1], q)
 
     return q
-
-def updateTask(workflowID, taskUID, links):
-    workflow = deserialize(workflowID)
-    print(dict(workflow))
 
 
 # Serialize workflow into json file with UID as filename
