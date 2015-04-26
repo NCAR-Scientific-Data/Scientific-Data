@@ -78,17 +78,17 @@ def createWorkflow():
 def loadWorkflow(workflowID):
 	# open mongodb client and database
 	client = MongoClient()
-	db = client.testdb
-	collection = db.testcollection
+	db = client.database
+	collection = db.workflows
 	
-	document = collection.find_one({"_id": workflowID}).strip("u")
-	return {"repop": document['repop'], "data": document['data']}
+	document = collection.find_one({"_id": workflowID})
+	return (document['repop'], document['data'])
 	
 def saveWorkflow(workflowID, data, repop):
 	# open mongodb client and database
 	client = MongoClient()
-	db = client.testdb
-	collection = db.testcollection
+	db = client.database
+	collection = db.workflows
 	
 	return collection.update_one({"_id": workflowID}, {'$set': {'data': data, 'repop': repop}}, upsert = True)
 
