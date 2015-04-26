@@ -28,6 +28,12 @@ function newThreshold() {
     $("#analysisHTMLLoadSection").load("stepHTML/threshold.html");
 }
 
+function newClimatology() {
+    "use strict";
+    $("#analysisHTMLLoadSection").empty();
+    $("#analysisHTMLLoadSection").load("stepHTML/climatology.html");
+}
+
 function newBasicOperation() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
