@@ -55,23 +55,47 @@ def run(function, workflowID, args):
     w = None
     args = ast.literal_eval(args)
     if function == "createWorkflow":
+
         (w, uid) = createWorkflow()
         tangelo.store()[str(uid)] = tangelo.plugin.workflow.serialize(w)
         return {"uid": str(uid)}
+
+    elif function == "saveWorkflow":
+
+        success = tangelo.plugin.workflow.saveWorkflow(workflowID, tangelo.store()[workflowID], args[0])
+        if success:
+            if tangelo.store().pop(workflowID, False) == False:
+                return {"result" : "false"}
+            return {"result": "true"}
+        return {"result": "false"}
+
+    elif function == "loadWorkflow":
+
+        (repop, w) = tangelo.plugin.workflow.loadWorkflow(workflowID)
+        tangelo.store()[workflowID] = w
+        w = tangelo.plugin.workflow.deserialize(w)
+        result = getOutput(w)
+
+        return {"result": result, "workflow" : w.__list__(), "repop" : repop}
+
     elif workflowID in tangelo.store():
 
         w = tangelo.plugin.workflow.deserialize(tangelo.store()[workflowID])
-
+        
         if function == "addTask":
+
             (w, tid) = addTask(args[0], args[1], w, workflowID)
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
             result = getOutput(w)
+
             return {"result":result, "workflow":w.__list__(), "taskID": tid}
 
         if function == "deleteTask":
+
             (w) = tangelo.plugin.workflow.deleteTask(args[0], workflowID, tangelo.store()[workflowID])
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
             result = getOutput(w)
+
             return {"result":result, "workflow":w.__list__()}
     else:
         return {"Error": "Error - Could Not Update Workflow"}

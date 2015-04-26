@@ -4,6 +4,8 @@ import json
 import unicodedata
 from customTasks import  *
 
+from pymongo import MongoClient
+
 # Add task with linkks to workflow
 def addTask(task, links, workflow):
     for i in task.inputs:
@@ -12,9 +14,13 @@ def addTask(task, links, workflow):
             # Find the task in the workflow with UID in link[i]
             t = workflow._dfs_([workflow._start_task.id], lambda t: t.getTaskWithID(links[i][1]))
             # Reset the tasks outputs
-            t[0].reset_all_outputs()
+            #t[0].reset_all_outputs()
             # Set the input to the outputs of found task
-            task.inputs[i] = t[0].outputs[links[i][2]]
+            if len(t) > 0:
+                task.inputs[i] = t[0].outputs[links[i][2]]
+            else :
+                task.inputs[i] = " "
+                print "Couldn't find the task...you did something horribly wrong."
         # Input is number
         # TODO:
         # Better checking
@@ -69,6 +75,23 @@ def getInstance(taskType):
 def createWorkflow():
     return pyutilib.workflow.Workflow()
 
+def loadWorkflow(workflowID):
+	# open mongodb client and database
+	client = MongoClient()
+	db = client.database
+	collection = db.workflows
+	
+	document = collection.find_one({"_id": workflowID})
+	return (document['repop'], document['data'])
+	
+def saveWorkflow(workflowID, data, repop):
+	# open mongodb client and database
+	client = MongoClient()
+	db = client.database
+	collection = db.workflows
+	
+	return collection.update_one({"_id": workflowID}, {'$set': {'data': data, 'repop': repop}}, upsert = True)
+
 # Add task with links to workflow
 # Do not set link to deleted task
 def addTaskNewLinks(task, taskUID, links, workflow):
@@ -81,12 +104,12 @@ def addTaskNewLinks(task, taskUID, links, workflow):
                 # Find the task in the workflow with UID in link[i]
                 t = workflow._dfs_([workflow._start_task.id], lambda t: t.getTaskWithID(links[i][1]))[0]
                 # Reset the tasks outputs
-                t.reset_all_outputs()
+                #t.reset_all_outputs()
                 # Set the input to the outputs of found task
-
                 task.inputs[i] = t.outputs[links[i][2]]
             else:
-                task.inputs[i] = None
+                task.inputs[i] = " "
+
         # Input is number
         # TODO:
         # Better checking
@@ -109,7 +132,7 @@ def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
             # Create instance of specified task
             # TODO:
             # Make this a factory and replace with actual tasks
-            t = test.getInstance(task['Type'])
+            t = getInstance(task['Type'])
             # Set UID to its previous instance's
             # This is so the particular task in the workflow
             # will always be linked properly
@@ -125,5 +148,3 @@ def deleteTask(taskUID, workflowID, workflowString):
     workflow.setWorkflowID(workflowID)
     serialize(workflow)
     return workflow
-
-
