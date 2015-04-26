@@ -81,7 +81,7 @@ def loadWorkflow(workflowID):
 	db = client.testdb
 	collection = db.testcollection
 	
-	document = collection.find_one({"_id": workflowID}).strip("u")
+	document = collection.find_one({"_id": workflowID})
 	return (document['repop'], document['data'])
 	
 def saveWorkflow(workflowID, data, repop):

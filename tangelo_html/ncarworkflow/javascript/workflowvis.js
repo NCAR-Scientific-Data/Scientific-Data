@@ -484,7 +484,7 @@ function saveWorkflow() {
 
     $.getJSON(url, stuffToPass, function (results) {
         if (results.result) {
-            if (results.result === true) {
+            if (results.result === "true") {
                 alert("Your Workflow Has Been Saved. You can access it again by using this serial number:\n" + localStorage.uid);
 
                 var done = confirm("Are you done working?\n Data will be removed from your local computer if you are.\n Don't worry though, your data is backed up.");

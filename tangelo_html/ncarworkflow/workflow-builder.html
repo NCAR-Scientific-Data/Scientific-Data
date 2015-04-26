@@ -96,7 +96,7 @@
         $("#wid").text(localStorage.uid);
 
         if (localStorage.workflow) {
-            var data = formatWorkflow(workflow);
+            var data = formatWorkflow(JSON.parse(localStorage.workflow));
 
             $("#workflow").empty();
 

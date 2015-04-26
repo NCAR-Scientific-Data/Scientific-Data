@@ -31,7 +31,7 @@ function loadWorkflow() {
 				var repop = JSON.parse(results.repop);
 				localStorage.uid = repop.workflowID;
 				localStorage.nodes = results.repop;
-				localStorage.workflow = results.workflow;
+				localStorage.workflow = JSON.stringify(results.workflow);
 				window.location.replace("workflow-builder.html");
 			}
 		}
