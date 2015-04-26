@@ -163,8 +163,20 @@ def saveWorkflow(workflowID, data, repop):
 	
 	return collection.update_one({"_id": workflowID}, {'$set': {'data': data, 'repop': repop}}, upsert = True)
 
-# Add task with links to workflow
-# Do not set link to deleted task
+#   Function: addTaskNewLinks
+#   A function that helps with rebuilding a workflow when deleting a task.
+#   Does not set links for task with link to a deleted task
+#
+#   Parameters:
+#   
+#       task - instance of task to be added
+#       taskUID - UID of task to be checked for in links
+#       links - inputs for the new task
+#       workflow - instance of workflow for task to be added to
+#
+#   Returns:
+#
+#       workflow - An instance of a workflow built from its representation
 def addTaskNewLinks(task, taskUID, links, workflow):
     for i in task.inputs:
         # Input is Port
