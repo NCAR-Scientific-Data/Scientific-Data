@@ -1,7 +1,40 @@
 import uuid
 import json
 import ast
-import tangelo
+#import tangelo
+import pyutilib.workflow
+
+class TaskA(pyutilib.workflow.Task):
+    def __init__(self, *args, **kwds):
+        """Constructor."""
+        pyutilib.workflow.Task.__init__(self, *args, **kwds)
+        self.inputs.declare('a')
+        self.inputs.declare('b')
+        self.outputs.declare('c')
+    def execute(self):
+        """Compute the sum of the inputs."""
+        self.c = "test.nc"
+
+class TaskB(pyutilib.workflow.Task):
+    def __init__(self, *args, **kwds):
+        """Constructor."""
+        pyutilib.workflow.Task.__init__(self, *args, **kwds)
+        self.inputs.declare('d')
+        self.outputs.declare('e')
+    def execute(self):
+        """Compute the sum of the inputs."""
+        self.e = self.d*3
+
+class TaskC(pyutilib.workflow.Task):
+    def __init__(self, *args, **kwds):
+        """Constructor."""
+        pyutilib.workflow.Task.__init__(self, *args, **kwds)
+        self.inputs.declare('e')
+        self.inputs.declare('c')
+        self.outputs.declare('f')
+    def execute(self):
+        """Compute the sum of the inputs."""
+        self.f = self.e*self.c
 
 def createWorkflow():
     uid = uuid.uuid4()
@@ -34,9 +67,15 @@ def addTask(taskType, links, workflow, workflowID):
     # Return the result, list representation of the workflow, and UID of the added task
     return (workflow, task.uid)
 
-def updateTask(workflowID, taskUID, links):
-    workflow = deserialize(workflowID)
-    print(dict(workflow))
+def updateTask(workflow, workflowID, taskUID, links):
+    w = deserialize(workflowID)
+    workflow = w.__dict__()
+    for task in workflow:
+        for key in task:
+            if key in ['UID'] and task[key] in [taskUID]:
+                task['Inputs'] = links 
+    return workflow
+
 
 def deleteTask(taskUID, workflowID):
     # Build workflow with filename workflowUID.json
@@ -79,3 +118,28 @@ def run(function, workflowID, args):
             return {"result":result, "workflow":w.__list__()}
     else:
         return {"Error": "Error - Could Not Update Workflow"}
+
+
+w = pyutilib.workflow.Workflow()
+w.setWorkflowID(str(uuid.uuid4()))
+
+A = TaskA()
+A.setUID(str(uuid.uuid4()))
+A.setWorkflowID(w.workflowID)
+B = TaskB()
+B.setUID(str(uuid.uuid4()))
+B.setWorkflowID(w.workflowID)
+C = TaskC()
+C.setUID(str(uuid.uuid4()))
+C.setWorkflowID(w.workflowID)
+
+A.inputs.a = 1
+A.inputs.b = 2
+B.inputs.d = A.outputs.c
+C.inputs.e = B.outputs.e
+C.inputs.c = 3
+
+w.add(A)
+w.add(B)
+w.add(C)
+updateTask(w.__dict__(), B.uid, {"d": [50]})
