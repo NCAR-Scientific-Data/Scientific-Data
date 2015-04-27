@@ -46,7 +46,7 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
             wid = "wid=\"{0}\"".format(self.workflowID)
             tid = "tid=\"{0}\"".format(self.uid)
             
-            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sUnit, 'ncl/unit_conversion.ncl']
+            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sUnit, '../plugin/workflow/python/customTasks/ncl/unit_conversion.ncl']
             args = filter(None,args)
             sysError = False
             nclError = False
