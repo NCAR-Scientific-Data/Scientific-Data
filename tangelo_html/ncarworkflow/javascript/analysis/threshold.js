@@ -1,8 +1,9 @@
-function threshold(filename, lower, upper, repopulateVals) {
+function threshold(filename, field, lower, upper, repopulateVals) {
     "use strict";
 
     var inputs = {
         "filename" : filename,
+	"field" : field,
         "lower" : lower,
         "upper" : upper
     };
@@ -19,19 +20,21 @@ function callThreshold() {
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
         //filename = "tmin_subset_time_latlon.nc",
+        field = $("#field").val(),
 	lower = $("#lower").val(),
         upper = $("#upper").val();
 
     var repopulateVals = {
         "html" : "stepHTML/threshold.html",
         "values" : {
+            "#field" : field,
             "#lower" : lower,
             "#upper" : upper,
             "#node"  : selectedNode
         }
     };
 
-    threshold(filename, lower, upper, repopulateVals);
+    threshold(filename, field, lower, upper, repopulateVals);
 }
 
 function generateNodeSelect() {

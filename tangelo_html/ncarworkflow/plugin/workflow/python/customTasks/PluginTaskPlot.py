@@ -41,9 +41,9 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
                 sysError = True
                 error = "System error, please contact site administrator."
         if self.native:
-                result = "/data/{0}/{1}_nativeplot.png".format(wid,tid)
+                result = "data/{0}/{1}_nativeplot.png".format(wid,tid)
         else:
-                result = "/data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
+                result = "data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
         if not sysError:
             if status:
                 if status == 2:
