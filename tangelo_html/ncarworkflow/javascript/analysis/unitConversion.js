@@ -7,8 +7,7 @@ function unitConversion(filename, unit, repopulateVals ){
 		"filename" : filename,
 		"unit" : unit
 	};
-
-	console.log(inputs)
+	
 	addTask("taskUnitConversion", inputs, repopulateVals, "result");
 }
 
