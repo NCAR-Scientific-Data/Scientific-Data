@@ -68,7 +68,7 @@ daysWithinThreshold <- function(infile, outfile, field, lower, upper){
 	from = 0
 	to = n_step - 1
 	dimension = gsub(" ", "", paste("time",",",from,",",to))
-	command = paste("ncks -d ",dimension,infile,outfile)
+	command = paste("ncks -O -d ",dimension,infile,outfile)
 	system(command)
 
 	# Open the output NetCDF file and then write the subsets to a new netcdf file

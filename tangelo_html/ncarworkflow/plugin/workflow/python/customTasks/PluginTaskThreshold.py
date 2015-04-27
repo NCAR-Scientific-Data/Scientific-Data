@@ -27,25 +27,26 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
         ro.r['source'](scriptname)
 
         # Check if workflow directory exists, if not create one
-        wid = "wid=\"{0}\"".format(self.workflowID)
-        tid = "tid=\"{0}\"".format(self.id)
+        #wid = "wid=\"{0}\"".format(self.workflowID)
+        #tid = "tid=\"{0}\"".format(self.id)
+	wid = self.workflowID
+	tid = self.id
 	#wid = "426"
 	#tid = "252"
 
-        workflowDirName = "/home/project/Scientific-Data/tangelo-html/ncarworkflow/python/data/" + wid + "/"
+        workflowDirName = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + str(wid) + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
 
         # Get path to the netcdf file
-        #infile = "filename=\"{0}\"".format(self.filename)
-	infile = self.filename
-	#infile = "tmin_subset_time_latlon.nc"
-        #infilePath = "/home/project/Scientific-Data/tangelo-html/ncarworkflow/python/" + infile 
-	# Uniquely name output file by task id
-        outfile = workflowDirName + tid + "_threshold.nc"
-        if os.path.exists(outfile): os.system("rm " + outfile)
+	#infile = self.filename
+	infile = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/tmin_subset_time_latlon.nc"
 
+	# Uniquely name output file by task id
+        outfile = workflowDirName + str(tid) + "_threshold.nc"
+        #if os.path.exists(outfile): os.system("rm " + outfile)
+	os.system("touch " + outfile)
         # Get field based on file name
-	field = 
+	field = "tmin" 
 
         # Check if user entered lowerlimit and upperlimit, if not
         #   Set lower to min or upper to max

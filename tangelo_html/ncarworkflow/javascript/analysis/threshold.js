@@ -18,7 +18,6 @@ function callThreshold() {
     var allNodes = JSON.parse(localStorage.nodes),
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
-        //filename = "tmin_subset_time_latlon.nc",
 	lower = $("#lower").val(),
         upper = $("#upper").val();
 
