@@ -1,5 +1,17 @@
 /*global $, addTask*/
 
+/*
+    Title: Plot
+*/
+
+/*
+    Functions: Plot Functions
+
+    plot - Creates the inputs for the addTask call.
+    callPlot - Parses the form data and creates the repopulation values.
+    generateNodeSelect - Generates the dropdown of nodes.
+*/
+
 function plot(filename, timeindex, nativeP, repopulateVals) {
     "use strict";
 

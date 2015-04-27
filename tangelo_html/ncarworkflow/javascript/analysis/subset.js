@@ -1,5 +1,17 @@
 /*global $, urlCatalog, addTask*/
 
+/*
+    Title: Subset
+*/
+
+/*
+    Function: subset
+    Creates the inputs and calls addTask.
+
+    See Also:
+
+        <urlCatalog>
+*/
 function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm, repopulateVals) {
     "use strict";
 
@@ -34,6 +46,10 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
     addTask("taskSubset", inputs, repopulateVals, "subset");
 }
 
+/*
+    Function: callSubset
+    Parse the form and creates the repopulation values object.
+*/
 function callSubset() {
     "use strict";
     var simulationType = $("#simulationType option:selected").val(),
@@ -77,6 +93,14 @@ function callSubset() {
     subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm, repopulateVals);
 }
 
+/*
+    Function: changeDateRange
+    Changes the date range available for subset based on the simulation type.
+
+    Parameters:
+
+    simulationType - a string representing the simulation type. Can either be "ncep", "-current", or "-future".
+*/
 function changeDateRange(simulationType) {
     "use strict";
     var start, end, i,
@@ -105,6 +129,15 @@ function changeDateRange(simulationType) {
     $("#endYear option:last-child").prop("selected", true);
 }
 
+/*
+    Function: changeGCM
+    Change the Global Climate Model input options based on the simulation type and Regional Climate Model.
+
+    Parameters:
+
+    simulationType -  A string with the value of the simulation type, either "ncep", "-current", or "-future".
+    rcm - A string with the value of the Regional Climate Model, either "ccsm", "cgcm3", "gfdl", or "hadcm3".
+*/
 function changeGCM(simulationType, rcm) {
     "use strict";
 
@@ -171,6 +204,15 @@ function changeGCM(simulationType, rcm) {
     }
 }
 
+/*
+    Function: changeBasedOnSim
+    Change certain input values based on the Simulation type.
+
+    See Also:
+
+        <changeDateRange>
+        <changeGCM>
+*/
 function changeBasedOnSim() {
     "use strict";
 
@@ -181,6 +223,13 @@ function changeBasedOnSim() {
     changeGCM(simulationType, rcm);
 }
 
+/*
+    Function: changeBasedOnRCM
+    Change certain input values based on the Regional Climate Model.
+
+    See Also:
+        <changeGCM>
+*/
 function changeBasedOnRCM() {
     "use strict";
 
