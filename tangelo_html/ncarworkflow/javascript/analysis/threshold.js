@@ -33,6 +33,33 @@ function callThreshold() {
     threshold(filename, lower, upper, repopulateVals);
 }
 
+function updateThreshold() {
+    "use strict";
+
+    var allNodes = JSON.parse(localStorage.nodes),
+        selectedNode = $("#node option:selected").val(),
+        filename = ["Port", selectedNode, allNodes[selectedNode].output],
+        lower = $("#lower").val(),
+        upper = $("#upper").val();
+
+    var repopulateVals = {
+        "html" : "stepHTML/threshold.html",
+        "values" : {
+            "#lower" : lower,
+            "#upper" : upper,
+            "#node"  : selectedNode
+        }
+    };
+
+    var inputs = {
+        "filename" : filename,
+        "lower" : lower,
+        "upper" : upper
+    };
+
+    updateTask(inputs, repopulateVals);
+}
+
 function generateNodeSelect() {
     "use strict";
     var nodeDropDown = $("#node");
