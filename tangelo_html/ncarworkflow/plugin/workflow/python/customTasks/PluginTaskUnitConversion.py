@@ -27,8 +27,7 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
         self.inputs.declare('filename')
-        self.inputs.declare('variable')
-        self.inputs.declare('outunit')
+        self.inputs.declare('unit')
         self.outputs.declare('result')
 
     #   Function: execute
@@ -43,12 +42,11 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
     #       The path of the resulting NetCDF file with converted units.
     def execute(self):
             sFilename = "filename=\"{0}\"".format(self.filename)
-            sVariable = "variable=\"{0}\"".format(self.variable)
-            sOutunit = "outunit=\"{0}\"".format(self.outunit)
+            sUnit = "unit=\"{0}\"".format(self.unit)
             wid = "wid=\"{0}\"".format(self.workflowID)
             tid = "tid=\"{0}\"".format(self.uid)
             
-            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sOutunit, 'ncl/unit_conversion.ncl']
+            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sUnit, 'ncl/unit_conversion.ncl']
             args = filter(None,args)
             sysError = False
             nclError = False
