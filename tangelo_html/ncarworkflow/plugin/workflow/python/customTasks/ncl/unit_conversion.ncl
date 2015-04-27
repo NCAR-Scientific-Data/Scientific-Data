@@ -1,7 +1,7 @@
 ;Inputs
 ;filename
 ;variable
-;outunit
+;unit
 
 begin
     f = addfile(filename,"r")
@@ -13,10 +13,10 @@ begin
 
     var = f->$variable$
 
-    if (.not.isvar("outunit")) then
+    if (.not.isvar("unit")) then
         status_exit(2)
     end if
-    if (outunit.ne."degC" .and. outunit.ne."degF" .and. outunit.ne."degK") then
+    if (unit.ne."degC" .and. unit.ne."degF" .and. unit.ne."degK") then
         status_exit(5)
     end if
 
@@ -25,9 +25,9 @@ begin
         status_exit(5)
     end if
 
-    if (vunits.ne.outunit) then
+    if (vunits.ne.unit) then
         if (vunits.eq."degC") then
-            if (outunit.eq."degF") then
+            if (unit.eq."degF") then
                 var = (var * (9./5.)) + 32
                 var@units = "degF"
             else
@@ -35,7 +35,7 @@ begin
                 var@units = "degK"
             end if
         else if (vunits.eq."degF")then
-            if (outunit.eq."degC") then
+            if (unit.eq."degC") then
                 var = ((var - 32) * (5./9.))
                 var@units = "degC"
             else
@@ -43,7 +43,7 @@ begin
                 var@units = "degK"
             end if
         else
-            if (outunit.eq."degC") then
+            if (unit.eq."degC") then
                 var = var - 273.15
                 var@units = "degC"
             else
