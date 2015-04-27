@@ -2,6 +2,7 @@ import tangelo
 import pyutilib.workflow
 import json
 import unicodedata
+import ast
 from customTasks import  *
 
 from pymongo import MongoClient
@@ -102,6 +103,7 @@ def deserialize(workflowString):
 def deserializeChangeTaskLinks(workflowString, taskUID, links): 
     data = json.loads(workflowString)
 
+    links = ast.literal_eval(links)
     taskList = []
     # Create temp workflow
     q = pyutilib.workflow.Workflow()
@@ -127,8 +129,8 @@ def deserializeChangeTaskLinks(workflowString, taskUID, links):
             taskList.append((t, task["Inputs"]))
     
     for task in taskList:
-        if(task[0].UID in [taskUID]):
-            addTask(task[0]), links, q)
+        if(task[0].UID() in [taskUID]):
+            addTask(task[0], links, q)
         else:
             addTask(task[0], task[1], q)
 
