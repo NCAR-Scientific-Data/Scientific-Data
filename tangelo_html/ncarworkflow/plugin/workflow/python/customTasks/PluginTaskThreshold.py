@@ -22,7 +22,7 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
     def execute(self):
 
 	# Import the R script so we can use its function
-        scriptname = "plugin/workflow/python/customTasks/r/r_calculation_module.R"
+        scriptname = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/r/r_calculation_module.R"
         ro.r['source'](scriptname)
 
         # Check if workflow directory exists, if not create one

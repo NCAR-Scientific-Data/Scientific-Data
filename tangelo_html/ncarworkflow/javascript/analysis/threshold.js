@@ -19,8 +19,8 @@ function callThreshold() {
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
         //filename = "tmin_subset_time_latlon.nc",
-	lower = $("#lower").val,
-        upper = $("#upper").val;
+	lower = $("#lower").val(),
+        upper = $("#upper").val();
 
     var repopulateVals = {
         "html" : "stepHTML/threshold.html",
