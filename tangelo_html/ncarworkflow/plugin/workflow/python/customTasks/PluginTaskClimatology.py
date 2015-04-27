@@ -18,14 +18,14 @@ class PluginTaskClimatology(pyutilib.workflow.TaskPlugin):
     def execute(self):
         
         # Import the R script so we can use its function
-        scriptname = "plugin/workflow/python/customTasks/r/r_calculation_module.R"
+        scriptname = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/r/r_calculation_module.R"
         ro.r['source'](scriptname)
 
         # Check if workflow directory exists, if not create one
         wid = "filename=\"{0}\"".format(self.workflowID)
         tid = "filename=\"{0}\"".format(self.uid)
 
-        workflowDirName = "/data/" + wid + "/"
+        workflowDirName = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + wid + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
 
         # Uniquely name output file by task id
@@ -33,12 +33,12 @@ class PluginTaskClimatology(pyutilib.workflow.TaskPlugin):
         if os.path.exists(outfile): os.system("rm -rf " + outfile)
 
         # Get path to the netcdf file
-        infile = "filename=\"{0}\"".format(self.filename)
-        start = "filename=\"{0}\"".format(self.startmonth)
-        end = "filename=\"{0}\"".format(self.endmonth)
+        infile = self.filename
+        start = self.startmonth
+        end = self.endmonth
 
         # Get field based on file name
-        field = infile.rsplit('_')[0]
+        #field = infile.rsplit('_')[0]
 
         # Call the function that does the calculation
         ro.r['calculateClimatology'](infile, outfile, start, end, field)

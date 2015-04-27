@@ -1,9 +1,8 @@
-function threshold(filename, field, lower, upper, repopulateVals) {
+function threshold(filename, lower, upper, repopulateVals) {
     "use strict";
 
     var inputs = {
         "filename" : filename,
-	"field" : field,
         "lower" : lower,
         "upper" : upper
     };
@@ -19,22 +18,46 @@ function callThreshold() {
     var allNodes = JSON.parse(localStorage.nodes),
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
-        //filename = "tmin_subset_time_latlon.nc",
-        field = $("#field").val(),
 	lower = $("#lower").val(),
         upper = $("#upper").val();
 
     var repopulateVals = {
         "html" : "stepHTML/threshold.html",
         "values" : {
-            "#field" : field,
             "#lower" : lower,
             "#upper" : upper,
             "#node"  : selectedNode
         }
     };
 
-    threshold(filename, field, lower, upper, repopulateVals);
+    threshold(filename, lower, upper, repopulateVals);
+}
+
+function updateThreshold() {
+    "use strict";
+
+    var allNodes = JSON.parse(localStorage.nodes),
+        selectedNode = $("#node option:selected").val(),
+        filename = ["Port", selectedNode, allNodes[selectedNode].output],
+        lower = $("#lower").val(),
+        upper = $("#upper").val();
+
+    var repopulateVals = {
+        "html" : "stepHTML/threshold.html",
+        "values" : {
+            "#lower" : lower,
+            "#upper" : upper,
+            "#node"  : selectedNode
+        }
+    };
+
+    var inputs = {
+        "filename" : filename,
+        "lower" : lower,
+        "upper" : upper
+    };
+
+    updateTask(inputs, repopulateVals);
 }
 
 function generateNodeSelect() {
