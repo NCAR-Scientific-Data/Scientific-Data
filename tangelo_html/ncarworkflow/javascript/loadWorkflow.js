@@ -1,5 +1,17 @@
 /*global $, confirm, alert*/
 
+/*
+	Function: loadWorkflow
+    Load a workflow given a workflow ID.
+
+   	Once a workflow is loaded, the user has the option to download the results,
+   	and then is further asked if they want to edit the workflow. If a user chooses
+   	to edit the  workflow, then the page redirects to the workflow builder.
+
+    See Also:
+
+        <saveWorkflow>
+*/
 function loadWorkflow() {
 	"use strict";
 

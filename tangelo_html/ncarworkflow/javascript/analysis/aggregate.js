@@ -1,5 +1,17 @@
 /*global localStorage, $*/
 
+/*
+    Title: Aggregate
+*/
+
+/*
+    Functions: Aggregate Functions
+
+    aggregate - Creates the inputs to pass to the add task parameters.
+    callAggregate - Parses the form input, creates the repopulation values, and passes them to aggregate.
+    generateNodeSelect - Populates the dropdown that takes in other nodes.
+*/
+
 function aggregate(filename, calc, interval, out, cyclic, repopulateVals) {
     "use strict";
 

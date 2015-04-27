@@ -1,10 +1,5 @@
 /*global window, $, tangelo, confirm, alert*/
 
-/*
-    File: workflowvis.js
-    Visualizes a workflow.
-*/
-
 
 /*
     Function: getIndexMap
@@ -17,6 +12,7 @@
     Returns:
 
         A JavaScript object mapping workflow indices to NodeLink indices.
+        The map is formatted "{ originalIndex : nodelinkIndex }"
 
     See Also:
 
@@ -55,7 +51,7 @@ function getIndexMap(workflow) {
 
 /*
     Function: generateData
-    Generates nodes and links between nodes.
+    Generates nodes and links between nodes for visualization.
 
     Parameters:
 
@@ -64,14 +60,38 @@ function getIndexMap(workflow) {
 
     Returns:
 
-        A JavaScript object containing 2 properties: *nodes* and *links*.
+        A list with the data javascript object and a breadth-first search
+        representation of the workflow.
 
-        *nodes:* A list of nodes. Each node is an object consisting of a node type
-        and a node name.
+        _The Data Object_
 
-        *links:* A list of links. Each link is an object with a source node index
-        and a target node index.
+            *nodes:* A list of nodes. Each node is an object consisting of a 
+            node type and a node name.
 
+            *links:* A list of links. Each link is an object with a source node 
+            index and a target node index.
+
+        _The Breadth-First Search List_
+
+            The list is such that the index is the parent node, and the children
+            of that node are a list stored at that index. For example, say we had
+            this tree:
+
+            >       0
+            >      / \
+            >     1   2
+            >    / \
+            >   3   4
+
+            Then it would be represented as
+
+            > [
+            >   [1,2],
+            >   [3, 4],
+            >   [ ]
+            >   [ ]
+            >   [ ]
+            > ]
 
     See Also:
 
@@ -117,12 +137,21 @@ function generateData(workflow, indexMap) {
 
 /*
     Function: assignXValue
-    Assigns an initial X value to each node.
+    Assigns an initial X value to each node using the breadth-first search list.
+
+    *1.* The web page is divided into columns based on the number of nodes.
+    
+    *2.* The farthest-left x-value is given to root nodes, and then children nodes are
+    assigned an x value equal to the width of the column plus the x value of the
+    parent.
+    
+    *3.* After all x values are assigned, the function returns the number of columns
+    it expected to create.
 
     Parameters:
 
         data - an object containing lists of the nodes and links.
-        parentsOfTargetNodes - an object mapping nodes to their parent nodes.
+        bfsList - a list representations of the tree with breadth-first-search
 
     Returns:
 
@@ -130,9 +159,9 @@ function generateData(workflow, indexMap) {
 
     See Also:
 
-        <generateData>
+        <readjustColumns>
 
-        <listParentsOfTargetNodes>
+        <generateData>
 
         <formatWorkflow>
 */
@@ -171,6 +200,14 @@ function assignXValue(data, bfsList) {
     Function: readjustColumns
     Modifies node X-values to make columns more even.
 
+    *1.* The function makes a list of all x-values assigned to the nodes.
+    
+    *2.* The number of actual columns used is the length of the x-values list.
+    
+    *3.* The old x-values are mapped to the new number of columns.
+    
+    *4.* Node x-values are adjusted to use the correct x values.
+
     Parameters:
 
         data - an object containing lists of the nodes and links.
@@ -178,9 +215,9 @@ function assignXValue(data, bfsList) {
 
     See Also:
 
-        <generateData>
-
         <assignXValue>
+
+        <generateData>
 
         <formatWorkflow>
 */
@@ -239,17 +276,23 @@ function readjustColumns(data, numberOfColumns) {
     Function: assignYValue
     Assigns a Y value to each node.
 
+    *1.* For each node's children, the children are assigned a y-value, evenly spaced.
+    
+    *2.* Then the same process is repeated with any missed nodes.
+
     Parameters:
 
         data - an object containing all nodes and links.
+        bfs - a breadth-first search type representation of the nodes.
 
     Returns:
 
-        Nothing
+        Nothing. Data is modified.
 
     See Also:
 
         <assignXValue>
+        
         <formatWorkflow>
 */
 function assignYValue(data, bfs) {
@@ -290,7 +333,7 @@ function assignYValue(data, bfs) {
 
     Parameters:
 
-        workflow - The workflow JSON object. Each node is a list consisting of the
+        workflow - The workflow list. Each node is a list consisting of the
         node type, the node name, and a list of indices of child nodes.
 
     Returns:
@@ -303,9 +346,9 @@ function assignYValue(data, bfs) {
 
         <generateData>
 
-        <listParentsOfTargetNodes>
-
         <assignXValue>
+
+        <assignYValue>
 
         <readjustColumns>
 */
@@ -328,11 +371,22 @@ function formatWorkflow(workflow) {
 
 /*
     Function: addTask
-    Run and then draw a workflow.
+    Add a task to a workflow, run the workflow, and then draw the workflow.
+
+    A Javascript Object of node ids and values for repopulating inputs is saved to localStorage.
+
+    Parameters:
+
+        task_Type - the type of task that is being created.
+        links - a Javascript object containing each input for the task.
+        repopulateVals - a Javascript object that contains the values for each input on the html page.
+        outputName - the name of the output variable in the workflow.
 
     See Also:
 
         <formatWorkflow>
+
+        <deleteTask>
 */
 function addTask(task_Type, links, repopulateVals, outputName) {
     "use strict";
@@ -403,6 +457,18 @@ function addTask(task_Type, links, repopulateVals, outputName) {
     });
 }
 
+/*
+    Function: deleteTask
+    Delete a task from the workflow, run the workflow, and then draw the workflow.
+
+    A Javascript Object of node ids and values for repopulating inputs is saved to localStorage.
+
+    See Also:
+
+        <formatWorkflow>
+
+        <addTask>
+*/
 function deleteTask() {
     "use strict";
 
@@ -473,6 +539,14 @@ function deleteTask() {
     });
 }
 
+/*
+    Function: saveWorkflow
+    Save a workflow to the database, along with its input repopulation values.
+
+    See Also:
+
+        <loadWorkflow>
+*/
 function saveWorkflow() {
     "use strict";
     var url = "python/updateWorkflow",

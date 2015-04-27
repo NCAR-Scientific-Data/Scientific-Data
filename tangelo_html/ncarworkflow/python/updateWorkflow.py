@@ -54,6 +54,7 @@ def getOutput(workflow):
 def run(function, workflowID, args):
     w = None
     args = ast.literal_eval(args)
+    
     if function == "createWorkflow":
 
         (w, uid) = createWorkflow()
