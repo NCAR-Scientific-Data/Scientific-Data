@@ -26,9 +26,26 @@ function callThreshold() {
         "html" : "stepHTML/threshold.html",
         "values" : {
             "#lower" : lower,
-            "#upper" : upper
+            "#upper" : upper,
+            "#node"  : selectedNode
         }
     };
 
     threshold(filename, lower, upper, repopulateVals);
+}
+
+function generateNodeSelect() {
+    "use strict";
+    var nodeDropDown = $("#node");
+
+    var nodes = JSON.parse(localStorage.nodes);
+
+    for(var node in nodes) {
+        if (node !== "workflowID") {
+            var n = nodes[node];
+            nodeDropDown.append($("<option></option>").val(node).html(n.name));
+        }
+    }
+
+    $("#node:first-child").prop("selected", true);
 }
