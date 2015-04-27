@@ -1,6 +1,6 @@
 /*global $, addTask*/
 
-function unitconversion(filename, unit, repopulateVals ){
+function unitConversion(filename, unit, repopulateVals ){
 	"use strict";
 
 	var inputs = {
@@ -8,7 +8,8 @@ function unitconversion(filename, unit, repopulateVals ){
 		"unit" : unit
 	};
 
-	addTask("taskUnitConversion", inputs, repopulateVals, "unitconversion");
+	console.log(inputs)
+	addTask("taskUnitConversion", inputs, repopulateVals, "result");
 }
 
 //Parse values from form
@@ -24,11 +25,11 @@ function callUnitConversion(){
 		"html" : "stepHTML/unitConversion.html",
 		"values" : {
 			"#unit" : unit,
-			"#node" : selectedNode
+			"#node" : filename[1]
 		}
 	};
 
-	unitconversion(filename,unit, repopulateVals);
+	unitConversion(filename, unit, repopulateVals);
 }
 
 function generateNodeSelect() {
