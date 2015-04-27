@@ -1,3 +1,20 @@
+/*
+	Variable: urlCatalog
+	A Javascript Object that maps OPeNDAP urls to their latest file versions.
+
+	Example:
+
+	If I was retrieving a variable from the first table of a netCDF containing
+	the CCSM-Current Global Climate Model and the CRCM Regional Climate Model then
+	the entry in the object would be:
+
+	> urlCatalog["crcm.ccsm-current.table1"] = 1;
+
+	See Also:
+
+		<subset>
+*/
+
 "use strict";
 
 window.urlCatalog = {};
