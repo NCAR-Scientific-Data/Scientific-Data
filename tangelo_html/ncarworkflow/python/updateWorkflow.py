@@ -54,6 +54,7 @@ def getOutput(workflow):
 def run(function, workflowID, args):
     w = None
     args = ast.literal_eval(args)
+    
     if function == "createWorkflow":
 
         (w, uid) = createWorkflow()
@@ -89,13 +90,22 @@ def run(function, workflowID, args):
             result = getOutput(w)
 
             return {"result":result, "workflow":w.__list__(), "taskID": tid}
+        elif function == "deleteTask":
 
-        if function == "deleteTask":
-
-            (w) = tangelo.plugin.workflow.deleteTask(args[0], workflowID, tangelo.store()[workflowID])
+            w = tangelo.plugin.workflow.deleteTask(args[0], workflowID, tangelo.store()[workflowID])
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
             result = getOutput(w)
 
             return {"result":result, "workflow":w.__list__()}
+        elif function == "updateTask":
+            
+            w = tangelo.plugin.workflow.deserializeChangeTaskLinks(tangelo.store()[workflowID], args[0], args[1])
+            tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
+            result = getOutput(w)
+
+            return {"result":result, "workflow":w.__list__()}
+        else:
+            return {"Error": "Error - Could Not Update Workflow"}
+
     else:
         return {"Error": "Error - Could Not Update Workflow"}

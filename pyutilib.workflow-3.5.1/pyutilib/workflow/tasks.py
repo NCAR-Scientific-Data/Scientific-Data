@@ -40,6 +40,9 @@ class TaskPlugin(Plugin, task.Task):
     def __list__(self):
         return task.Task.__list__(self)
 
+    def UID(self):
+        return task.Task.getUID(self)
+
 
 class WorkflowPlugin(Plugin, workflow.Workflow):
 
