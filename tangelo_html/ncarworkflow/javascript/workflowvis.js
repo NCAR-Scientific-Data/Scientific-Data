@@ -539,6 +539,76 @@ function deleteTask() {
     });
 }
 
+function updateTask(links, repopulateVals) {
+    "use strict";
+    var url = "python/updateWorkflow",
+        stuffToPass = {
+            "function" : "updateTask",
+            "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([localStorage.current, JSON.stringify(links)])
+        };
+
+    var tid = localStorage.current;
+
+    delete localStorage.current;
+
+    $.getJSON(url, stuffToPass, function (results) {
+        if (results.result) {
+            $("[id^='tangelo-drawer-icon-']").trigger("click");
+            $("#analysisWrapper").empty();
+            $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
+            
+            var data = formatWorkflow(results.workflow),
+                nodes = JSON.parse(localStorage.nodes);
+
+            var n = data.nodes;
+
+            for (var i = 0; i < n.length; i += 1) {
+                var taskid = n[i].uid,
+                    name = n[i].name;
+
+                if (nodes.hasOwnProperty(taskid)) {
+                    nodes[taskid].name = name;
+                } else {
+                    nodes[taskid] = {};
+                    nodes[taskid].name = name;
+                }
+                
+            }
+
+            nodes[tid].repop = repopulateVals;
+                
+            localStorage.nodes = JSON.stringify(nodes);
+
+            $("#workflow").empty();
+
+            $("#workflow").nodelink({
+                data: data,
+                nodeCharge: tangelo.accessor({value: -10000}),
+                linkSource: tangelo.accessor({field: "source"}),
+                linkTarget: tangelo.accessor({field: "target"}),
+                nodeColor: tangelo.accessor({field: "type"}),
+                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeUID: tangelo.accessor({field: "uid"}),
+            });
+
+            var re = new RegExp("^.+[.](png|nc)$");
+            if (re.test(results.result)) {
+                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
+
+                if (download) {
+                    window.open("python/" + results.result);
+                }
+            } else {
+                alert("Results of Workflow:\n" + results.result);
+            }
+
+        } else {
+            alert(JSON.stringify(results));
+        }
+    });
+}
+
 /*
     Function: saveWorkflow
     Save a workflow to the database, along with its input repopulation values.

@@ -1,4 +1,4 @@
-/*global $, addTask*/
+/*global $, addTask, updateTask*/
 
 /*
     Title: Plot
@@ -48,6 +48,37 @@ function callPlot() {
     repopulateVals.values[nativePSelector] = true;
 
     plot(filename, timeindex, nativeP, repopulateVals);
+}
+
+function updatePlot() {
+    "use strict";
+
+    var allNodes = JSON.parse(localStorage.nodes),
+        selectedNode = $("#node option:selected").val(),
+        filename = ["Port", selectedNode, allNodes[selectedNode].output],
+        timeindex = $("#timeindex option:selected").val(),
+        nativeP = $("input[name='native']:checked").val();
+
+    var repopulateVals = {
+        "html" : "stepHTML/plot.html",
+        "values" : {
+            "#timeindex" : timeindex,
+            "#node" : selectedNode
+        }
+    };
+
+    var nativePSelector = "input[name='" + nativeP + "']";
+
+    repopulateVals.values[nativePSelector] = true;
+
+    var inputs = {
+        "filename" : filename,
+        "timeindex" : timeindex,
+        "native" : nativeP
+    };
+
+    updateTask(inputs, repopulateVals);
+
 }
 
 function generateNodeSelect() {

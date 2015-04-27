@@ -1,4 +1,4 @@
-/*global $, addTask*/
+/*global $, addTask, updateTask*/
 
 function unitConversion(filename, unit, repopulateVals ){
 	"use strict";
@@ -29,6 +29,30 @@ function callUnitConversion(){
 	};
 
 	unitConversion(filename, unit, repopulateVals);
+}
+
+function updateUnitConversion() {
+	"use strict";
+
+	var allNodes = JSON.parse(localStorage.nodes),
+	selectedNode = $("#node option:selected").val(),
+	filename = ["Port", selectedNode, allNodes[selectedNode].output],
+	unit = $("#unit option:selected").val();
+
+	var repopulateVals = {
+		"html" : "stepHTML/unitConversion.html",
+		"values" : {
+			"#unit" : unit,
+			"#node" : filename[1]
+		}
+	};
+
+	var inputs = {
+		"filename" : filename,
+		"unit" : unit
+	};
+
+	updateTask(inputs, repopulateVals);
 }
 
 function generateNodeSelect() {

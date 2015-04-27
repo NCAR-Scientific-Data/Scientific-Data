@@ -1,4 +1,4 @@
-/*global localStorage, $*/
+/*global localStorage, $, addTask, updateTask*/
 
 /*
     Title: Aggregate
@@ -22,8 +22,6 @@ function aggregate(filename, calc, interval, out, cyclic, repopulateVals) {
         "outtime" : out,
         "cyclic" : cyclic
     };
-
-    console.log(inputs)
 
     addTask("taskAggregate", inputs, repopulateVals, "result");
 }
@@ -55,6 +53,42 @@ function callAggregate() {
     repopulateVals.values[cyclicSelector] = true;
 
     aggregate(filename, calculation, interval, out, cyclic, repopulateVals);
+}
+
+function updateAggregate() {
+    "use strict";
+
+    var allNodes = JSON.parse(localStorage.nodes),
+        selectedNode = $("#node option:selected").val(),
+        filename = ["Port", selectedNode, allNodes[selectedNode].output],
+        calculation = $("#method option:selected").val(),
+        interval = $("#interval option:selected").val(),
+        out = $("#outtime option:selected").val(),
+        cyclic = $("input[name='cyclic']:checked").val();
+
+    var repopulateVals = {
+        "html" : "stepHTML/aggregate.html",
+        "values" : {
+            "#calc" : calculation,
+            "#node" : filename[1],
+            "#interval" : interval,
+            "#outtime" : out
+        }
+    };
+
+    var cyclicSelector = "input[name='" + cyclic + "']";
+
+    repopulateVals.values[cyclicSelector] = true;
+
+    var inputs = {
+        "filename" : filename,
+        "method" : calculation,
+        "interval" : interval,
+        "outtime" : out,
+        "cyclic" : cyclic
+    };
+
+    updateTask(inputs, repopulateVals);
 }
 
 function generateNodeSelect(){
