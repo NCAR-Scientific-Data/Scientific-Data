@@ -19,12 +19,16 @@
 #                output file name
 #
 ##########################################################
-daysWithinThreshold <- function(infile, outfile, field, lower, upper){
+daysWithinThreshold <- function(infile, outfile, lower, upper){
 	# Import required libraries
 	library(ncdf)
 
 	# Open the NetCDF file
 	nc = open.ncdf(infile)
+	
+	# Get main variable
+	field_att = att.get.ncdf(nc, 0, "MainVariable")
+	field = field_att$value
 
 	# Read the field data and its dimension off the NetCDF file
 	field_data = get.var.ncdf(nc, field)

@@ -17,7 +17,6 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
         self.inputs.declare('filename')
         self.inputs.declare('lower')
         self.inputs.declare('upper')
-	#self.inputs.declare('field')
         self.outputs.declare('result')
 
     def execute(self):
@@ -34,15 +33,14 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
 
         # Get path to the netcdf file
-	#infile = self.filename
-	infile = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/tmin_subset.nc"
+	infile = self.filename
+	#infile = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/tmin_subset.nc"
 
 	# Uniquely name output file by task id
         outfile = workflowDirName + str(tid) + "_threshold.nc"
         #if os.path.exists(outfile): os.system("rm " + outfile)
 	os.system("touch " + outfile)
         # Get field based on file name
-	field = "tmin" 
 
         # Check if user entered lowerlimit and upperlimit, if not
         #   Set lower to min or upper to max
@@ -52,6 +50,6 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
         upperlimit = str(up) if self.upper else "max"
 
         # Call the function that does the calculation
-        value = ro.r['daysWithinThreshold'](infile, outfile, field, lowerlimit, upperlimit)
+        value = ro.r['daysWithinThreshold'](infile, outfile, lowerlimit, upperlimit)
 
         self.result = "data/{0}/{1}_threshold.nc".format(wid,tid)
