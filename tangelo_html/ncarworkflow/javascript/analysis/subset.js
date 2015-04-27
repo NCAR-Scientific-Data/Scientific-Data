@@ -1,4 +1,4 @@
-/*global $, urlCatalog, addTask*/
+/*global $, urlCatalog, addTask, updateTask*/
 
 /*
     Title: Subset
@@ -83,14 +83,83 @@ function callSubset() {
             "#endDay" : $("#endDay option:selected").val(),
         }
         
-    }
+    };
 
-    repopulateVals["values"][rcmSelector] = true;
-    repopulateVals["values"][gcmSelector] = true;
-    repopulateVals["values"][variableSelector] = true;
+    repopulateVals.values[rcmSelector] = true;
+    repopulateVals.values[gcmSelector] = true;
+    repopulateVals.values[variableSelector] = true;
 
 
     subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm, repopulateVals);
+}
+
+function updateSubset() {
+    "use strict";
+    var simulationType = $("#simulationType option:selected").val(),
+        variable = $("input[name='variable']:checked").val(),
+        swlat = $("#swlat").val(),
+        swlon = $("#swlon").val(),
+        nelat = $("#nelat").val(),
+        nelon = $("#nelon").val(),
+        timestart = $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#startDay option:selected").val(),
+        timeend = $("#endYear option:selected").val() + "-" + $("#endMonth option:selected").val() + "-" + $("#endDay option:selected").val(),
+        rcm = $("input[name='rcm']:checked").val(),
+        gcm = $("input[name='gcm']:checked").val(),
+        variableSelector = "input[name='variable'][value='" + variable+ "']",
+        rcmSelector = "input[name='rcm'][value='" + rcm + "']",
+        gcmSelector = "input[name='gcm'][value='" + gcm + "']",
+        repopulateVals;
+
+    repopulateVals = {
+        "html" : "stepHTML/subset.html",
+        "values" : {
+            "#simulationType" : simulationType,
+            "#swlat" : swlat,
+            "#swlon" : swlon,
+            "#nelat" : nelat,
+            "#nelon" : nelon,
+            "#startYear" :  $("#startYear option:selected").val(),
+            "#startMonth" : $("#startMonth option:selected").val(),
+            "#startDay" : $("#startDay option:selected").val(),
+            "#endYear" : $("#endYear option:selected").val(),
+            "#endMonth" : $("#endMonth option:selected").val(),
+            "#endDay" : $("#endDay option:selected").val(),
+        }
+        
+    };
+
+    repopulateVals.values[rcmSelector] = true;
+    repopulateVals.values[gcmSelector] = true;
+    repopulateVals.values[variableSelector] = true;
+
+    var basicString = "http://tds.ucar.edu/thredds/dodsC/narccap.",
+        modelString = rcm + "." + gcm + simulationType + "." + variable.substring(0,6),
+        version = window.urlCatalog[modelString];
+
+        modelString += variable.substring(6);
+
+        if (version === 0) {
+            version = ".aggregation";
+        } else {
+            version = "." + String(version) + ".aggregation";
+        }
+
+
+    var url = basicString + modelString + version;
+
+    var inputs = {
+        "url" : url,
+        "variable" : variable.substring(7),
+        "swlat" : swlat,
+        "swlon" : swlon,
+        "nelat" : nelat,
+        "nelon" : nelon,
+        "startdate" : timestart,
+        "enddate" : timeend
+    };
+
+
+    updateTask(inputs, repopulateVals);
 }
 
 /*

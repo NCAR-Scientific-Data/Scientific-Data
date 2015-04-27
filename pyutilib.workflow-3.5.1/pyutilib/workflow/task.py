@@ -93,6 +93,10 @@ class Task(object):
     # Robert Crimi
     def setUID(self, uid):
         self.uid = uid
+
+    # Hannah T
+    def getUID(self):
+        return self.uid
            
     def execute(self, debug=False):
         """Execute this task."""
