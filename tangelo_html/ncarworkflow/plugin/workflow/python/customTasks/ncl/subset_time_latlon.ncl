@@ -16,9 +16,8 @@
 
 begin
 ;---Get NetCDF file
-  ;f        = addfile(filename,"r")
-  test = "../plugin/workflow/python/customTasks/ncl/tmin.CRCM.ncep.dayavg.native.nc"
-  f = addfile(test, "r")
+  ;f        = addfile(filename)
+  f = addfile("../tmin.CRCM.ncep.dayavg.native.nc", "r")
   variable = "tmin"
 
 ;---Read variable, lat, lon off the file
