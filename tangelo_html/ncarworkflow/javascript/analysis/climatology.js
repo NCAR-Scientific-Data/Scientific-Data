@@ -18,16 +18,34 @@ function callClimatology() {
     var allNodes = JSON.parse(localStorage.nodes),
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
-        startmonth = $("#startmonth").val,
-        endmonth = $("#endmonth").val,
+        startmonth = $("#startmonth").val(),
+        endmonth = $("#endmonth").val(),
 
     var repopulateVals = {
         "html" : "stepHTML/climatology.html",
         "values" : {
             "#startmonth" : startmonth,
-            "#endmonth" : endmonth
+            "#endmonth"   : endmonth,
+            "#node"       : selectedNode
         }
     };
 
     percentile(filename, startmonth, endmonth, repopulateVals);
 }
+
+function generateNodeSelect() {
+    "use strict";
+    var nodeDropDown = $("#node");
+
+    var nodes = JSON.parse(localStorage.nodes);
+
+    for(var node in nodes) {
+        if (node !== "workflowID") {
+            var n = nodes[node];
+            nodeDropDown.append($("<option></option>").val(node).html(n.name));
+        }
+    }
+
+    $("#node:first-child").prop("selected", true);
+}
+
