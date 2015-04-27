@@ -54,7 +54,7 @@ daysWithinThreshold <- function(infile, outfile, field, lower, upper){
 	#    in that time, if the value is 0, it means on that day the field is
 	#    not in the threshold, if the value is > 0, it means that day is
 	#    with in the threshold.
-	climatology <- apply(field_data, c(field_dimsize), function(x){sum(x>=lower & x <=upper)})
+	climatology <- apply(field_data, c(3), function(x){sum(x>=lower & x <=upper)})
 
 	# Subset the field, time variables and then output to a new netcdf file
 	index = which(climatology != 0)
