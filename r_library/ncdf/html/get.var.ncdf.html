@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Read data from a netCDF file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for get.var.ncdf {ncdf}"><tr><td>get.var.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Read data from a netCDF file</h2>
+
+<h3>Description</h3>
+
+<p>Reads data from an existing netCDF file.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ get.var.ncdf(nc, varid=NA, start=NA, count=NA, verbose=FALSE,
+ signedbyte=TRUE, forcevarid=NA) 
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>nc</code></td>
+<td>
+<p>An object of class <code>ncdf</code> (as returned by either 
+function <code>open.ncdf()</code>
+or function <code>create.ncdf()</code>, indicating what file to read from.</p>
+</td></tr>
+<tr valign="top"><td><code>varid</code></td>
+<td>
+<p>What variable to read the data from.  Can be a string with the name
+of the variable, an object of class <code>var.ncdf</code>, or the &quot;id&quot; field of
+a <code>var.ncdf</code> object.  If left unspecified, the function will determine if there
+is only one variable in the file and, if so, read from that.  If left unspecified
+and there are multiple variables in the file, an error is generated.
+This argument can also, optionally, specify the name of a dimension (usually the
+unlimited dimension) in order to read values from a coordinate variable.
+Note this is not usual practice, because the <code>dim.ncdf</code> object already
+contains all the dimension's values, in the field named &quot;vals&quot;.  However, it can
+sometimes be faster to turn off this automatic reading of the unlimited dimension's
+values by using <code>open.ncdf(filename, readunlim=FALSE)</code>, then read the
+dimension values in later with this function.</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+<p>A vector of indices indicating where to start reading the passed values
+(beginning at 1).  
+The length of this vector must equal the number of dimensions the variable has.
+Order is X-Y-Z-T (i.e., the time dimension is last).  If not specified, reading 
+starts at the beginning of the file (1,1,1,...).</p>
+</td></tr>
+<tr valign="top"><td><code>count</code></td>
+<td>
+<p>A vector of integers indicating the count of values to read
+along each dimension (order is X-Y-Z-T).  
+The length of this vector must equal the number of dimensions the variable has.
+If not specified and the variable does
+NOT have an unlimited dimension, the entire variable is read.  
+As a special case, the value
+&quot;-1&quot; indicates that all entries along that dimension should be read.</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>If TRUE, then progress information is printed.</p>
+</td></tr>
+<tr valign="top"><td><code>signedbyte</code></td>
+<td>
+<p>If TRUE (default), then on-disk byte variables are interpreted
+as signed.  This is in accord with the netCDF standard.  If FALSE, then
+on-disk byte variables are interpreted as unsigned.</p>
+</td></tr>
+<tr valign="top"><td><code>forcevarid</code></td>
+<td>
+<p>Internal use only.  This indicates
+that the integer value passed in this argument is the actual variable ID to
+use, and no interpretation of the 'varid' argument is done.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This routine reads data values from a variable in a netCDF file.  The file
+must already have been opened with <code><a href="open.ncdf.html">open.ncdf</a></code>.
+</p>
+<p>Returned values will be in ordinary R double precision if the netCDF 
+variable type is float or double.
+Returned values will be in R's integer storage mode if the netCDF 
+variable type is short or int.
+Returned values will be of character type if the netCDF variable is 
+of character type.
+</p>
+<p>Values of &quot;NA&quot; are supported; values in the data file that match the
+variable's missing value attribute are automatically converted to &quot;NA&quot; before
+being returned to the user.
+See <code><a href="set.missval.ncdf.html">set.missval.ncdf</a></code> for more information.
+</p>
+<p>Data in a netCDF file is conceived as being a multi-dimensional array.
+The number and length of dimensions is determined when the variable is
+created.  The 'start' and 'count' indices that this routine takes indicate
+where the writing starts along each dimension, and the count of values
+along each dimension to write.  Note that the special count value &quot;-1&quot;
+means &quot;all the values along that dimension&quot;.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="put.var.ncdf.html">put.var.ncdf</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Start with the simplest example.  If the file only has one variable in it,
+# you can read the data as easily as this:
+#
+nc &lt;- open.ncdf("salinity.nc")
+# NOTE how not specifying varid reads the "only" var in the file
+data &lt;- get.var.ncdf( nc )	
+close.ncdf(nc)
+
+# In this next example we read values from file "writevals.nc", which is created by
+# the R code in the example section for function "put.var.ncdf".  We open the
+# file with readunlim=FALSE for potentially faster access, and to illustrate
+# (below) how to read in the unlimited dimension values.
+#
+nc &lt;- open.ncdf( "writevals.nc", readunlim=FALSE )
+
+print(paste("The file has",nc$nvars,"variables"))
+
+# This illustrates how to read all the data from a variable
+v1 &lt;- nc$var[[1]]
+data1 &lt;- get.var.ncdf( nc, v1 )	# by default, reads ALL the data
+print(paste("Data for var ",v1$name,":",sep=""))
+print(data1)
+
+# This shows how the shape of the read data is preserved
+v2 &lt;- nc$var[[2]]
+data2 &lt;- get.var.ncdf( nc, v2 )
+print(paste("Var 2 has name",v2$name,"and is of shape",dim(data2),
+	". Here are the values:"))
+print(data2)
+
+# This illustrates how to read data one timestep at a time.  In this
+# example we will elaborately show how to deal with a variable whose
+# shape is completely unknown (i.e., how many dimensions, and what their
+# sizes are).  We will also, for illustration of a common case, show how
+# to read in the values of the time dimension at each timestep.
+v3      &lt;- nc$var[[3]]
+varsize &lt;- v3$varsize
+ndims   &lt;- v3$ndims
+nt      &lt;- varsize[ndims]  # Remember timelike dim is always the LAST dimension!
+for( i in 1:nt ) {
+	# Initialize start and count to read one timestep of the variable.
+	start &lt;- rep(1,ndims)	# begin with start=(1,1,1,...,1)
+	start[ndims] &lt;- i	# change to start=(1,1,1,...,i) to read timestep i
+	count &lt;- varsize	# begin w/count=(nx,ny,nz,...,nt), reads entire var
+	count[ndims] &lt;- 1	# change to count=(nx,ny,nz,...,1) to read 1 tstep
+	data3 &lt;- get.var.ncdf( nc, v3, start=start, count=count )
+
+	# Now read in the value of the timelike dimension
+	timeval &lt;- get.var.ncdf( nc, v3$dim[[ndims]]$name, start=i, count=1 )
+
+	print(paste("Data for variable",v3$name,"at timestep",i,
+		" (time value=",timeval,v3$dim[[ndims]]$units,"):"))
+	print(data3)
+	}
+
+close.ncdf(nc)
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

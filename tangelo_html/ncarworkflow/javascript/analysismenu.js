@@ -39,6 +39,18 @@ function newPercentile() {
     $("#analysisHTMLLoadSection").load("stepHTML/percentile.html");
 }
 
+function newThreshold() {
+    "use strict";
+    $("#analysisHTMLLoadSection").empty();
+    $("#analysisHTMLLoadSection").load("stepHTML/threshold.html");
+}
+
+function newClimatology() {
+    "use strict";
+    $("#analysisHTMLLoadSection").empty();
+    $("#analysisHTMLLoadSection").load("stepHTML/climatology.html");
+}
+
 function newBasicOperation() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
@@ -50,3 +62,4 @@ function newMinMax() {
     $("#analysisHTMLLoadSection").empty();
     $("#analysisHTMLLoadSection").load("stepHTML/minMax.html");
 }
+

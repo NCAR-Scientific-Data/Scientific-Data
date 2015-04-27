@@ -17,39 +17,43 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
         self.inputs.declare('filename')
         self.inputs.declare('lower')
         self.inputs.declare('upper')
+	self.inputs.declare('field')
         self.outputs.declare('result')
 
     def execute(self):
 
 	# Import the R script so we can use its function
-        scriptname = "plugin/workflow/python/customTasks/r/r_calculation_module.R"
+        scriptname = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/r/r_calculation_module.R"
         ro.r['source'](scriptname)
 
         # Check if workflow directory exists, if not create one
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.id)
+	#wid = "426"
+	#tid = "252"
 
-        workflowDirName = "/data/" + wid + "/"
+        workflowDirName = "/home/project/Scientific-Data/tangelo-html/ncarworkflow/python/data/" + wid + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
 
         # Get path to the netcdf file
         infile = "filename=\"{0}\"".format(self.filename)
-
-        # Uniquely name output file by task id
+	#infile = "tmin_subset_time_latlon.nc"
+        infilePath = "/home/project/Scientific-Data/tangelo-html/ncarworkflow/python/" + infile 
+	# Uniquely name output file by task id
         outfile = workflowDirName + tid + "_threshold.nc"
         if os.path.exists(outfile): os.system("rm " + outfile)
 
         # Get field based on file name
-        field = infile.rsplit('_')[0]
+        field = "field=\"{0}\"".format(self.field) 
 
         # Check if user entered lowerlimit and upperlimit, if not
         #   Set lower to min or upper to max
-	low = "filename=\"{0}\"".format(self.lower)
-	up = "filename=\"{0}\"".format(self.upper)
+	low = "lower=\"{0}\"".format(self.lower)
+	up = "upper=\"{0}\"".format(self.upper)
         lowerlimit = str(low) if self.lower else "min"
         upperlimit = str(up) if self.upper else "max"
 
         # Call the function that does the calculation
-        value = ro.r['daysWithinThreshold'](infile, outfile, field, lowerlimit, upperlimit)
+        value = ro.r['daysWithinThreshold'](infilePath, outfile, field, lowerlimit, upperlimit)
 
         self.result = "data/{0}/{1}_threshold.nc".format(wid,tid)

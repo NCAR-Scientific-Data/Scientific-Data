@@ -1,0 +1,73 @@
+<h1>Analyze Data</h1>
+
+<!--Calculation Form-->
+<div class="form-inline">
+
+	<!--Filename/Node-->
+	<section>
+		<div class="title">
+			<h2>Node</h2>
+			<h3>The Node this analysis pulls data from.</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<!-- Select Box -->
+			<select id="node">
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Region Section-->
+        <section>
+                <div class="title">
+                        <h2>Threshold</h2>
+                        <h3>Explanation of Threshold</h3>
+                </div>
+
+                <div class="inputs">
+                        <div class="right">
+                        <label for="field">Field</label>
+                        <input type="text" id="field"><br>
+                        </div>
+                </div>
+        </section>
+        <!--End Region Section-->
+
+	<!--Region Section-->
+	<section>
+		<div class="title">
+			<h2>Threshold</h2>
+			<h3>Explanation of Threshold</h3>
+		</div>
+
+		<div class="inputs">
+			<div class="left">
+			<label for="lower">Lower</label>
+			<input type="text" id="lower"><br>
+			</div>
+			
+			<div class="right">
+			<label for="upper">Upper</label>
+			<input type="text" id="upper"><br>
+			</div>
+		</div>
+	</section>
+	<!--End Region Section-->
+
+	<!--Submit Section-->
+	<section>
+		<!--Always have all three buttons.-->
+		<button onclick="callThreshold()">Add New Task</button>
+		<button onclick="updateYourAnalysis()">Update</button>
+		<button onclick="deleteTask()">Delete Task</button>
+	</section>
+	<!--End Section-->
+</div>
+<!--End Calculation Form-->
+
+<script type="text/javascript" src="javascript/analysis/threshold.js"></script>
+<script type="text/javascript">
+	generateNodeSelect();
+</script>

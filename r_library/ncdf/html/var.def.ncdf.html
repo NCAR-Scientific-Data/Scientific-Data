@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Define a netCDF Variable</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for var.def.ncdf {ncdf}"><tr><td>var.def.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Define a netCDF Variable</h2>
+
+<h3>Description</h3>
+
+<p>Defines a netCDF variable.  This variable initially only exists in memory.
+It is written to disk using <code>create.ncdf()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ var.def.ncdf( name, units, dim, missval, longname=name, prec="single")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>Name of the variable to be created (character string).</p>
+</td></tr>
+<tr valign="top"><td><code>units</code></td>
+<td>
+<p>The variable's units (character string).</p>
+</td></tr>
+<tr valign="top"><td><code>dim</code></td>
+<td>
+<p>The variable's dimension(s) (one or a list of &quot;dim.netcdf&quot; class objects).</p>
+</td></tr>
+<tr valign="top"><td><code>missval</code></td>
+<td>
+<p>The variable's missing value.</p>
+</td></tr>
+<tr valign="top"><td><code>longname</code></td>
+<td>
+<p>Optional longer name for the variable, which is assigned to the variables &quot;long\_name&quot; attribute. For example, a variable named &quot;TS&quot; might have the longname &quot;Surface Temperature&quot;</p>
+</td></tr>
+<tr valign="top"><td><code>prec</code></td>
+<td>
+<p>Precision of the created variable.  Valid options: 'short' 'integer' 'single' 'double' 'char'.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This routine creates a netCDF variable in memory.  The variable can then
+be passed to the routine <code>create.ncdf</code> when writing a file to disk.
+</p>
+<p>Note that this interface to the netCDF library includes that more than the
+minimum required by the netCDF standard.  I.e., the netCDF standard allows
+variables with no units or missing values.  This call requires units and 
+a missing value,
+as it is useful to ensure that all variables have units and
+missing values, and considerably easier to include them in this call than it is
+to add them later.  The units and missing value are implemented through attributes
+to the variable, named &quot;units&quot; and &quot;missing\_value&quot;, respectively.
+This is standard practice in netCDF files.
+</p>
+<p>After a variable is defined with this call, and created on disk using
+<code>create.ncdf</code>, then data values for the variable can be written
+to disk using <code>put.var.ncdf</code>.
+</p>
+<p>This function returns a <code>var.ncdf</code> object, which describes the newly-created
+variable.  However, the <code>var.ncdf</code> object is used for more than just
+creating new variables.  The function <code>open.ncdf</code> returns a <code>ncdf</code>
+object that itself contains a list of <code>var.ncdf</code> objects that describe
+the variables in an existing, on-disk netCDF file.  (Note that coordinate
+variables are NOT included in this list.  Attributes of the coordinate variables
+are kept in the <code>dim.ncdf</code> object instead.)
+</p>
+<p>The <code>var.ncdf</code> object has the following fields, which are all read-only:
+1) name, which is a character string containing the name of the variable;
+2) units, which is a character string containing the contents of the
+variable's &quot;units&quot; attribute; 3) missval, which contains the contents of the
+variable's &quot;missing\_value&quot; attribute; 4) longname, which is the 
+contents of the variable's &quot;long\_name&quot; attribute, or defaults to the name
+of the variable if there is no &quot;long\_name&quot; attribute; 5) ndims, which is the
+number of dimensions this variable has; 6) dim, which is a list of objects of
+class &quot;dim.ncdf&quot; (see <code><a href="dim.def.ncdf.html">dim.def.ncdf</a></code>), and describe this
+variable's dimensions; 7) unlim, which is TRUE if this variable has an unlimited
+dimension and FALSE otherwise; 8) varsize, which is a convenience array
+that gives the shape of the variable (in XYZT ordering).
+</p>
+<p>Note that the missval attribute does not need to be used much in R, because
+R's special value NA is fully supported.  I.e., when data is read in from an
+existing file, any values equal to the &quot;missing&quot; value are set to NA.  When
+data is written out, any NAs are set equal to the missing value.  If not
+explicitly set by the user, a default value of 1.e30 is used for the missing
+value.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>var.ncdf</code> that can later be passed to 
+<code>create.ncdf()</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="dim.def.ncdf.html">dim.def.ncdf</a></code>, <code><a href="create.ncdf.html">create.ncdf</a></code>, 
+<code><a href="put.var.ncdf.html">put.var.ncdf</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Define an integer dimension 
+dimState &lt;- dim.def.ncdf( "StateNo", "count", 1:50 )
+
+# Make an integer variable.  Note that an integer variable can have
+# a double precision dimension, or vice versa; there is no fixed
+# relationship between the precision of the dimension and that of the
+# associated variable.  We just make an integer variable here for
+# illustration purposes.
+varPop &lt;- var.def.ncdf("Pop", "count", dimState, -1, 
+		longname="Population", prec="integer")
+
+# Create a netCDF file with this variable
+ncnew &lt;- create.ncdf( "states_population.nc", varPop )
+
+# Write some values to this variable on disk.
+popAlabama &lt;- 4447100
+put.var.ncdf( ncnew, varPop, popAlabama, start=1, count=1 )
+
+# Add source info metadata to file
+att.put.ncdf( ncnew, 0, "source", "Census 2000 from census bureau web site")
+
+close.ncdf(ncnew)
+
+# Now illustrate some manipulations of the var.ncdf object
+filename &lt;- "states_population.nc"
+nc &lt;- open.ncdf(filename)
+print(paste("File",nc$filename,"contains",nc$nvars,"variables"))
+for( i in 1:nc$nvars ) {
+	v &lt;- nc$var[[i]]
+	print(paste("Here is information on variable number",i))
+	print(paste("   Name: ",v$name))
+	print(paste("   Units:",v$units))
+	print(paste("   Missing value:",v$missval))
+	print(paste("   # dimensions :",v$ndims))
+	print(paste("   Variable size:",v$varsize))
+	}
+
+# Illustrate creating variables of various types.  You will find
+# that the type of the missing_value attribute automatically follows
+# the type of the variable.
+dimt &lt;- dim.def.ncdf( "Time", "days", 1:3 ) 
+missval &lt;- -1
+varShort &lt;- var.def.ncdf( "varShort", "meters", dimt, missval, prec="short")
+varInt   &lt;- var.def.ncdf( "varInt",   "meters", dimt, missval, prec="integer")
+varFloat &lt;- var.def.ncdf( "varFloat", "meters", dimt, missval, prec="single")
+varDouble&lt;- var.def.ncdf( "varDouble","meters", dimt, missval, prec="double")
+nctypes &lt;- create.ncdf("vartypes.nc", list(varShort,varInt,varFloat,varDouble) )
+close.ncdf(nctypes)
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -23,7 +23,7 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
                 sTimeindex = "timeindex=0"
         else:
                 sTimeindex = "timeindex={0}".format(self.timeindex)
-        if self.native:
+        if self.native == "True":
                 plotScript = '../plugin/workflow/python/customTasks/ncl/plot_native.ncl'
         else:
                 plotScript = '../plugin/workflow/python/customTasks/ncl/plot.ncl'
@@ -40,10 +40,10 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
         except:
                 sysError = True
                 error = "System error, please contact site administrator."
-        if self.native:
-                result = "/data/{0}/{1}_nativeplot.png".format(wid,tid)
+        if self.native == "True":
+                result = "data/{0}/{1}_nativeplot.png".format(self.workflowID,self.uid)
         else:
-                result = "/data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
+                result = "data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
         if not sysError:
             if status:
                 if status == 2:
