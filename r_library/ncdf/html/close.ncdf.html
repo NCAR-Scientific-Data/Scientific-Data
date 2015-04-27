@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Close a netCDF File</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for close.ncdf {ncdf}"><tr><td>close.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Close a netCDF File</h2>
+
+<h3>Description</h3>
+
+<p>Closes an open netCDF file, which flushes any unwritten data to disk.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ close.ncdf( con, ... )
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>con</code></td>
+<td>
+<p>An object of class <code>ncdf</code> (as returned by either function
+<code>open.ncdf()</code> or function <code>create.ncdf()</code>, indicating what file to read from.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Other arguments passed to or from other methods.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Data in a netCDF file might be cached in memory, for better performance.
+This data is written out when the file is closed.  Therefore, always
+remember to close the file when done with it.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="sync.ncdf.html">sync.ncdf</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: nc &lt;- open.ncdf("salinity.nc")
+## Not run: data &lt;- get.var.ncdf( nc )	# Read the "only" var in the file
+## Not run: close.ncdf(nc)
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

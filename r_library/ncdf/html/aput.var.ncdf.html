@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Write data to a netCDF file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for put.var.ncdf {ncdf}"><tr><td>put.var.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Write data to a netCDF file</h2>
+
+<h3>Description</h3>
+
+<p>Writes data to an existing netCDF file.  The variable to be written to
+must already exist on disk. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ put.var.ncdf( nc, varid, vals, start=NA, count=NA, verbose=FALSE ) 
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>nc</code></td>
+<td>
+<p>An object of class <code>ncdf</code> (as returned by either function
+<code>open.ncdf()</code>
+or function <code>create.ncdf()</code>), indicating what file to write to.</p>
+</td></tr>
+<tr valign="top"><td><code>varid</code></td>
+<td>
+<p>What variable to write the data to.  Can be a string with the name
+of the variable, an object of class <code>var.ncdf</code>, or the &quot;id&quot; field of
+a <code>var.ncdf</code> object.</p>
+</td></tr>
+<tr valign="top"><td><code>vals</code></td>
+<td>
+<p>The values to be written.</p>
+</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+<p>A vector of indices indicating where to start writing the passed values
+(starting at 1).  
+The length of this vector must equal the number of dimensions the variable has.
+Order is X-Y-Z-T (i.e., the time dimension is last).  If not specified, writing 
+starts at the beginning of the file (1,1,1,...).</p>
+</td></tr>
+<tr valign="top"><td><code>count</code></td>
+<td>
+<p>A vector of integers indicating the count of values to write
+along each dimension (order is X-Y-Z-T).  
+The length of this vector must equal the number of dimensions the variable has.
+If not specified and the variable does
+NOT have an unlimited dimension, the entire variable is written.  If the variable
+has an unlimited dimension, this must be specified.  As a special case, the value
+&quot;-1&quot; indicates that all entries along that dimension should be written.</p>
+</td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+<p>If true, prints information while executing.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This routine writes data values to a variable in a netCDF file.  The file
+should have either been created with <code><a href="create.ncdf.html">create.ncdf</a></code>, or 
+opened with <code><a href="open.ncdf.html">open.ncdf</a></code> called with parameter <code>write=TRUE</code>..
+</p>
+<p>Note that the type of the values written to the file is determined when the
+variable is created; in particular, it does not matter what type you pass
+to this function to be written.  In other words, if the variable was created
+with type 'integer', passing double precision values to this routine will 
+still result in integer values being written to disk.
+</p>
+<p>Values of &quot;NA&quot; are supported; they are converted to the netCDF variable's
+missing value attribute before being written.  See <code><a href="set.missval.ncdf.html">set.missval.ncdf</a></code>
+for more information.
+</p>
+<p>Data in a netCDF file is conceived as being a multi-dimensional array.
+The number and length of dimensions is determined when the variable is
+created.  The 'start' and 'count' indices that this routine takes indicate
+where the writing starts along each dimension, and the count of values
+along each dimension to write.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="dim.def.ncdf.html">dim.def.ncdf</a></code>, <code><a href="create.ncdf.html">create.ncdf</a></code>, 
+<code><a href="get.var.ncdf.html">get.var.ncdf</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Make a few dimensions we can use
+nx &lt;- 3
+ny &lt;- 4
+nt &lt;- 5
+xvals &lt;- (1:nx)*100.
+dimX &lt;- dim.def.ncdf( "X", "meters", xvals )
+dimY &lt;- dim.def.ncdf( "Y", "meters", (1:ny)*100. )
+dimT &lt;- dim.def.ncdf( "Time", "seconds", (1:nt)/100., unlim=TRUE )
+
+# Make varables of various dimensionality, for illustration purposes
+mv &lt;- 1.e30		# missing value to use
+var1d &lt;- var.def.ncdf( "var1d", "units", dimX, mv )
+var2d &lt;- var.def.ncdf( "var2d", "units", list(dimX,dimY), mv )
+var3d &lt;- var.def.ncdf( "var3d", "units", list(dimX,dimY,dimT), mv )
+
+# Create the test file
+nc &lt;- create.ncdf( "writevals.nc", list(var1d,var2d,var3d) )
+
+# Write some data to the file
+data1d &lt;- runif(nx)
+put.var.ncdf( nc, var1d, data1d )	# no start or count: write all values
+put.var.ncdf( nc, var1d, 27.5, start=3, count=1 ) # Write a value to the third slot
+
+data2d &lt;- runif(nx*ny)
+put.var.ncdf( nc, var2d, data2d )	# no start or count: write all values
+# Write a 1-d slice to the 2d var
+put.var.ncdf( nc, var2d, data1d, start=c(1,2), count=c(nx,1) )	
+# Note how "-1" in the count means "the whole dimension length", 
+# which equals nx in this case
+put.var.ncdf( nc, var2d, data1d, start=c(1,3), count=c(-1,1) )	
+
+# The 3-d variable has an unlimited dimension.  We will loop over the timesteps,
+# writing one 2-d slice per timestep.
+for( i in 1:nt) 
+	put.var.ncdf( nc, var3d, data2d, start=c(1,1,i), count=c(-1,-1,1) )
+
+close.ncdf(nc)
+
+#----------------------------------------------------------------------
+# Illustrate creating a character type variable
+#----------------------------------------------------------------------
+cnames   &lt;- c("red", "orange", "green", "yellow", "puce", "colorwithverylongname" )
+nstrings &lt;- length(cnames)
+
+#--------------------------------------------------------------
+# Make dimensions. Setting "dimnchar" to have a length of 12
+# means that the maximum color name
+# length can be 12.  Longer names will be truncated to this.
+#--------------------------------------------------------------
+dimnchar   &lt;- dim.def.ncdf("nchar",   "", 1:12 )
+dimcolorno &lt;- dim.def.ncdf("colorno", "", 1:nstrings )
+
+varcolors  &lt;- var.def.ncdf("colors", "", list(dimnchar, dimcolorno), 
+			NA, prec="char" )
+
+ncid &lt;- create.ncdf( "colornames.nc", list(varcolors) )
+
+put.var.ncdf( ncid, "colors", cnames )
+
+close.ncdf( ncid )
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>
