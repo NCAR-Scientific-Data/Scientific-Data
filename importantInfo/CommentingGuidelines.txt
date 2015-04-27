@@ -3,12 +3,6 @@ Example Usage:
 JavaScript:
 
 /*
-    File: workflowvis.js
-    Visualizes a workflow.
-*/
-
-
-/*
     Function: getIndexMap
     Maps workflow indices to NodeLink indices.
 
@@ -26,12 +20,6 @@ JavaScript:
 */
 
 Python:
-
-#    File: TaskAggregate.py
-#    This script Aggregates data in from a given NetCDF file via a NCL script. The NCL script
-#    takes in an input file, output file, the variable on which to aggregate, the method to use (mean, min, max),
-#    the interval on which to aggregate (day, month, season, or year), and the outtime to set (the date/time of interval
-#    to set the aggregate result). The output file is then a NetCDF with the aggregate data
 
 
 #   Class: taskAggregate

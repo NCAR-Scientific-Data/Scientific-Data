@@ -1,3 +1,20 @@
+/*
+    Title: Analysis Menu Items
+
+    All of the javascript calls for loading analysis pages.
+*/
+
+/*
+    Functions: Load analysis pages.
+
+        newAggregate - Loads the Aggregate page.
+        newUnitConversion - Loads the Unit Conversion page.
+        newFilter - Loads the Filter page.
+        newPercentile - Loads the Percentile page.
+        newBasicOperation - Loads a Basic Operation page.
+        newMinMax - Loads a new Min/Max page.
+*/
+
 function newAggregate() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
