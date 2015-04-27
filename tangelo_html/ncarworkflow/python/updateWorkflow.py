@@ -34,10 +34,6 @@ def addTask(taskType, links, workflow, workflowID):
     # Return the result, list representation of the workflow, and UID of the added task
     return (workflow, task.uid)
 
-def updateTask(workflowID, taskUID, links):
-    workflow = deserialize(workflowID)
-    print(dict(workflow))
-
 def deleteTask(taskUID, workflowID):
     # Build workflow with filename workflowUID.json
     # Don't add task with UID = taskUID
@@ -94,13 +90,22 @@ def run(function, workflowID, args):
             result = getOutput(w)
 
             return {"result":result, "workflow":w.__list__(), "taskID": tid}
+        elif function == "deleteTask":
 
-        if function == "deleteTask":
-
-            (w) = tangelo.plugin.workflow.deleteTask(args[0], workflowID, tangelo.store()[workflowID])
+            w = tangelo.plugin.workflow.deleteTask(args[0], workflowID, tangelo.store()[workflowID])
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
             result = getOutput(w)
 
             return {"result":result, "workflow":w.__list__()}
+        elif function == "updateTask":
+            
+            w = tangelo.plugin.workflow.deserializeChangeTaskLinks(tangelo.store()[workflowID], args[0], args[1])
+            tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
+            result = getOutput(w)
+
+            return {"result":result, "workflow":w.__list__()}
+        else:
+            return {"Error": "Error - Could Not Update Workflow"}
+
     else:
         return {"Error": "Error - Could Not Update Workflow"}
