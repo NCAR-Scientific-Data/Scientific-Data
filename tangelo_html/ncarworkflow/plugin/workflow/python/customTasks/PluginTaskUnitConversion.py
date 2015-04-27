@@ -71,7 +71,7 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
                     else:
                         error = "NCL Error: Error with NCL script"
                     nclError = True
-            result = "/data/{0}/{1}_unitconv.nc".format(self.workflowID,self.uid)
+            result = "data/{0}/{1}_unitconv.nc".format(self.workflowID,self.uid)
             if not sysError or not nclError:
                 if not os.path.isfile(result):
                     error = "NCL Error: Please check input parameters."
