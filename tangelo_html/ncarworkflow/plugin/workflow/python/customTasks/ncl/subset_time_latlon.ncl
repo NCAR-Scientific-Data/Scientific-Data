@@ -16,7 +16,9 @@
 
 begin
 ;---Get NetCDF file
-  f        = addfile(filename,"r")
+  ;f        = addfile(filename)
+  f = addfile("../tmin.CRCM.ncep.dayavg.native.nc", "r")
+  variable = "tmin"
 
 ;---Read variable, lat, lon off the file
   if (.not. isfilevar(f, variable)) then
