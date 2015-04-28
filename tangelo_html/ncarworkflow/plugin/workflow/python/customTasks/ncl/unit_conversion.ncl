@@ -16,17 +16,21 @@ begin
     if (.not.isvar("unit")) then
         status_exit(2)
     end if
+
     if (unit.ne."degC" .and. unit.ne."degF" .and. unit.ne."degK") then
-        status_exit(5)
+            status_exit(5)
+        end if
     end if
 
     vunits = str_get_field(var@units,1," ")
     if (vunits.ne."degC" .and. vunits.ne."degF" .and. vunits.ne."degK") then
-        status_exit(5)
+        if (unit.ne."C" .and. unit.ne."F" .and. unit.ne."K") then
+            status_exit(5)
+        end if
     end if
 
     if (vunits.ne.unit) then
-        if (vunits.eq."degC") then
+        if (vunits.eq."degC" .or. vunits.eq."C") then
             if (unit.eq."degF") then
                 var = (var * (9./5.)) + 32
                 var@units = "degF"
@@ -34,7 +38,7 @@ begin
                 var = var + 273.15
                 var@units = "degK"
             end if
-        else if (vunits.eq."degF")then
+        else if (vunits.eq."degF" .or. vunits.eq."F")then
             if (unit.eq."degC") then
                 var = ((var - 32) * (5./9.))
                 var@units = "degC"
