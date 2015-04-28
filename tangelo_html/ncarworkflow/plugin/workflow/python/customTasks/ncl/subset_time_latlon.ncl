@@ -16,17 +16,22 @@
 
 begin
 ;---Get NetCDF file
-  f        = addfile(filename,"r")
+  f        = addfile(filename, "r")
 
 ;---Read variable, lat, lon off the file
   if (.not. isfilevar(f, variable)) then
     status_exit(5)
   end if
 
-  varname  = f->$variable$
   lat2d = f->lat
   lon2d = f->lon
   tbnds = f->time_bnds
+
+;---Do initial subset of data to North America in order meet server size limit for downloading data
+
+  sw = getind_latlon2d (lat2d, lon2d, 25, 245)
+  ne = getind_latlon2d (lat2d, lon2d, 46, 285)
+  varname = f->$variable$(:,sw(0,0):ne(0,0),sw(0,1):ne(0,1))
 
 ;---Convert "time" array into something we can more easily understand.
   opt      = -2

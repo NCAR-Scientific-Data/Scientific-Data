@@ -1,7 +1,10 @@
+# Title: Workflow Library
+
 import tangelo
 import pyutilib.workflow
 import json
 import unicodedata
+import ast
 from customTasks import  *
 
 from pymongo import MongoClient
@@ -102,6 +105,7 @@ def deserialize(workflowString):
 def deserializeChangeTaskLinks(workflowString, taskUID, links): 
     data = json.loads(workflowString)
 
+    links = ast.literal_eval(links)
     taskList = []
     # Create temp workflow
     q = pyutilib.workflow.Workflow()
@@ -127,8 +131,8 @@ def deserializeChangeTaskLinks(workflowString, taskUID, links):
             taskList.append((t, task["Inputs"]))
     
     for task in taskList:
-        if(task[0].UID in [taskUID]):
-            addTask(task[0]), links, q)
+        if(task[0].UID() in [taskUID]):
+            addTask(task[0], links, q)
         else:
             addTask(task[0], task[1], q)
 
@@ -149,17 +153,17 @@ def createWorkflow():
 def loadWorkflow(workflowID):
 	# open mongodb client and database
 	client = MongoClient()
-	db = client.testdb
-	collection = db.testcollection
+	db = client.database
+	collection = db.workflows
 	
-	document = collection.find_one({"_id": workflowID}).strip("u")
-	return {"repop": document['repop'], "data": document['data']}
+	document = collection.find_one({"_id": workflowID})
+	return (document['repop'], document['data'])
 	
 def saveWorkflow(workflowID, data, repop):
 	# open mongodb client and database
 	client = MongoClient()
-	db = client.testdb
-	collection = db.testcollection
+	db = client.database
+	collection = db.workflows
 	
 	return collection.update_one({"_id": workflowID}, {'$set': {'data': data, 'repop': repop}}, upsert = True)
 

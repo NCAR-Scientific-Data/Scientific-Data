@@ -16,8 +16,9 @@
 
 begin
 ;---Get NetCDF file
-  f        = addfile(filename,"r")
-
+  ;f        = addfile(filename,"r")
+  f = addfile("tmin.CRCM.ncep.dayavg.native.nc", "r")
+  variable = "tmin"
 ;---Read variable, lat, lon off the file
   if (.not. isfilevar(f, variable)) then
     status_exit(5)
@@ -82,7 +83,7 @@ begin
 
 ;---Remove file first, if it exists.
   ;Check if workflow directory exists, if not create one
-  directory = "/data/" + wid + "/"
+  directory = "/cygdrive/c/Users/Hannah/Documents/Scientific-Data/tangelo_html/demo/" + wid + "/"
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
   if (echo .eq. "notfound") then
     system("mkdir " + directory)

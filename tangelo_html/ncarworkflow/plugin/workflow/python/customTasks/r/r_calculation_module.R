@@ -19,12 +19,16 @@
 #                output file name
 #
 ##########################################################
-daysWithinThreshold <- function(infile, outfile, field, lower, upper){
+daysWithinThreshold <- function(infile, outfile, lower, upper){
 	# Import required libraries
 	library(ncdf)
 
 	# Open the NetCDF file
 	nc = open.ncdf(infile)
+	
+	# Get main variable
+	field_att = att.get.ncdf(nc, 0, "MainVariable")
+	field = field_att$value
 
 	# Read the field data and its dimension off the NetCDF file
 	field_data = get.var.ncdf(nc, field)
@@ -54,7 +58,7 @@ daysWithinThreshold <- function(infile, outfile, field, lower, upper){
 	#    in that time, if the value is 0, it means on that day the field is
 	#    not in the threshold, if the value is > 0, it means that day is
 	#    with in the threshold.
-	climatology <- apply(field_data, c(field_dimsize), function(x){sum(x>=lower & x <=upper)})
+	climatology <- apply(field_data, c(3), function(x){sum(x>=lower & x <=upper)})
 
 	# Subset the field, time variables and then output to a new netcdf file
 	index = which(climatology != 0)
@@ -68,7 +72,7 @@ daysWithinThreshold <- function(infile, outfile, field, lower, upper){
 	from = 0
 	to = n_step - 1
 	dimension = gsub(" ", "", paste("time",",",from,",",to))
-	command = paste("ncks -d ",dimension,infile,outfile)
+	command = paste("ncks -O -d ",dimension,infile,outfile)
 	system(command)
 
 	# Open the output NetCDF file and then write the subsets to a new netcdf file
