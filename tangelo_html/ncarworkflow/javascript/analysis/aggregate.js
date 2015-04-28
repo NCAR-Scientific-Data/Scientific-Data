@@ -49,7 +49,6 @@ function callAggregate() {
     };
 
     var cyclicSelector = "input[name='" + cyclic + "']";
-
     repopulateVals.values[cyclicSelector] = true;
 
     aggregate(filename, calculation, interval, out, cyclic, repopulateVals);

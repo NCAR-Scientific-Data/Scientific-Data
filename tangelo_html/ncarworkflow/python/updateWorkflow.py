@@ -2,6 +2,7 @@ import uuid
 import json
 import ast
 import tangelo
+import pyutilib.workflow
 
 #   Function: createWorkflow
 #   A function that creates a new empty workflow
