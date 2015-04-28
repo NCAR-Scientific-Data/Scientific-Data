@@ -50,33 +50,43 @@ Format: 1.52
 # --------------------------------------------------------------------------
 
 
-Group: Tasks  {
+Group: Workflow Library  {
 
-   File: taskAggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskAggregate.py)
-   File: taskDelta  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskDelta.py)
-   File: taskPlot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskPlot.py)
-   File: taskSubset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskSubset.py)
-   File: taskThreshold  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskThreshold.py)
-   File: taskUnitConversion  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskUnitConversion.py)
-   }  # Group: Tasks
+   Group: Tasks  {
 
-Group: JavaScript  {
+      File: Aggregate NCL Script  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/aggregate.ncl)
+      File: taskAggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskAggregate.py)
+      File: taskDelta  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskDelta.py)
+      File: taskPlot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskPlot.py)
+      File: taskSubset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskSubset.py)
+      File: taskThreshold  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskThreshold.py)
+      File: taskUnitConversion  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskUnitConversion.py)
+      }  # Group: Tasks
 
-   File: Create Workflow  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/workflowBuilder.js)
-   File: Load Workflow  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/loadWorkflow.js)
-   File: Mini Menu  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/minimenu.js)
-   File: Workflow Visualization  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/workflowvis.js)
+   File: Workflow Library  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/__init__.py)
+   }  # Group: Workflow Library
 
-   Group: Analysis  {
+Group: Climate Analysis Website  {
 
-      File: Analysis Menu Items  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysismenu.js)
-      File: Aggregate  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/aggregate.js)
-      File: urlCatalog  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/urlCatalog.js)
-      File: Plot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/plot.js)
-      File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/subset.js)
-      }  # Group: Analysis
+   Group: JavaScript  {
 
-   }  # Group: JavaScript
+      File: Create Workflow  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/workflowBuilder.js)
+      File: Load Workflow  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/loadWorkflow.js)
+      File: Mini Menu  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/minimenu.js)
+      File: Workflow Visualization  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/workflowvis.js)
+
+      Group: Analysis  {
+
+         File: Analysis Menu Items  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysismenu.js)
+         File: Aggregate  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/aggregate.js)
+         File: urlCatalog  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/urlCatalog.js)
+         File: Plot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/plot.js)
+         File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/subset.js)
+         }  # Group: Analysis
+
+      }  # Group: JavaScript
+
+   }  # Group: Climate Analysis Website
 
 Group: Index  {
 
