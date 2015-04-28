@@ -9,10 +9,10 @@
 
         newAggregate - Loads the Aggregate page.
         newUnitConversion - Loads the Unit Conversion page.
-        newFilter - Loads the Filter page.
+        newCalculateDelta - Loads the Calculate Delta page.
         newPercentile - Loads the Percentile page.
-        newBasicOperation - Loads a Basic Operation page.
-        newMinMax - Loads a new Min/Max page.
+        newThreshold - Loads a Threshold page.
+        newClimatology - Loads a Climatology page.
 */
 
 function newAggregate() {
@@ -39,14 +39,15 @@ function newPercentile() {
     $("#analysisHTMLLoadSection").load("stepHTML/percentile.html");
 }
 
+function newThreshold() {
+    "use strict";
+    $("#analysisHTMLLoadSection").empty();
+    $("#analysisHTMLLoadSection").load("stepHTML/threshold.html");
+}
+
 function newClimatology() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
-    $("#analysisHTMLLoadSection").load("stepHTML/basicOperation.html");
+    $("#analysisHTMLLoadSection").load("stepHTML/climatology.html");
 }
 
-function newMinMax() {
-    "use strict";
-    $("#analysisHTMLLoadSection").empty();
-    $("#analysisHTMLLoadSection").load("stepHTML/minMax.html");
-}

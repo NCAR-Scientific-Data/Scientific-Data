@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Takes a netCDF file out of define mode</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for enddef.ncdf {ncdf}"><tr><td>enddef.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Takes a netCDF file out of define mode</h2>
+
+<h3>Description</h3>
+
+<p>Changes a netCDF that is currently in define mode back into data mode.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ enddef.ncdf( nc )
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>nc</code></td>
+<td>
+<p>An object of class <code>ncdf</code> (as returned by either 
+function <code>open.ncdf()</code>
+or function <code>create.ncdf()</code>, indicating what file to read from.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>NetCDF files can be in &quot;define mode&quot;, at which time dimensions and variables can be
+defined, or new attributes added to a file, or in &quot;data mode&quot;, at which time data
+can be read from the file.
+This call puts a file that is currently in define mode back into data mode.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The typical user will never need this call, nor will ever have to worry about
+&quot;define mode&quot; or &quot;data mode&quot;.  THIS CALL IS PROVIDED FOR ADVANCED USERS ONLY!
+If the user goes through this package's standard functional interface,
+the file will always automatically be set to whatever mode it needs to be in
+without the user having to do anything.
+In particular, the call to write an attribute (<code><a href="att.put.ncdf.html">att.put.ncdf</a></code>)
+handles this automatically.
+An example of the kind of situation where you would need this call is if you
+are adding a new variable to an already-existing netCDF file.
+This case is not really handled by this package.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="redef.ncdf.html">redef.ncdf</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# This function is for advanced useage only, and will never
+# be needed by the typical users R code.
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

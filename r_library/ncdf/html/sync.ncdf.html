@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Synchronize (flush to disk) a netCDF File</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for sync.ncdf {ncdf}"><tr><td>sync.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Synchronize (flush to disk) a netCDF File</h2>
+
+<h3>Description</h3>
+
+<p>Flushes any pending operations on a netCDF file to disk.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ sync.ncdf( nc )
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>nc</code></td>
+<td>
+<p>An object of class <code>ncdf</code> (as returned by either 
+function <code>open.ncdf()</code>
+or function <code>create.ncdf()</code>, indicating what file to read from.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Data in a netCDF file might be cached in memory, for better performance.
+An example of when this might be bad is if a long-running job writes one
+timestep of the output file at a time; if the job crashes near the end, 
+the results of many timesteps might be lost.  In such an event, the user
+can manually force any cached data to be written to disk using this call.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# The time you would use the sync.ncdf function is when you have an unlimited
+# dimension and are writing to the file timestep-by-timestep. Make a netCDF file 
+# that has an unlimited dimension for illustration.
+nx &lt;- 5
+ny &lt;- 8
+dimx &lt;- dim.def.ncdf( "X", "meters", 1:nx )
+dimy &lt;- dim.def.ncdf( "Y", "meters", 1:ny )
+dimt &lt;- dim.def.ncdf( "Time", "days since 1900-01-01", 0, unlim=TRUE )
+
+vartemp &lt;- var.def.ncdf( "Temperature", "degC", list(dimx,dimy,dimt), 1.e30 )
+nc  &lt;- create.ncdf( "temperature.nc", vartemp )
+
+nt &lt;- 10  # Imagine this is actually some very large number of timesteps
+for( i in 1:nt ) {
+	# Long, slow computation to get the data ... for illustration, we just
+	# use the following:
+	data &lt;- runif(nx*ny)
+
+	# Write the data to this timestep
+	put.var.ncdf( nc, vartemp, data, start=c(1,1,i), count=c(nx,ny,1) )
+
+	# Write the time value for this timestep as well
+	timeval &lt;- i*10
+	put.var.ncdf( nc, dimt, timeval, start=i, count=1 )
+
+	# Flush this timesteps data to the file so we dont lose it
+	# if there is a crash or other problem
+	sync.ncdf( nc )
+	}
+
+# Always remember to close the file when done!!
+close.ncdf(nc)
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>
