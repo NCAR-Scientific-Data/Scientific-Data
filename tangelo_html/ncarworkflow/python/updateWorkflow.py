@@ -3,6 +3,12 @@ import json
 import ast
 import tangelo
 
+#   Function: createWorkflow
+#   A function that creates a new empty workflow
+#
+#   Returns:
+#
+#       (w, uid) - A tuple with an empty instance of a workflow and its UID
 def createWorkflow():
     uid = uuid.uuid4()
     w = tangelo.plugin.workflow.createWorkflow()
@@ -11,6 +17,20 @@ def createWorkflow():
 
 
 # Call this function to add a new task to a workflow
+#   Function: addTask
+#   A function that adds a task of type taskType with inputs in 
+#   links to a workflow instance "workflow" with the id = workflowID
+#
+#   Parameters:
+#   
+#       taskType - Type of task to be added
+#       links - Dictionary of links and inputs for the new task
+#       workflow - Instance of the workflow to add task to
+#       workflowID - ID of the workflow to be built upon
+#
+#   Returns:
+#
+#       (workflow, task.uid) - A tuple with an instance of a workflow built from its representation and the new tasks UID
 def addTask(taskType, links, workflow, workflowID):
     # Build workflow with filename workflowID.json
     #workflow = tangelo.plugin.workflow.deserialize(tangelo.store()[workflowID])
@@ -34,10 +54,18 @@ def addTask(taskType, links, workflow, workflowID):
     # Return the result, list representation of the workflow, and UID of the added task
     return (workflow, task.uid)
 
-def updateTask(workflowID, taskUID, links):
-    workflow = deserialize(workflowID)
-    print(dict(workflow))
-
+#   Function: deleteTask
+#   A function that helps with rebuilding a workflow when deleting a task.
+#   Call this function to delete a task
+#
+#   Parameters:
+#   
+#       taskUID - UID of task to be deleted
+#       workflowID - ID of the workflow for the task to be deleted from
+#
+#   Returns:
+#
+#       workflow - An instance of a workflow built from its representation
 def deleteTask(taskUID, workflowID):
     # Build workflow with filename workflowUID.json
     # Don't add task with UID = taskUID
@@ -79,3 +107,6 @@ def run(function, workflowID, args):
             return {"result":result, "workflow":w.__list__()}
     else:
         return {"Error": "Error - Could Not Update Workflow"}
+
+
+w = pyutilib.workflow.Workflow()
