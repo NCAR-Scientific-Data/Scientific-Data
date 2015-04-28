@@ -346,7 +346,6 @@
                                 $(elementKey).prop("checked", elementValue);
                                 $(elementKey).change();
                             } else {
-                                console.log(elementKey, elementValue);
                                 $(elementKey).val(elementValue);
                                 $(elementKey).change();
                             }
