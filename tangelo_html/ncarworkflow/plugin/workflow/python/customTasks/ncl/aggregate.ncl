@@ -1,3 +1,7 @@
+; Title: Aggregate NCL Script
+; An NCL Script that takes a netcdf file and aggregates its results.
+
+
 ;;; Aggregates 3-hourly NARCCAP data to averages over daily and longer periods
 
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
