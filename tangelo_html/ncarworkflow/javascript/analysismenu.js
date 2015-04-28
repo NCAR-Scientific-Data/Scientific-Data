@@ -27,7 +27,7 @@ function newUnitConversion() {
     $("#analysisHTMLLoadSection").load("stepHTML/unitConversion.html");
 }
 
-function newFilter() {
+function newCalculateDelta() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
     $("#analysisHTMLLoadSection").load("stepHTML/filter.html");
@@ -39,7 +39,7 @@ function newPercentile() {
     $("#analysisHTMLLoadSection").load("stepHTML/percentile.html");
 }
 
-function newBasicOperation() {
+function newClimatology() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
     $("#analysisHTMLLoadSection").load("stepHTML/basicOperation.html");
