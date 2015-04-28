@@ -139,32 +139,94 @@ def deserializeChangeTaskLinks(workflowString, taskUID, links):
     return q
 
 
-# Serialize workflow into json file with UID as filename
+#   Function: serialize
+#   Takes the pyutilib workflow object as a parameter, and rebuilds it as a
+#	json-format dictionary
+#
+#   Parameters:
+#   
+#       workflow - the pyutilib workflow object to be serialized
+#
+#   Returns:
+#
+#       The workflow as a json-formatted dictionary via dumps()
 def serialize(workflow):
     #with open('/data/'+ str(workflow.workflowID) +'.json', 'w') as outfile:
     return json.dumps(workflow.__dict__())
 
+#   Function: getInstance
+#   Takes the type of task desired and returns a new instance of a task of
+#	that type
+#
+#   Parameters:
+#   
+#		taskType - a task type to be created by TaskFactory
+
+#   Returns:
+#
+#       The new task as a pyutilib Task
 def getInstance(taskType):
     return pyutilib.workflow.TaskFactory(taskType)
 
+#   Function: createWorkflow
+#   Creates a new pyutilib workflow object for populating with tasks
+#
+#   Parameters:
+#   
+#       None
+#
+#   Returns:
+#
+#       The new workflow object
 def createWorkflow():
     return pyutilib.workflow.Workflow()
 
+#   Function: loadWorkflow
+#   A function that loads a mongo client instance, opens database 'database',
+#	collection 'workflows', finds the workflow by searching for the workflowID,
+#	and returns the repopulation and json-formatted workflow data
+#
+#   Parameters:
+#   
+#       workflowID - the unique ID given to any new workflow
+#
+#   Returns:
+#
+#       document['repop'] - the repopulation data from the 'document' dictionary
+#		document['data'] - the json formatted workflow data
 def loadWorkflow(workflowID):
 	# open mongodb client and database
 	client = MongoClient()
 	db = client.database
 	collection = db.workflows
 	
+	# find the workflow
 	document = collection.find_one({"_id": workflowID})
 	return (document['repop'], document['data'])
-	
+
+#   Function: saveWorkflow
+#   A function that takes in the unique workflow ID, the json-formatted workflow data,
+#	the repopulation data, and inserts the the workflow as a new document in MongoDB
+#	if no existing document is found.
+#
+#   Parameters:
+#   
+#       workflowID - the unique ID given to any new workflow
+#		data - the json-formatted workflow data
+#		repop - the repopulation data for visualization
+#
+#   Returns:
+#
+#       function 'update_one' - will search for a workflow in the collection with
+#		the workflowID, and either update the found workflow or insert a new document
+#		with the parameters inputted.
 def saveWorkflow(workflowID, data, repop):
 	# open mongodb client and database
 	client = MongoClient()
 	db = client.database
 	collection = db.workflows
 	
+	# save the workflow (upsert = True ensures an insert if no update possible)
 	return collection.update_one({"_id": workflowID}, {'$set': {'data': data, 'repop': repop}}, upsert = True)
 
 #   Function: addTaskNewLinks
