@@ -34,7 +34,6 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
 
         # Get path to the netcdf file
 	infile = self.filename
-	#infile = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/tmin_subset.nc"
 
 	# Uniquely name output file by task id
         outfile = workflowDirName + str(tid) + "_threshold.nc"

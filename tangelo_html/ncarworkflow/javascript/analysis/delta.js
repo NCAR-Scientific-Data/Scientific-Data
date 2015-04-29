@@ -59,17 +59,21 @@ function updateDelta() {
 
 function generateNodeSelect() {
     "use strict";
-    var nodeDropDown = $("#node");
+    var nodeDropDown1 = $("#node1");
+    var nodeDropDown2 = $("#node2");
 
     var nodes = JSON.parse(localStorage.nodes);
 
     for(var node in nodes) {
         if (node !== "workflowID") {
             var n = nodes[node];
-            nodeDropDown.append($("<option></option>").val(node).html(n.name));
+            nodeDropDown1.append($("<option></option>").val(node).html(n.name));
+            nodeDropDown2.append($("<option></option>").val(node).html(n.name));
+	    console.log(node);
         }
     }
 
-    $("#node:first-child").prop("selected", true);
+    $("#node1:first-child").prop("selected", true);
+    $("#node2:first-child").prop("selected", true);
 }
 

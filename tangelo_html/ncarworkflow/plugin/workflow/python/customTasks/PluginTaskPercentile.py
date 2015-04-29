@@ -31,10 +31,9 @@ class PluginTaskPercentile(pyutilib.workflow.TaskPlugin):
         # Uniquely name output file by task id
         outfile = workflowDirName + tid + "_percentile.nc"
         if os.path.exists(outfile): os.system("rm -rf " + outfile)
-	#os.system("touch " + outfile)
+
         # Get path to the netcdf file
-        #infile = self.filename
-	infile = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/tmin_subset.nc"
+        infile = self.filename
 
 	percent = self.percentage
 
