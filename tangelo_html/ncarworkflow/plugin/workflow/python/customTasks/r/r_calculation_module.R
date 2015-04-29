@@ -19,6 +19,28 @@
 #                output file name
 #
 ##########################################################
+
+getSubByDimsize <- function(variable, dimsize, index){
+	if(dimsize == 3){
+            return(field_data[,,index])
+        } else if(dimsize == 4){
+            return(field_data[,,,index])
+        } else if(dimsize == 5){
+            return(field_data[,,,,index])
+        } else if(dimsize == 6){
+            return(field_data[,,,,,index])
+        } else if(dimsize == 7){
+            return(field_data[,,,,,,index])
+        } else if(dimsize == 8){
+            return(field_data[,,,,,,,index])
+        } else if(dimsize == 9){
+            return(field_data[,,,,,,,,index])
+        } else if(dimsize == 10){
+            return(field_data[,,,,,,,,,index])
+        }
+
+}
+
 daysWithinThreshold <- function(infile, outfile, lower, upper){
 	# Import required libraries
 	library(ncdf)
@@ -58,12 +80,12 @@ daysWithinThreshold <- function(infile, outfile, lower, upper){
 	#    in that time, if the value is 0, it means on that day the field is
 	#    not in the threshold, if the value is > 0, it means that day is
 	#    with in the threshold.
-	climatology <- apply(field_data, c(3), function(x){sum(x>=lower & x <=upper)})
+	climatology <- apply(field_data, c(field_dimsize), function(x){sum(x>=lower & x <=upper)})
 
 	# Subset the field, time variables and then output to a new netcdf file
 	index = which(climatology != 0)
 	time_sub <- time[index]
-	field_sub <- field_data[,,index]
+	field_sub <- getSubByDimsize(field_data, field_dimsize, index)
 
 	# Calculate number of days
 	n_step = length(time_sub)

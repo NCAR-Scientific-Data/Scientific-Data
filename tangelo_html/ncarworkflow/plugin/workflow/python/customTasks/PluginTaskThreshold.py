@@ -38,9 +38,7 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
 
 	# Uniquely name output file by task id
         outfile = workflowDirName + str(tid) + "_threshold.nc"
-        #if os.path.exists(outfile): os.system("rm " + outfile)
-	os.system("touch " + outfile)
-        # Get field based on file name
+        if os.path.exists(outfile): os.system("rm " + outfile)
 
         # Check if user entered lowerlimit and upperlimit, if not
         #   Set lower to min or upper to max
