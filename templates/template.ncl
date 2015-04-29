@@ -1,3 +1,5 @@
+;; Place ncl files in tangelo_html/ncarworkflow/plugin/python/customTasks/ncl
+;;
 ;; Template
 ;; A template for writing NCL analysis scripts
 ;;

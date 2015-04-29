@@ -1,3 +1,11 @@
+"""
+Put python files in tangelo_html/ncarworkflow/plugin/workflow/python/customTasks
+Note:
+Be sure to add the task to the __init__.py found in the customTasks folder.
+Otherwise, the task will not be imported.
+"""
+
+
 import subprocess
 import pyutilib.workflow
 import os
