@@ -1,7 +1,21 @@
+#    File: PluginTaskClimatology.py
+#    This script calculates average for a specific range in a year
+#    for multiple years from a given NetCDF file via a R script
+#    takes in an input file, output file, the variable on which to average.
+#    The output file is then a NetCDF with the average data
 import pyutilib.workflow
 import rpy2.robjects as ro
 import os
 
+#    Class: taskClimatology
+#    A task class that average data
+#
+#    Attributes:
+#
+#    infile - the name of the NetCDF file to average
+#    startmonth - the start month of the range
+#    endmonth - the end month of the range
+#    result - the resulting output
 class PluginTaskClimatology(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskClimatology")
