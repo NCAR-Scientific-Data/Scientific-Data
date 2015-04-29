@@ -45,6 +45,12 @@ function newThreshold() {
     $("#analysisHTMLLoadSection").load("stepHTML/threshold.html");
 }
 
+function newDelta() {
+    "use strict";
+    $("#analysisHTMLLoadSection").empty();
+    $("#analysisHTMLLoadSection").load("stepHTML/delta.html");
+}
+
 function newClimatology() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();

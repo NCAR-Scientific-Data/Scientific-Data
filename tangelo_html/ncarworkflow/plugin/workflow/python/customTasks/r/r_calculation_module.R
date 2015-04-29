@@ -1,3 +1,27 @@
+#    Title: R Calculation Module
+#    This script contains a collection of R functions for different analysis steps.
+
+getSubByDimsize <- function(variable, dimsize, index){
+	if(dimsize == 3){
+            return(field_data[,,index])
+        } else if(dimsize == 4){
+            return(field_data[,,,index])
+        } else if(dimsize == 5){
+            return(field_data[,,,,index])
+        } else if(dimsize == 6){
+            return(field_data[,,,,,index])
+        } else if(dimsize == 7){
+            return(field_data[,,,,,,index])
+        } else if(dimsize == 8){
+            return(field_data[,,,,,,,index])
+        } else if(dimsize == 9){
+            return(field_data[,,,,,,,,index])
+        } else if(dimsize == 10){
+            return(field_data[,,,,,,,,,index])
+        }
+
+}
+
 #    Class: R Calculation Module
 #    This script contains a collection of R functions for different analysis steps.
 
@@ -48,12 +72,12 @@ daysWithinThreshold <- function(infile, outfile, lower, upper){
 	#    in that time, if the value is 0, it means on that day the field is
 	#    not in the threshold, if the value is > 0, it means that day is
 	#    with in the threshold.
-	climatology <- apply(field_data, c(3), function(x){sum(x>=lower & x <=upper)})
+	climatology <- apply(field_data, c(field_dimsize), function(x){sum(x>=lower & x <=upper)})
 
 	# Subset the field, time variables and then output to a new netcdf file
 	index = which(climatology != 0)
 	time_sub <- time[index]
-	field_sub <- field_data[,,index]
+	field_sub <- getSubByDimsize(field_data, field_dimsize, index)
 
 	# Calculate number of days
 	n_step = length(time_sub)
@@ -81,18 +105,22 @@ daysWithinThreshold <- function(infile, outfile, lower, upper){
 #	 	filename1 - Name of first input file.
 #	 	filename2 - Name of second input file.
 #	 	outputFname - Name of the output file, passed by the parent python task.
-ncdfDelta <- function(filename1, filename2, outputFname, field){
+ncdfDelta <- function(infile1, infile2, outfile){
 	library(ncdf)	
 
-	nc1 = open.ncdf(filename1)
+	# Get main variable
+    field_att = att.get.ncdf(nc, 0, "MainVariable")
+    field = field_att$value
+
+	nc1 = open.ncdf(infile1)
 	field1 = get.var.ncdf(nc1, field)
 
-	nc2 = open.ncdf(filename2)
+	nc2 = open.ncdf(infile2)
 	field2 = get.var.ncdf(nc2, field)
 
 	field_delta = abs(field1 - field2)
 
-	nc3 = open.ncdf(outputFname, write=TRUE)
+	nc3 = open.ncdf(outfile, write=TRUE)
 	put.var.ncdf(nc3, field, field_delta)
 
 	close.ncdf(nc3)
@@ -100,8 +128,8 @@ ncdfDelta <- function(filename1, filename2, outputFname, field){
 	close.ncdf(nc2)
 }
 
-#    Function: ncdfDelta
-#    Calculates delta between two subsets and output to a new NetCDF file.
+#    Function: timePercentile
+#    Calculates a percentile
 #             
 #    Parameters: 
 #		
@@ -109,27 +137,34 @@ ncdfDelta <- function(filename1, filename2, outputFname, field){
 #		outfile - Name of the output file, passed by the parent python task.	
 #       field - Variable to calculate the percentile on.
 #		percentile - The percentile to calculate.
-timePercentile <- function(infile, outfile, field, percentile){
+timePercentile <- function(infile, outfile, percentile){
 	library(ncdf)	
 
 	nc = open.ncdf(infile)
 
+	# Get main variable
+        field_att = att.get.ncdf(nc, 0, "MainVariable")
+        field = field_att$value
+
+	# Get the data from variable
 	field_data = get.var.ncdf(nc, field)
+	field_dimsize = length(dim(field_data))
 	time_data = nc$dim$time$vals
 
-	percentage = percentile/100
-
+	percentage = as.numeric(percentile)/100
+	print(percentage)
 	time_sub_close = quantile(time_data, probs=c(percentage))
 	time_sub = which.min(abs(time_data - time_sub_close))+ min(time_data)
 
 	index = which(time_data == time_sub)
 
-	field_sub = field_data[,,index]
+	field_sub = getSubByDimsize(field_data, field_dimsize, index)
 
 	# Copy input file to output file
-	step = 0
-	dimension = gsub(" ", "", paste("time",",",step))
-	command = paste("ncks -d ",dimension,infile,outfile)
+	from = 0
+	to = 0
+	dimension = gsub(" ", "", paste("time",",",from,",",to))
+	command = paste("ncks -O -d ",dimension,infile,outfile)
 	system(command)
 
 	nc_out = open.ncdf(outfile, write=TRUE)
@@ -150,15 +185,18 @@ timePercentile <- function(infile, outfile, field, percentile){
 #	 	outfile - Name of the output file.
 #    	startmonth - The starting month.
 #	 	endmonth - The ending month.
-calculateClimatology <- function(infile, outfile, startmonth, endmonth, field){
+calculateClimatology <- function(infile, outfile, startmonth, endmonth){
 	
 	library(ncdf)
 
 	# Open NetCDF file
 	nc = open.ncdf(infile)
 
-	# Read the field
+	# Get main variable
+        field_att = att.get.ncdf(nc, 0, "MainVariable")
+        field = field_att$value
 	field_data = get.var.ncdf(nc,field)
+	field_dimsize = length(dim(field_data))
 
 	# Read the time variable
 	time = nc$dim$time$vals
@@ -188,7 +226,7 @@ calculateClimatology <- function(infile, outfile, startmonth, endmonth, field){
 	time_num_subset <- time_num_subset - offset
 
 	indices = which(time %in% time_num_subset)
-	field_data_sub = field_data[,,indices]
+	field_data_sub = getSubByDimsize(field_data, field_dimsize, indices)
 
 	# Calculate average over multiple years
 	year_dim_length = end_year - start_year + 1
