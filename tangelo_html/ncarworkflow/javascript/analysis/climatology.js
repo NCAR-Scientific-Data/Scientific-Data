@@ -19,7 +19,7 @@ function callClimatology() {
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
         startmonth = $("#startmonth").val(),
-        endmonth = $("#endmonth").val(),
+        endmonth = $("#endmonth").val();
 
     var repopulateVals = {
         "html" : "stepHTML/climatology.html",
@@ -30,7 +30,34 @@ function callClimatology() {
         }
     };
 
-    percentile(filename, startmonth, endmonth, repopulateVals);
+    climatology(filename, startmonth, endmonth, repopulateVals);
+}
+
+function updateClimatology() {
+    "use strict";
+
+    var allNodes = JSON.parse(localStorage.nodes),
+        selectedNode = $("#node option:selected").val(),
+        filename = ["Port", selectedNode, allNodes[selectedNode].output],
+        startmonth = $("#startmonth").val(),
+        endmonth = $("#endmonth").val();
+
+    var repopulateVals = {
+        "html" : "stepHTML/climatology.html",
+        "values" : {
+            "#startmonth" : startmonth,
+            "#endmonth" : endmonth,
+            "#node"  : selectedNode
+        }
+    };
+
+    var inputs = {
+        "filename" : filename,
+        "startmonth" : startmonth,
+        "endmonth" : endmonth
+    };
+
+    updateTask(inputs, repopulateVals);
 }
 
 function generateNodeSelect() {

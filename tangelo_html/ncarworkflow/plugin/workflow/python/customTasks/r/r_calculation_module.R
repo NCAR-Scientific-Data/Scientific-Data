@@ -197,15 +197,18 @@ timePercentile <- function(infile, outfile, percentile){
 #                field to be calculated
 #
 ##########################################################
-calculateClimatology <- function(infile, outfile, startmonth, endmonth, field){
+calculateClimatology <- function(infile, outfile, startmonth, endmonth){
 	
 	library(ncdf)
 
 	# Open NetCDF file
 	nc = open.ncdf(infile)
 
-	# Read the field
+	# Get main variable
+        field_att = att.get.ncdf(nc, 0, "MainVariable")
+        field = field_att$value
 	field_data = get.var.ncdf(nc,field)
+	field_dimsize = length(dim(field_data))
 
 	# Read the time variable
 	time = nc$dim$time$vals
@@ -235,7 +238,7 @@ calculateClimatology <- function(infile, outfile, startmonth, endmonth, field){
 	time_num_subset <- time_num_subset - offset
 
 	indices = which(time %in% time_num_subset)
-	field_data_sub = field_data[,,indices]
+	field_data_sub = getSubByDimsize(field_data, field_dimsize, indices)
 
 	# Calculate average over multiple years
 	year_dim_length = end_year - start_year + 1
