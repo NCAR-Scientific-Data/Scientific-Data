@@ -88,13 +88,13 @@ Group: Website  {
 
       File: Create Workflow  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/workflowBuilder.js)
       File: Load Workflow  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/loadWorkflow.js)
-      File: Mini Menu  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/minimenu.js)
       File: Workflow Visualization  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/workflowvis.js)
+      File: Mini Menu  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/minimenu.js)
+      File: Analysis Menu  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysismenu.js)
 
       Group: Analysis  {
 
-         File: Analysis Menu Items  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysismenu.js)
-         File: Aggregate  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/aggregate.js)
+         File: Aggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/aggregate.js)
          File: Plot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/plot.js)
          File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/subset.js)
          File: urlCatalog  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/urlCatalog.js)
@@ -104,7 +104,7 @@ Group: Website  {
 
    Group: Python  {
 
-      File: updateWorkflow.py  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/python/updateWorkflow.py)
+      File: Update Workflow  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/python/updateWorkflow.py)
       }  # Group: Python
 
    }  # Group: Website
