@@ -136,19 +136,25 @@ ncdfDelta <- function(filename1, filename2, outputFname, field){
 
 ##########################################################
 #
-#    Name:    ncdfDelta
-#    Summary: Calculates delta between two subsets and output
-#             to a new NetCDF file
+#    Name:    timePercentile 
+#    Summary: This function applies percentile to time dimension
+#             and it returns a output variable with the same structure
+#             except the time dimension reduced to 1 
+#             
 #
-#    Parameters: Name of first file name, name of second file name
-#                name of the output file, filed to be calculatedS
+#    Parameters: Input file name, output file name, percentage
 #
 ##########################################################
-timePercentile <- function(infile, outfile, field, percentile){
+timePercentile <- function(infile, outfile, percentile){
 	library(ncdf)	
 
 	nc = open.ncdf(infile)
 
+	# Get main variable
+        field_att = att.get.ncdf(nc, 0, "MainVariable")
+        field = field_att$value
+
+	# Get the data from variable
 	field_data = get.var.ncdf(nc, field)
 	time_data = nc$dim$time$vals
 
