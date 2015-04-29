@@ -115,18 +115,22 @@ daysWithinThreshold <- function(infile, outfile, lower, upper){
 #                name of the output file, filed to be calculatedS
 #
 ##########################################################
-ncdfDelta <- function(filename1, filename2, outputFname, field){
+ncdfDelta <- function(infile1, infile2, outfile){
 	library(ncdf)	
 
-	nc1 = open.ncdf(filename1)
+	# Get main variable
+        field_att = att.get.ncdf(nc, 0, "MainVariable")
+        field = field_att$value
+
+	nc1 = open.ncdf(infile1)
 	field1 = get.var.ncdf(nc1, field)
 
-	nc2 = open.ncdf(filename2)
+	nc2 = open.ncdf(infile2)
 	field2 = get.var.ncdf(nc2, field)
 
 	field_delta = abs(field1 - field2)
 
-	nc3 = open.ncdf(outputFname, write=TRUE)
+	nc3 = open.ncdf(outfile, write=TRUE)
 	put.var.ncdf(nc3, field, field_delta)
 
 	close.ncdf(nc3)

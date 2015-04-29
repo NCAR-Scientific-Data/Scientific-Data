@@ -18,12 +18,13 @@ class PluginTaskDelta(pyutilib.workflow.TaskPlugin):
 	self.outputs.declare('result')
     def execute(self):
 
-	infile1 = self.filename1
-	infile2 = self.filename2
-
+	#infile1 = self.filename1
+	#infile2 = self.filename2
+	infile1 = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/tmin_subset.nc"
+	infile2 = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/tmin_subset.nc"
     	# Check if workflow directory exists, if not create one
-    	wid = "wid=\"{0}\"".format(self.workflowID)
-    	tid = "tid=\"{0}\"".format(self.uid)
+    	wid = self.workflowID
+    	tid = self.uid
 
     	workflowDirName = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + wid + "/"
     	if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
@@ -41,9 +42,6 @@ class PluginTaskDelta(pyutilib.workflow.TaskPlugin):
     	command = "cp " + infile1 + " " + outfile
     	os.system(command)
 
-	# Get field based on file name
-        #field = infile1.rsplit('_')[0]
-
     	# Call the function that does the calculation
-    	ro.r['ncdfDelta'](infile1, infile2, outfile, field)
+    	ro.r['ncdfDelta'](infile1, infile2, outfile)
     	self.result = "/data/{0}/{1}_delta.nc".format(wid,tid)
