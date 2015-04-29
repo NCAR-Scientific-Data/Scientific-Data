@@ -1,28 +1,14 @@
-##########################################################
-#
-#    Title: calculationModule.R
-#    This scripts are a collection of R functions
-#    that does some data analysis operations
-#
-##########################################################
+#    Class: R Calculation Module
+#    This script contains a collection of R functions for different analysis steps.
 
-##########################################################
-#
 #    Function: daysWithinThreshold
-#    Calculate number of days that a specific field is 
-#	 within a specific range. Now this script only takes days 
-#    as frequency and it only works with daily data for 
-#    proof-of-concept.
+#    Calculate the number of days a field is within a specific range. As a proof-of-concept, only days is accepted as a frequency. 
 #
 #    Parameters: 
-#		infile - Subset file name
-#		outfile - output file name
-#       lower - lower limit of the threshold
-#		upper - limit of the threshold
-#
-#	 Returns:
-#	 Nothing. The output file is written.
-##########################################################
+#		infile - The name of the NetCDF file to analyze.
+#		outfile - The output file with updated data. The filename is created and passed by the parent python task.
+#       lower - The lower limit of the threshold.
+#		upper - THe upper limit of the threshold.
 daysWithinThreshold <- function(infile, outfile, lower, upper){
 	# Import required libraries
 	library(ncdf)
@@ -87,19 +73,14 @@ daysWithinThreshold <- function(infile, outfile, lower, upper){
 	close.ncdf(nc_out)
 }
 
-##########################################################
-#
 #    Function: ncdfDelta
-#    Calculates delta between two subsets and output
-#    to a new NetCDF file
-#
+#    Calculates delta between two subsets and output to a new NetCDF file.
+#   
 #    Parameters: 
 #	 
-#	 filename1 - Name of first file name
-#	 filename2 - name of second file name
-#	 outputFname - name of the output file
-#
-##########################################################
+#	 	filename1 - Name of first input file.
+#	 	filename2 - Name of second input file.
+#	 	outputFname - Name of the output file, passed by the parent python task.
 ncdfDelta <- function(filename1, filename2, outputFname, field){
 	library(ncdf)	
 
@@ -119,16 +100,15 @@ ncdfDelta <- function(filename1, filename2, outputFname, field){
 	close.ncdf(nc2)
 }
 
-##########################################################
-#
 #    Function: ncdfDelta
-#    Calculates delta between two subsets and output
-#             to a new NetCDF file
-#
-#    Parameters: Name of first file name, name of second file name
-#                name of the output file, filed to be calculatedS
-#
-##########################################################
+#    Calculates delta between two subsets and output to a new NetCDF file.
+#             
+#    Parameters: 
+#		
+#		infile - Name of input file.
+#		outfile - Name of the output file, passed by the parent python task.	
+#       field - Variable to calculate the percentile on.
+#		percentile - The percentile to calculate.
 timePercentile <- function(infile, outfile, field, percentile){
 	library(ncdf)	
 
@@ -160,20 +140,16 @@ timePercentile <- function(infile, outfile, field, percentile){
 	close.ncdf(nc)
 }
 
-##########################################################
-#
-#    Function:    calculateClimatology
+#    Function: calculateClimatology
 #    Calculates average data for a specific monthly range
-#    over either current data(1970-2000) or future data(2040-2070)
-#    and output the result to a new netCDF file
+#    over either current data (1970-2000) or future data (2040-2070)
+#    and outputs the result to a new netCDF file.
 #
 #    Parameters: 
-#	 infile - Name of the input file name
-#	 outfile - name of the output file name
-#    startmonth - Starting month
-#	 endmonth - Ending month
-#
-##########################################################
+#	 	infile - Name of the input file.
+#	 	outfile - Name of the output file.
+#    	startmonth - The starting month.
+#	 	endmonth - The ending month.
 calculateClimatology <- function(infile, outfile, startmonth, endmonth, field){
 	
 	library(ncdf)
