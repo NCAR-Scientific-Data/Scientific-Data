@@ -24,7 +24,7 @@ Timestamp: Last Updated on day month year
 # These are indexes you deleted, so Natural Docs will not add them again
 # unless you remove them from this line.
 
-Don't Index: Variables, Files
+Don't Index: Files, Variables
 
 
 # --------------------------------------------------------------------------
@@ -70,6 +70,11 @@ Group: Tangelo Workflow Plugin  {
          File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl)
          File: Unit Conversion  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/unit_conversion.ncl)
          }  # Group: Ncl
+
+      Group: R  {
+
+         File: calculationModule.R  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/r/r_calculation_module.R)
+         }  # Group: R
 
       File: PluginTaskAggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskAggregate.py)
       File: PluginTaskPlot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskPlot.py)

@@ -1,0 +1,91 @@
+Crash Message:
+
+   The version string 1.52Title: Reproducible Scientific Workflows isn't in a recognized format.
+
+Natural Docs version 1.52
+Perl version 5.18.2 on darwin
+
+Command Line:
+
+   -i ncarworkflow/javascript -i ncarworkflow/python -i ncarworkflow/plugin/workflow -o HTML ../Documentation -p ../Documentation/naturaldocs
+
+Stack Trace:
+
+   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   Encode::decode, line 176 of /System/Library/Perl/5.18/darwin-thread-multi-2level/Encode.pm, called from
+   (eval), line 100 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/LineReader.pm, called from
+   NaturalDocs::LineReader::New, line 100, called from
+   (eval), line 1411 of /Users/imaginationandtech/Git/Scientific-Data/NaturalDocs/Modules/NaturalDocs/Languages.pm, called from
+   NaturalDocs::Languages::LanguageOf, line 1410, called from
+   NaturalDocs::Project::GetAllSupportedFiles, line 1250, called from
+   NaturalDocs::Project::LoadSourceFileInfo, line 324, called from
+   (eval), line 294 of ../NaturalDocs/NaturalDocs   NaturalDocs::Error::CatchDeath, called from
+   NaturalDocs::Version::FromString, line 82, called from
+   NaturalDocs::ConfigFile::Open, line 170, called from
+   NaturalDocs::Menu::LoadMenuFile, line 685, called from
+   NaturalDocs::Menu::LoadAndUpdate, line 388, called from
+   (eval), line 334 of ../NaturalDocs/NaturalDocs
