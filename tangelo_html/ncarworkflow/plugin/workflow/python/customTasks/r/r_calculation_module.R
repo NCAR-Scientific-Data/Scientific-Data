@@ -1,23 +1,27 @@
 ##########################################################
 #
-#    Name:    calculationModule.R
-#    Summary: This scripts are a collection of R functions
-#             that does some data analysis operations
+#    Title: calculationModule.R
+#    This scripts are a collection of R functions
+#    that does some data analysis operations
 #
 ##########################################################
 
 ##########################################################
 #
-#    Name:    daysWithinThreshold
-#    Summary: Calculate number of days that
-#             a specific field is within a specific range.
-#             Now this script only takes days as frequency
-#             and it only works with daily data for proof-of-concept.
+#    Function: daysWithinThreshold
+#    Calculate number of days that a specific field is 
+#	 within a specific range. Now this script only takes days 
+#    as frequency and it only works with daily data for 
+#    proof-of-concept.
 #
-#    Parameters: Subset file name, the field needs to be calculated
-#                lower limit of the threshold, upper limit of the threshold
-#                output file name
+#    Parameters: 
+#		infile - Subset file name
+#		outfile - output file name
+#       lower - lower limit of the threshold
+#		upper - limit of the threshold
 #
+#	 Returns:
+#	 Nothing. The output file is written.
 ##########################################################
 daysWithinThreshold <- function(infile, outfile, lower, upper){
 	# Import required libraries
@@ -85,12 +89,15 @@ daysWithinThreshold <- function(infile, outfile, lower, upper){
 
 ##########################################################
 #
-#    Name:    ncdfDelta
-#    Summary: Calculates delta between two subsets and output
-#             to a new NetCDF file
+#    Function: ncdfDelta
+#    Calculates delta between two subsets and output
+#    to a new NetCDF file
 #
-#    Parameters: Name of first file name, name of second file name
-#                name of the output file, filed to be calculatedS
+#    Parameters: 
+#	 
+#	 filename1 - Name of first file name
+#	 filename2 - name of second file name
+#	 outputFname - name of the output file
 #
 ##########################################################
 ncdfDelta <- function(filename1, filename2, outputFname, field){
@@ -114,8 +121,8 @@ ncdfDelta <- function(filename1, filename2, outputFname, field){
 
 ##########################################################
 #
-#    Name:    ncdfDelta
-#    Summary: Calculates delta between two subsets and output
+#    Function: ncdfDelta
+#    Calculates delta between two subsets and output
 #             to a new NetCDF file
 #
 #    Parameters: Name of first file name, name of second file name
@@ -155,13 +162,16 @@ timePercentile <- function(infile, outfile, field, percentile){
 
 ##########################################################
 #
-#    Name:    calculateClimatology
-#    Summary: Calculates average data for a specific monthly range
-#             over either current data(1970-2000) or future data(2040-2070)
-#             and output the result to a new netCDF file
+#    Function:    calculateClimatology
+#    Calculates average data for a specific monthly range
+#    over either current data(1970-2000) or future data(2040-2070)
+#    and output the result to a new netCDF file
 #
-#    Parameters: Name of the input file name, name of the output file name
-#                field to be calculated
+#    Parameters: 
+#	 infile - Name of the input file name
+#	 outfile - name of the output file name
+#    startmonth - Starting month
+#	 endmonth - Ending month
 #
 ##########################################################
 calculateClimatology <- function(infile, outfile, startmonth, endmonth, field){
