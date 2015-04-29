@@ -3,6 +3,10 @@
 
     Notes:
     Replace "Analysis" and "analysis" with the name of your task.
+
+    After developing this script and the corresponding HTML, be sure to add this
+    analysis to the analysis menu javascript, located in tangelo_html/ncarworkflow/javascript/analysismenu.js
+
 */
 
 /*global $, addTask, updateTask*/
