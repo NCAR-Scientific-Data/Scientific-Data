@@ -2,15 +2,14 @@ import subprocess
 import pyutilib.workflow
 import os
 
-#   Class: taskUnitConversion
+#   Class: PluginTaskUnitConversion
 #   A task class that converts temperature units
 #
 #   Attributes:
 #
-#       filename - the name of the NetCDF file to convert.
-#       variable - the variable to convert.
-#       outunit - the unit to convert the output to.
-#       result - the resulting NetCDF file with new units.
+#       filename - The name of the NetCDF file to convert.
+#       outunit - The unit to convert the data to.
+#       result - The resulting NetCDF file with new units.
 class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskUnitConversion")
@@ -20,9 +19,9 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
     #
     #   Parameters:
     #
-    #       self - a reference to the object
-    #       *args - a list of arguments
-    #       **kwds - a list of keyword arguments
+    #       self - A reference to the object.
+    #       *args - A list of arguments.
+    #       **kwds - A list of keyword arguments.
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
@@ -35,7 +34,7 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
     #
     #   Parameters:
     #
-    #       self - a reference to the object.
+    #       self - A reference to the object.
     #
     #   Returns:
     #
@@ -46,7 +45,7 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
             wid = "wid=\"{0}\"".format(self.workflowID)
             tid = "tid=\"{0}\"".format(self.uid)
             
-            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sUnit, '../plugin/workflow/python/customTasks/ncl/unit_conversion.ncl']
+            args = ['ncl', '-Q', wid, tid, sFilename, sUnit, '../plugin/workflow/python/customTasks/ncl/unit_conversion.ncl']
             args = filter(None,args)
             sysError = False
             nclError = False

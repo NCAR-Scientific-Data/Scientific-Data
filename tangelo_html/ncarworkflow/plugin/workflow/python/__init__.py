@@ -90,14 +90,14 @@ def deserialize(workflowString):
     return q
 
 #   Function: deserializeChangeTaskLinks
-#   A function that builds a workflow from its json representation and sets inputs of
-#   specified task to new links
+#   A function that builds a workflow from its json representation and changes
+#   the inputs of a specified task to newly provided inputs.
 #
 #   Parameters:
 #   
 #       workflowString - The json dictionary representation of a workflow to be built
 #       taskUID - the UID of the task to be modified
-#       links - the new links for the specified task
+#       links - the new inputs for the specified task.
 #
 #   Returns:
 #
@@ -140,8 +140,7 @@ def deserializeChangeTaskLinks(workflowString, taskUID, links):
 
 
 #   Function: serialize
-#   Takes the pyutilib workflow object as a parameter, and rebuilds it as a
-#	json-format dictionary
+#   Takes a workflow object and builds it into a JSON string.
 #
 #   Parameters:
 #   
@@ -155,8 +154,8 @@ def serialize(workflow):
     return json.dumps(workflow.__dict__())
 
 #   Function: getInstance
-#   Takes the type of task desired and returns a new instance of a task of
-#	that type
+#   A wrapper function for the pyutilib.workflow.TaskFactory. Builds tasks based
+#   on task types.
 #
 #   Parameters:
 #   
@@ -184,7 +183,7 @@ def createWorkflow():
 #   Function: loadWorkflow
 #   A function that loads a mongo client instance, opens database 'database',
 #	collection 'workflows', finds the workflow by searching for the workflowID,
-#	and returns the repopulation and json-formatted workflow data
+#	and returns the repopulation data and json-formatted workflow data
 #
 #   Parameters:
 #   
@@ -192,8 +191,9 @@ def createWorkflow():
 #
 #   Returns:
 #
-#       document['repop'] - the repopulation data from the 'document' dictionary
-#		document['data'] - the json formatted workflow data
+#       (document['repop'], document['data']) - a tuple consisting of the repopulation 
+#       data from the 'document' dictionary and the json formatted workflow data, 
+#       respectively.
 def loadWorkflow(workflowID):
 	# open mongodb client and database
 	client = MongoClient()
@@ -230,8 +230,8 @@ def saveWorkflow(workflowID, data, repop):
 	return collection.update_one({"_id": workflowID}, {'$set': {'data': data, 'repop': repop}}, upsert = True)
 
 #   Function: addTaskNewLinks
-#   A function that helps with rebuilding a workflow when deleting a task.
-#   Does not set links for task with link to a deleted task
+#   A function that adds a task and sets the inputs of a task if and only if the
+#   inputs are not the deleted task.
 #
 #   Parameters:
 #   
@@ -269,8 +269,18 @@ def addTaskNewLinks(task, taskUID, links, workflow):
     workflow.add(task)
     return workflow
 
-# Build a workflow from json file with id workflowID
-# Do not add task with UID = taskUID
+#   Function: buildUpdated
+#   A function that rebuilds a workflow, only adding a task if and only if it
+#   is not the deleted task.
+#
+#   Parameters:
+#   
+#       taskUID - The UID of the task to be deleted
+#       worfklowString - The ID of the workflow to delete the task from
+#
+#   Returns:
+#
+#       q - An instance of a workflow built from its representation
 def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
     data = json.loads(workflowString)
     # Create temp workflow
@@ -291,9 +301,19 @@ def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
             addTaskNewLinks(t, taskUID, task['Inputs'], q)
     return q
 
-
+#   Function: deleteTask
+#   A function that deletes a task from a workflow.
+#
+#   Parameters:
+#   
+#       taskUID - UID of task to be deleted
+#       workflowID - ID of the workflow for the task to be deleted from
+#       workflowString - ID of the workflow for the task to be deleted from
+#
+#   Returns:
+#
+#       workflow - An instance of a workflow built from its representation
 def deleteTask(taskUID, workflowID, workflowString):
     workflow = buildUpdatedWorkflow(taskUID, workflowID, workflowString)
     workflow.setWorkflowID(workflowID)
-    serialize(workflow)
     return workflow

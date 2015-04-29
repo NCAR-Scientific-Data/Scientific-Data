@@ -1,0 +1,117 @@
+<!--
+	Place html files in tangelo_html/ncarworkflow/stepHTML
+
+	 Notes:
+	 Inputs for data from other tasks (input links) should be dropdown menus.
+	 Javascript will be used to generate the list of available input nodes,
+	 so simply make a drop down menu with a unique ID. The menu itself can be
+	 empty.
+
+	 After developing this script and the corresponding HTML, be sure to add this
+    analysis to the analysis menu, located in tangelo_html/ncarworkflow/stepHTML/analysis.html
+-->
+
+<h1>Title Here</h1>
+
+<!--Form-->
+<div class="form-inline">
+
+	<!--Section-->
+	<section>
+		<!-- Section Title -->
+		<div class="title">
+			<h2>Name of Section</h2>
+			<h3>Explanation of Section</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<!-- Select Box Example -->
+			<select id="uniqueID">
+				<option value="val1" selected>Option 1</option>
+				<option value="val2">Option 2</option>
+				<option value="val3">Option 3</option>
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Section-->
+	<section>
+		<!--Section Title-->
+		<div class="title">
+			<h2>Name of Section</h2>
+			<h3>Explanation of Section</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<!--2-Column Example. Use class "left" for left column and class "right" for right column. -->
+			<div class="left">
+				<!-- Radio Button example. Use "radioButton" class as span on both the button and the label.-->
+				<span class="radioButton"><input type="radio" name="variable" id="sic" value="table1.sic" checked><label for="sic">Daily Average Sea Ice Fraction</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="spdmax" value="table1.spdmax"><label for="spdmax">Maximum Daily 10-Meter Wind Speed</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="tasmax" value="table1.tasmax"><label for="tasmax">Maximum Daily Surface Air Temperature</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="tasmin" value="table1.tasmin"><label for="tasmin">Minimum Daily Surface Air Temperature</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="huss" value="table2.huss"><label for="huss">Surface Specific Humidity</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="pr" value="table2.pr"><label for="pr">Precipitation</label></span><br>
+			</div>
+			<div class="right">
+				<span class="radioButton"><input type="radio" name="variable" id="ps" value="table2.ps"><label for="ps">Surface Pressure</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="rsds" value="table2.rsds"><label for="rsds">Surface Downwelling Shortwave Radiation</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="tas" value="table2.tas"><label for="tas">Surface Air Temperature</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="uas" value="table2.uas"><label for="uas">Zonal Surface Wind Speed</label></span><br>
+				<span class="radioButton"><input type="radio" name="variable" id="vas" value="table2.vas"><label for="vas">Meridional Surface Wind Speed</label></span><br>
+			</div>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Section-->
+	<section>
+		<!-- Section Title -->
+		<div class="title">
+			<h2>Section Title</h2>
+			<h3>Explanation of Section</h3>
+		</div>
+
+		<!-- Section Inputs-->
+		<div class="inputs">
+			<!--Another 2-Column Example-->
+			<div class="left">
+				<!-- Text Box Example. Place labels directly next to their boxes.-->
+				<label>Southwest Corner</label>
+				<label for="swlat">Latitude</label>
+				<input type="text" id="swlat"><br>
+				<label for="swlon">Longitude</label>
+				<input type="text" id="swlon"><br>
+			</div>
+			
+			<div class="right">
+				<label>Northeast Corner</label><br>
+				<label for="nelat">Latitude</label>
+				<input type="text" id="nelat"><br>
+				<label for="nelon">Longitude</label>
+				<input type="text" id="nelon"><br>
+			</div>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Submit Section-->
+	<section>
+		<!--Always have all three of these buttons. replatce "Analysis" with your
+			task name.-->
+		<button onclick="callAnalysis()">Add New Task</button>
+		<button onclick="updateAnalysis()">Update Task</button>
+		<button onclick="deleteTask()">Delete Task</button>
+	</section>
+	<!-- End Section -->
+</div>
+<!--End Subset Form-->
+
+<script type="text/javascript" src="javascript/analysis/yourScriptHere.js"></script>
+<!-- If your form takes tasks as inputs, include this script as well -->
+<script type="text/javascript">
+generateNodeSelect()
+</script>

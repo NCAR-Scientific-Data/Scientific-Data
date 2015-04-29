@@ -1,5 +1,5 @@
 /*
-    Title: Analysis Menu Items
+    Title: Analysis Menu
 
     All of the javascript calls for loading analysis pages.
 */
@@ -43,6 +43,12 @@ function newThreshold() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
     $("#analysisHTMLLoadSection").load("stepHTML/threshold.html");
+}
+
+function newDelta() {
+    "use strict";
+    $("#analysisHTMLLoadSection").empty();
+    $("#analysisHTMLLoadSection").load("stepHTML/delta.html");
 }
 
 function newClimatology() {
