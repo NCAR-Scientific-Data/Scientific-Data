@@ -3,19 +3,42 @@ import rpy2.robjects as ro
 import os
 import tangelo
 
-#   Class: taskDelta
-#   Task that calculate the delta between two subsets
+#   Class: PluginTaskDelta
+#   A task that calculate the delta between two subsets.
+#
+#   Attributes:
+#
+#           filename1 - The name of the first NetCDF file.
+#           filename2 - The name of the second NetCDF file.
 class PluginTaskDelta(pyutilib.workflow.TaskPlugin):
     
     pyutilib.component.core.alias("taskDelta")
     alias = "taskDelta"
-
+    #   Constructor: __init__
+    #   Creates a Delta task
+    #
+    #   Parameters:
+    #
+    #       self - A reference to the object.
+    #       *args - A list of arguments.
+    #       **kwds - A list of keyword arguments.
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
         self.inputs.declare('filename1')
         self.inputs.declare('filename2')
 	self.outputs.declare('result')
+
+    #   Function: execute
+    #   Calls the R function to calculate the delta of the two files.
+    #
+    #   Parameters:
+    #
+    #       self - A reference to the object.
+    #
+    #   Returns:
+    #
+    #       The path of the resulting file containing the delta values.
     def execute(self):
 
 	infile1 = self.filename1
