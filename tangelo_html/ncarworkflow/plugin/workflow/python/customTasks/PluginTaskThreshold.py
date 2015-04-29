@@ -48,6 +48,6 @@ class PluginTaskThreshold(pyutilib.workflow.TaskPlugin):
         upperlimit = str(up) if self.upper else "max"
 
         # Call the function that does the calculation
-        value = ro.r['daysWithinThreshold'](infile, outfile, lowerlimit, upperlimit)
+        ro.r['daysWithinThreshold'](infile, outfile, lowerlimit, upperlimit)
 
         self.result = "data/{0}/{1}_threshold.nc".format(wid,tid)
