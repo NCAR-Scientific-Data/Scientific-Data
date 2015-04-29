@@ -49,8 +49,8 @@ begin
 ;
 ;       varname - the main variable subsetted to the US
 
-  sw = getind_latlon2d (lat2d, lon2d, 25, 245)
-  ne = getind_latlon2d (lat2d, lon2d, 46, 285)
+  sw = getind_latlon2d (lat2d, lon2d, 24, 246)
+  ne = getind_latlon2d (lat2d, lon2d, 44, 286)
   varname = f->$variable$(:,sw(0,0):ne(0,0),sw(0,1):ne(0,1))
 
 ;---Convert "time" array into something we can more easily understand.
