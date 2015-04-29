@@ -1,3 +1,18 @@
+/*global localStorage, $, addTask*/
+
+/*
+    Title: Climatology
+    Climatology function is not implemented on the website yet
+*/
+
+/*
+    Functions: Climatology Functions
+
+    climatology - Creates the inputs to pass to the add task parameters.
+    callClimatology - Parses the form input, creates the repopulation values, and passes them to climatology.
+    generateNodeSelect - Populates the dropdown that takes in other nodes.
+*/
+
 function climatology(filename, startmonth, endmonth, repopulateVals) {
     "use strict";
 
