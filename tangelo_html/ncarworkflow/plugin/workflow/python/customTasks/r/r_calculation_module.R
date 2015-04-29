@@ -22,9 +22,6 @@ getSubByDimsize <- function(variable, dimsize, index){
 
 }
 
-#    Class: R Calculation Module
-#    This script contains a collection of R functions for different analysis steps.
-
 #    Function: daysWithinThreshold
 #    Calculate the number of days a field is within a specific range. As a proof-of-concept, only days is accepted as a frequency. 
 #
