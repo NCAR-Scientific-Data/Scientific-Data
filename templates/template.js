@@ -1,4 +1,10 @@
-//Put this file in tangelo_html/ncarworkflow/javascript/analysis
+/*
+    Place javascript files in tangelo_html/ncarworkflow/javascript/analysis
+
+    Notes:
+    Replace "Analysis" and "analysis" with the name of your task.
+*/
+
 /*global $, addTask, updateTask*/
 
 function analysis(args1, args2, args3, args4, repopulateVals) {
@@ -11,7 +17,7 @@ function analysis(args1, args2, args3, args4, repopulateVals) {
         "var4" : args4
     };
 
-    addTask("taskName", inputs, repopulateVals, "nameOfTaskOutputVariable");
+    addTask("taskAnalysis", inputs, repopulateVals, "nameOfTaskOutputVariable");
 }
 
 //Parse values from form
@@ -91,9 +97,12 @@ function updateAnalysis() {
     updateTask(inputs, repopulateVals);
 }
 
-//If your task takes another task as input
+//If your task takes another task as input, you will need to have this function.
 function generateNodeSelect() {
     "use strict";
+
+    //Note: Copy the below code for each node input you have. This code should be
+    //repeated for each unique node dropdown id.
     var nodeDropDown = $("#nodeInputID");
 
     var nodes = JSON.parse(localStorage.nodes);

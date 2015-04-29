@@ -1,4 +1,6 @@
 <!--
+	Place html files in tangelo_html/ncarworkflow/stepHTML
+
 	 Notes:
 	 Inputs for data from other tasks (input links) should be dropdown menus.
 	 Javascript will be used to generate the list of available input nodes,
@@ -95,9 +97,10 @@
 
 	<!--Submit Section-->
 	<section>
-		<!--Always have all three buttons.-->
-		<button onclick="callYourAnalysis()">Add New Task</button>
-		<button onclick="updateYourAnalysis()">Update Task</button>
+		<!--Always have all three of these buttons. replatce "Analysis" with your
+			task name.-->
+		<button onclick="callAnalysis()">Add New Task</button>
+		<button onclick="updateAnalysis()">Update Task</button>
 		<button onclick="deleteTask()">Delete Task</button>
 	</section>
 	<!-- End Section -->
@@ -105,3 +108,7 @@
 <!--End Subset Form-->
 
 <script type="text/javascript" src="javascript/analysis/yourScriptHere.js"></script>
+<!-- If your form takes tasks as inputs, include this script as well -->
+<script type="text/javascript">
+generateNodeSelect()
+</script>
