@@ -2,18 +2,17 @@ import subprocess
 import pyutilib.workflow
 import os
 
-#   Class: taskAggregate
+#   Class: PluginTaskAggregate
 #   A task class that aggregates data.
 #
 #   Attributes:
 #   
-#       filename - the name of the NetCDF file to aggregate.
-#       variable - the variable to aggregate.
-#       interval - the time interval to aggregate over.
-#       method - the method of aggregation.
-#       outtime - the outtime
-#       cyclic - whatever that means
-#       result - the resulting output.
+#       filename - The name of the NetCDF file to aggregate.
+#       interval - The time interval to aggregate over.
+#       method - The method of aggregation (Min, Max, Mean).
+#       outtime - The outtime of the aggregation values.
+#       cyclic - Whether or not to aggregate over years.
+#       result - The resulting output.
 class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskAggregate")
@@ -23,9 +22,9 @@ class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
     #
     #   Parameters:
     #
-    #       self - a reference to the object.
-    #       *args - a list of arguments
-    #       **kwds - a list of keyword arguments.
+    #       self - A reference to the object.
+    #       *args - A list of arguments.
+    #       **kwds - A list of keyword arguments.
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
@@ -41,7 +40,7 @@ class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
     #
     #   Parameters:
     #
-    #       self - a reference to the object.
+    #       self - A reference to the object.
     #
     #    Returns:
     #
@@ -61,7 +60,7 @@ class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
 
-        args = ['ncl', '-n', '-Q', wid, tid, sFilename, sInterval, sMethod, sOuttime, sCyclic, '../plugin/workflow/python/customTasks/ncl/aggregate.ncl']
+        args = ['ncl', '-Q', wid, tid, sFilename, sInterval, sMethod, sOuttime, sCyclic, '../plugin/workflow/python/customTasks/ncl/aggregate.ncl']
         args = filter(None,args)
         sysError = False
         nclError = False

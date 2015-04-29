@@ -1,3 +1,18 @@
+/*global $, addTask, updateTask*/
+
+/*
+    Title: Threshold
+*/
+
+/*
+    Functions: Threshold Functions
+
+    threshold - Creates the inputs for the addTask call.
+    callThreshold - Parses the form data and creates the repopulation values.
+    updateThreshold - A combination of threshold and callThreshold, but instead of creating a new node it updates an existing one.
+    generateNodeSelect - Generates the dropdown of nodes.
+*/
+
 function threshold(filename, lower, upper, repopulateVals) {
     "use strict";
 
@@ -6,8 +21,6 @@ function threshold(filename, lower, upper, repopulateVals) {
         "lower" : lower,
         "upper" : upper
     };
-
-    console.log(inputs)
 
     addTask("taskThreshold", inputs, repopulateVals, "result");
 }

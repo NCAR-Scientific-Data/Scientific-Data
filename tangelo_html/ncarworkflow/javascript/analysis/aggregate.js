@@ -9,6 +9,7 @@
 
     aggregate - Creates the inputs to pass to the add task parameters.
     callAggregate - Parses the form input, creates the repopulation values, and passes them to aggregate.
+    updateAggregate - Performs the same steps as callAggregate and aggregate, but updates an existing node instead of creating a new one.
     generateNodeSelect - Populates the dropdown that takes in other nodes.
 */
 
@@ -49,7 +50,6 @@ function callAggregate() {
     };
 
     var cyclicSelector = "input[name='" + cyclic + "']";
-
     repopulateVals.values[cyclicSelector] = true;
 
     aggregate(filename, calculation, interval, out, cyclic, repopulateVals);

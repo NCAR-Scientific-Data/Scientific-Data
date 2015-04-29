@@ -1,5 +1,5 @@
 /*
-    Title: Analysis Menu Items
+    Title: Analysis Menu
 
     All of the javascript calls for loading analysis pages.
 */
@@ -9,10 +9,10 @@
 
         newAggregate - Loads the Aggregate page.
         newUnitConversion - Loads the Unit Conversion page.
-        newFilter - Loads the Filter page.
+        newCalculateDelta - Loads the Calculate Delta page.
         newPercentile - Loads the Percentile page.
-        newBasicOperation - Loads a Basic Operation page.
-        newMinMax - Loads a new Min/Max page.
+        newThreshold - Loads a Threshold page.
+        newClimatology - Loads a Climatology page.
 */
 
 function newAggregate() {
@@ -27,7 +27,7 @@ function newUnitConversion() {
     $("#analysisHTMLLoadSection").load("stepHTML/unitConversion.html");
 }
 
-function newFilter() {
+function newCalculateDelta() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
     $("#analysisHTMLLoadSection").load("stepHTML/filter.html");
@@ -55,17 +55,5 @@ function newClimatology() {
     "use strict";
     $("#analysisHTMLLoadSection").empty();
     $("#analysisHTMLLoadSection").load("stepHTML/climatology.html");
-}
-
-function newBasicOperation() {
-    "use strict";
-    $("#analysisHTMLLoadSection").empty();
-    $("#analysisHTMLLoadSection").load("stepHTML/basicOperation.html");
-}
-
-function newMinMax() {
-    "use strict";
-    $("#analysisHTMLLoadSection").empty();
-    $("#analysisHTMLLoadSection").load("stepHTML/minMax.html");
 }
 

@@ -344,8 +344,10 @@
                             var elementValue = nodeInfo.values[elementKey];
                             if (elementValue === true) {
                                 $(elementKey).prop("checked", elementValue);
+                                $(elementKey).change();
                             } else {
-                                $(elementKey).attr("value", elementValue);
+                                $(elementKey).val(elementValue);
+                                $(elementKey).change();
                             }
                         }
                     }

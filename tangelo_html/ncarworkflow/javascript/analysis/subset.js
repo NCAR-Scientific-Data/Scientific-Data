@@ -1,4 +1,4 @@
-/*global $, urlCatalog, addTask, updateTask*/
+/*global $, addTask, updateTask*/
 
 /*
     Title: Subset
@@ -93,6 +93,10 @@ function callSubset() {
     subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm, repopulateVals);
 }
 
+/*
+    Function: updateSubset()
+    Performs the same steps as callSubset() and subset(), except it updates an existing node instead of creating a new node.
+*/
 function updateSubset() {
     "use strict";
     var simulationType = $("#simulationType option:selected").val(),
@@ -280,6 +284,7 @@ function changeGCM(simulationType, rcm) {
     See Also:
 
         <changeDateRange>
+        
         <changeGCM>
 */
 function changeBasedOnSim() {

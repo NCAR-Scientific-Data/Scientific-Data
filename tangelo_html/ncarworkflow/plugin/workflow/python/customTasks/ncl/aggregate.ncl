@@ -1,13 +1,27 @@
-;;; Aggregates 3-hourly NARCCAP data to averages over daily and longer periods
+; Class: Aggregate
+; A NCL script that aggregates NetCDF data by different time intervals and finding the min, max, or mean of the data.
+;
+; Attributes:
+;
+;     filename - The name of the NetCDF file of which to aggregate.
+;     interval - The time interval to aggregate over.
+;     method - The method of aggregation (Min, Max, Mean).
+;     outtime - The outtime of the aggregation values.
+;     cyclic - Whether or not to aggregate over years.
 
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/ut_string.ncl"
 
-
-;; This stuff is localized into functions so that seasons or their
-;; ordering can be redefined.  Functions could be rewritten to take an
-;; optional argument for whether you wanted monsoons, etc.  May move
-;; into a separate file at some point.
+; Function: getnames
+; Returns the interval information for seasons and months. 
+;
+; Parameters:
+;
+;     interval - The interval value.
+;
+; Returns:
+;
+;     Information for month and seasonal intervals.
 
 function getnames(interval)
 begin
@@ -21,6 +35,17 @@ begin
 end
 
 
+; Function: mon2seas
+; A function to convert months into the seasons
+;
+; Parameters:
+;
+;     month - The numeric value representing the month.
+;
+; Returns:
+;
+;     The season to which the month belongs.
+
 function mon2seas(month:numeric)
 local season
 begin
@@ -32,22 +57,9 @@ begin
   return(season)
 end
 
-
-;;  For converting times to dates
-
+; For converting times to dates
 format = "%Y-%N-%D %H:%M:%S"
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;; Command-line inputs:
-;; filename
-;; variable
-;; interval: day, month, season, or year (no default)
-;; method:  mean, min, max (defaults to mean)
-;; outtime: start, mid, end  (defaults to end)
-;; cyclic  (boolean option: average over multiple years?)
 
 if (.not. isvar("cyclic")) then
   cyclic = False
@@ -85,20 +97,23 @@ if (interval.ne."day" .and. interval.ne."month" .and. interval.ne."season" .and.
 end if
 
 if(cyclic .and. interval .eq. "year") then
-  ;; actually, this is just averaging over all time.  The only reason to
-  ;; disallow it is clarity.  If we add an "all" option, we can make
-  ;; this case synonymous with that and implement it with just a
-  ;; dim_avg_n shortcut.
   status_exit(5)
 end if
 
 if(cyclic .and. interval .eq. "day") then
-  ;; once NCL v.6.1.0 is readily available, this is actually an
-  ;; allowable option.  Use day_of_year() to convert from Y/M/D output
-  ;; of cd_calendar to julian day, and just discard day 366 in leap
-  ;; years.  (day_of_year doesn't recognize calendars before v.6.1.0)
   status_exit(5)
 end if
+
+; Function: Add File
+; Opens the file for aggregating and returns the metadata.
+;
+; Parameters:
+;
+;     filename - The filename of the NetCDF file.
+;
+; Returns:
+;
+;     The metadata of the corresponding NetCDF file.
 
 f = addfile(filename, "r")
 variable = f@MainVariable
@@ -115,8 +130,7 @@ if (.not. isfilevar(f, variable)) then
 end if
 
 
-;; get or create time@bounds as appropriate
-
+; get or create time@bounds as appropriate
 if (isatt(time,"bounds")) then
   tbname = time@bounds
   time_bnds = f->$tbname$
@@ -125,8 +139,7 @@ else
 end if
 
  
-;; Extract month & year using ut_calendar
-
+; Extract month & year using ut_calendar
 utc = ut_calendar(time, 0)
 
 year  = floattointeger(utc(:,0))
@@ -150,9 +163,18 @@ season = mon2seas(month)
 names =  getnames(interval)
 
 
-;; Construct mapping info:
-
-;; oci == output cell index array
+; Function: Construct Mapping
+; Updates the mapping information for the output file.
+;
+; Parameters:
+;
+;     dt - The dimension size of the time variable.
+;     interval - The interval used for aggregation.
+;     cyclic - Whether to aggregate over years.
+;
+; Returns:
+;
+;     oci - The cell index array.
 
 oci = new(nt,"integer")
 
@@ -169,14 +191,13 @@ if (cyclic) then
     bin = season   
   end if
 
-  ;; The -1 is because January = month 1 goes in array position time(0), etc.
+  ; The -1 is because January = month 1 goes in array position time(0), etc.
   do i = 1, nout
     oci(ind(bin .eq. i)) = i-1
   end do
 
 else
-  ;; normal (linear/non-cyclic) intervals
-  
+  ; normal (linear/non-cyclic) intervals
  if(interval .eq. "day"   ) then bin = jday   end if
  if(interval .eq. "month" ) then bin = month  end if
  if(interval .eq. "season") then bin = season end if
@@ -193,27 +214,30 @@ else
  nout = nout + 1
 end if
 
+; Function: Aggregate
+; Aggregates the data by the interval and method selected.
+;
+; Parameters:
+;
+;     variable - The variable over which to aggregate, obtained from the NetCDF file's MainVariable attribute. 
+;     method - The method of aggregation (Min, Max, Mean).
+;     cyclic - Whether or not to aggregate over the years.
+;     time_bnds - The time bounds of the data.
 
-
-;; And now for the actual averaging of data
-
-;; This is a cheap way to get metadata from a non-copied var
+; This is a cheap way to get metadata from a non-copied var
 outdata = f->$variable$(0:nout-1,:,:)
 outdata(:,:,:) = outdata@_FillValue
 odim = dimsizes(outdata)
 
 misscount = new(nout,"integer")
 stepcount = new(nout,"integer")
-cell_bnds = new((/nout,2/), "double","No_FillValue") ;; will become time_bnds; follows CF rules
-date = new (nout, "string")                          ;; plain-text version of output time coordinate
+cell_bnds = new((/nout,2/), "double","No_FillValue") ; will become time_bnds; follows CF rules
+date = new (nout, "string")                          ; plain-text version of output time coordinate
 
 
 ;; so the deletes don't error...
 map  = 0
 slab = 0 
-
-;; Note that we dodge around reading in f->$variable$ so that we
-;; don't crash in cases where it's too big to fit into memory.
 
 do i=0, nout-1
 
@@ -221,10 +245,6 @@ do i=0, nout-1
   map = ind(oci .eq. i)
 
   if(dimsizes(map) .eq. 1) then
-
-    ;; A little kludgey.  Probably ought to do something with expected
-    ;; of timesteps and a threshold for allowable %missing instead of
-    ;; simple yes-no tainting by missing value...
 
     outdata(i,:,:) = f->$variable$(map(0):map(0),:,:)
     misscount(i) = num(ismissing(outdata(i,:,:)))
@@ -270,13 +290,22 @@ do i=0, nout-1
   end if
 end do
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Function: Output Aggregation
+; Creates the output NetCDF file in the corresponding workflow and adds the appropriate metadata.
+;
+; Parameters:
+;
+;     outtime - The outtime within the interval to set the aggregate values in the output file.
+;     cyclic - Whether or not to aggregate over years.
+;     variable - The variable over which to aggregate, obtained from the NetCDF file's MainVariable attribute. 
+;     wid - The workflow id, passed from the python task.
+;     tid - The task id, passed from the python task.
+;
+; Returns:
+;
+;     An aggregate NetCDF file in the workflow folder with the name tid_aggregate.nc. The metadata of the new file contains the updated time, time_bnds, date, and date_bnds.
 
-;; Done with the actual aggregation.  From here on out, we're just
-;; generating output
-
-;; Add appropriate metadata to output variables
-
+; Add appropriate metadata to output variables
 delete(time)
 delete(time_bnds)
 
@@ -334,32 +363,31 @@ end if
 outdata@cell_methods = cmstring
 
 
-;; Create output file
-;;Check if workflow directory exists, if not create one
+; Create output file
+; Check if workflow directory exists, if not create one
 directory = "data/" + wid + "/"
 echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
 if (echo .eq. "notfound") then
   system("mkdir " + directory)
 end if
 
-;Uniquely name output file by task id
+; Uniquely name output file by task id
 filename_out = directory + tid + "_aggregate.nc"
 if(isfilepresent(filename_out)) then
   system("rm -rf " + filename_out)
 end if
 
 fout = addfile(filename_out, "c")
-filedimdef(fout,"time",-1,True)  ;; make time dimension unlimited
+filedimdef(fout,"time",-1,True)  ; make time dimension unlimited
 
-;; copy global attributes
-
+; copy global attributes
 att_names = getvaratts(f) 
 
 do i = 0,dimsizes(att_names)-1
   fout@$att_names(i)$ = f@$att_names(i)$
 end do
 fout@MainVariable = variable
-;; copy over other variables
+; copy over other variables
 
 var_names = getfilevarnames(f) ;
 
@@ -374,11 +402,10 @@ do i = 0,dimsizes(var_names)-1
   fout->$var_names(i)$ = f->$var_names(i)$
 end do
 
-;; add our data
-
+; add our data
 fout->time_bnds = time_bnds
 fout->$variable$ = outdata
 fout->time      = time
 ; For some reason, time needs to come *last* or it gets values from f instead
-delete(fout->time@_FillValue)  ;; coming from filedimdf call to make it unlimited, I think
+delete(fout->time@_FillValue)  ; coming from filedimdf call to make it unlimited, I think
 exit
