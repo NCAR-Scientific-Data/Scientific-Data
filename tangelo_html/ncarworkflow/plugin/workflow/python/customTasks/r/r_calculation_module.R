@@ -163,8 +163,8 @@ timePercentile <- function(infile, outfile, percentile){
 	field_dimsize = length(dim(field_data))
 	time_data = nc$dim$time$vals
 
-	percentage = percentile/100
-
+	percentage = as.numeric(percentile)/100
+	print(percentage)
 	time_sub_close = quantile(time_data, probs=c(percentage))
 	time_sub = which.min(abs(time_data - time_sub_close))+ min(time_data)
 
@@ -173,9 +173,10 @@ timePercentile <- function(infile, outfile, percentile){
 	field_sub = getSubByDimsize(field_data, field_dimsize, index)
 
 	# Copy input file to output file
-	step = 0
-	dimension = gsub(" ", "", paste("time",",",step))
-	command = paste("ncks -d ",dimension,infile,outfile)
+	from = 0
+	to = 0
+	dimension = gsub(" ", "", paste("time",",",from,",",to))
+	command = paste("ncks -O -d ",dimension,infile,outfile)
 	system(command)
 
 	nc_out = open.ncdf(outfile, write=TRUE)
