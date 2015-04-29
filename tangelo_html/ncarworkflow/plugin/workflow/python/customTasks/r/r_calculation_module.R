@@ -160,6 +160,7 @@ timePercentile <- function(infile, outfile, percentile){
 
 	# Get the data from variable
 	field_data = get.var.ncdf(nc, field)
+	field_dimsize = length(dim(field_data))
 	time_data = nc$dim$time$vals
 
 	percentage = percentile/100
@@ -169,7 +170,7 @@ timePercentile <- function(infile, outfile, percentile){
 
 	index = which(time_data == time_sub)
 
-	field_sub = field_data[,,index]
+	field_sub = getSubByDimsize(field_data, field_dimsize, index)
 
 	# Copy input file to output file
 	step = 0
