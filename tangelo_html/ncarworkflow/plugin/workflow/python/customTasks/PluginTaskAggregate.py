@@ -17,6 +17,7 @@ class PluginTaskAggregate(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskAggregate")
     alias = "taskAggregate"
+    
     #   Constructor: __init__
     #   Creates an Aggregation task.
     #

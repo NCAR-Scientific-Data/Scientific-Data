@@ -24,7 +24,7 @@ Timestamp: Last Updated on day month year
 # These are indexes you deleted, so Natural Docs will not add them again
 # unless you remove them from this line.
 
-Don't Index: Files, Variables
+Don't Index: Variables, Files
 
 
 # --------------------------------------------------------------------------
@@ -101,6 +101,7 @@ Group: Website  {
       Group: Analysis  {
 
          File: Aggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/aggregate.js)
+         File: Climatology  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/climatology.js)
          File: Plot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/plot.js)
          File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/subset.js)
          File: Threshold  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/threshold.js)
