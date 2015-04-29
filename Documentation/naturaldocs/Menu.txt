@@ -1,19 +1,15 @@
 Format: 1.52
 
 
-# You can add a title and sub-title to your menu like this:
-# Title: [project name]
+Title: Reproducible Scientific Workflows
+
+# You can also add a sub-title to your menu like this:
 # SubTitle: [subtitle]
 
 # You can add a footer to your documentation like this:
 # Footer: [text]
 # If you want to add a copyright notice, this would be the place to do it.
-
-# You can add a timestamp to your documentation like one of these:
-# Timestamp: Generated on month day, year
-# Timestamp: Updated mm/dd/yyyy
-# Timestamp: Last updated mon day
-#
+Timestamp: Last Updated on day month year
 #   m     - One or two digit month.  January is "1"
 #   mm    - Always two digit month.  January is "01"
 #   mon   - Short month word.  January is "Jan"
@@ -24,6 +20,11 @@ Format: 1.52
 #   yy    - Two digit year.  2006 is "06"
 #   yyyy  - Four digit year.  2006 is "2006"
 #   year  - Four digit year.  2006 is "2006"
+
+# These are indexes you deleted, so Natural Docs will not add them again
+# unless you remove them from this line.
+
+Don't Index: Variables, Files
 
 
 # --------------------------------------------------------------------------
@@ -50,23 +51,38 @@ Format: 1.52
 # --------------------------------------------------------------------------
 
 
-Group: Workflow Library  {
+Group: Index  {
+
+   Index: Everything
+   Class Index: Classes
+   Function Index: Functions
+   }  # Group: Index
+
+Group: Tangelo Workflow Plugin  {
 
    Group: Tasks  {
 
-      File: Aggregate NCL Script  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/aggregate.ncl)
-      File: taskAggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskAggregate.py)
+      Group: Ncl  {
+
+         File: Aggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/aggregate.ncl)
+         File: Plot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/plot.ncl)
+         File: Plot Native  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/plot_native.ncl)
+         File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl)
+         File: Unit Conversion  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/ncl/unit_conversion.ncl)
+         }  # Group: Ncl
+
+      File: PluginTaskAggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskAggregate.py)
+      File: PluginTaskPlot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskPlot.py)
+      File: PluginTaskSubset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskSubset.py)
+      File: PluginTaskUnitConversion  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskUnitConversion.py)
       File: taskDelta  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskDelta.py)
-      File: taskPlot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskPlot.py)
-      File: taskSubset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskSubset.py)
       File: taskThreshold  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskThreshold.py)
-      File: taskUnitConversion  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskUnitConversion.py)
       }  # Group: Tasks
 
    File: Workflow Library  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/__init__.py)
-   }  # Group: Workflow Library
+   }  # Group: Tangelo Workflow Plugin
 
-Group: Climate Analysis Website  {
+Group: Website  {
 
    Group: JavaScript  {
 
@@ -79,23 +95,19 @@ Group: Climate Analysis Website  {
 
          File: Analysis Menu Items  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysismenu.js)
          File: Aggregate  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/aggregate.js)
-         File: urlCatalog  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/urlCatalog.js)
          File: Plot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/plot.js)
          File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/subset.js)
+         File: urlCatalog  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/urlCatalog.js)
          }  # Group: Analysis
 
       }  # Group: JavaScript
 
-   }  # Group: Climate Analysis Website
+   Group: Python  {
 
-Group: Index  {
+      File: updateWorkflow.py  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/python/updateWorkflow.py)
+      }  # Group: Python
 
-   Class Index: Classes
-   Index: Everything
-   File Index: Files
-   Function Index: Functions
-   Variable Index: Variables
-   }  # Group: Index
+   }  # Group: Website
 
 
 
