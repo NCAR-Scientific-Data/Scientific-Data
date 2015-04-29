@@ -3,20 +3,20 @@ import pyutilib.workflow
 import os
 import tangelo
 
-#   Class: taskSubset
+#   Class: PluginTaskSubset
 #   A task class that subsets NetCDF data.
 #
 #   Attributes:
 #
-#       url - the OPeNDAP url for the netCDF file to subset.
-#       variable - the variable to subset.
-#       swlat - the southwest latitude coordinate of the bounding box to subset.
-#       swlon - the southwest longitude coordinate of the bounding box to subset.
-#       nelat - the northeast latitude coordinate of the bounding box to subset.
-#       nelon - the northeast longitude coordinate of the bounding box to subset.
-#       startdate - the beginning date to subset data over.
-#       enddate - the final date to subset data over.
-#       result - the output subsetted NetCDF file.
+#       url - The OPeNDAP url for the netCDF file to subset.
+#       variable - The variable to subset.
+#       swlat - The southwest latitude coordinate of the bounding box to subset.
+#       swlon - The southwest longitude coordinate of the bounding box to subset.
+#       nelat - The northeast latitude coordinate of the bounding box to subset.
+#       nelon - The northeast longitude coordinate of the bounding box to subset.
+#       startdate - The beginning date to subset data over.
+#       enddate - The final date to subset data over.
+#       result - The output subsetted NetCDF file.
 class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskSubset")
@@ -26,9 +26,9 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
     #
     #   Parameters:
     #
-    #       self - a reference to the object.
-    #       *args - a list of arguments
-    #       **kwds - a list of keyword arguments.
+    #       self - A reference to the object.
+    #       *args - A list of arguments.
+    #       **kwds - A list of keyword arguments.
     def __init__(self,*args,**kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
@@ -47,7 +47,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
     #
     #   Parameters:
     #
-    #       self - a reference to the object.
+    #       self - A reference to the object.
     #
     #    Returns:
     #
@@ -64,7 +64,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
         
-        args = ['ncl', '-n', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl']
+        args = ['ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl']
         args = filter(None,args)
         sysError = False
         nclError = False

@@ -1,13 +1,24 @@
-;----------------------------------------------------------------------
-; narccap_plot_tmin_native.ncl
+; Class: Plot Native
+; A NCL script that plots data using the data's native projection.
 ;
-;  1. Opens a NARR NetCDF file
-;  2. Reads "tmin" off the file
-;  3. Plots "tmin" for the first time step, using native map 
-;     projection defined on file.
-;----------------------------------------------------------------------
+; Attributes:
+;
+;     filename - The name of the NetCDF file to plot.
+;     timeindex - The time index of which to plot.
 
 begin
+
+; Function: Add File
+; Opens the file for plotting and returns the metadata.
+;
+; Parameters:
+;
+;     filename - The filename of the NetCDF file.
+;
+; Returns:
+;
+;     The metadata of the corresponding NetCDF file.
+
   f        = addfile(filename,"r")
   variable = f@MainVariable
 
@@ -27,6 +38,18 @@ begin
   if (nt .ge. ntime ) then
     status_exit(5)
   end if
+
+  ; Function: Natvie Plot
+  ; Plots the data using the data's native projection.
+  ;
+  ; Parameters:
+  ;
+  ;     timeindex - The timeindex of which to plot.
+  ;     wid - The workflow id, passed from the python task.
+  ;     tid - The task id, passed from the python task.
+  ; Returns:
+  ;
+  ;     The .png image of the plot.
 
   ;Check if workflow directory exists, if not create one
   directory = "data/" + wid + "/"

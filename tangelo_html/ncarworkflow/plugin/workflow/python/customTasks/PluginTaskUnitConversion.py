@@ -2,15 +2,14 @@ import subprocess
 import pyutilib.workflow
 import os
 
-#   Class: taskUnitConversion
+#   Class: PluginTaskUnitConversion
 #   A task class that converts temperature units
 #
 #   Attributes:
 #
-#       filename - the name of the NetCDF file to convert.
-#       variable - the variable to convert.
-#       outunit - the unit to convert the output to.
-#       result - the resulting NetCDF file with new units.
+#       filename - The name of the NetCDF file to convert.
+#       outunit - The unit to convert the data to.
+#       result - The resulting NetCDF file with new units.
 class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskUnitConversion")
@@ -20,15 +19,14 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
     #
     #   Parameters:
     #
-    #       self - a reference to the object
-    #       *args - a list of arguments
-    #       **kwds - a list of keyword arguments
+    #       self - A reference to the object.
+    #       *args - A list of arguments.
+    #       **kwds - A list of keyword arguments.
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
         self.inputs.declare('filename')
-        self.inputs.declare('variable')
-        self.inputs.declare('outunit')
+        self.inputs.declare('unit')
         self.outputs.declare('result')
 
     #   Function: execute
@@ -36,19 +34,18 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
     #
     #   Parameters:
     #
-    #       self - a reference to the object.
+    #       self - A reference to the object.
     #
     #   Returns:
     #
     #       The path of the resulting NetCDF file with converted units.
     def execute(self):
             sFilename = "filename=\"{0}\"".format(self.filename)
-            sVariable = "variable=\"{0}\"".format(self.variable)
-            sOutunit = "outunit=\"{0}\"".format(self.outunit)
+            sUnit = "unit=\"{0}\"".format(self.unit)
             wid = "wid=\"{0}\"".format(self.workflowID)
             tid = "tid=\"{0}\"".format(self.uid)
             
-            args = ['ncl', '-n', '-Q', wid, tid, sFilename, sVariable, sOutunit, 'ncl/unit_conversion.ncl']
+            args = ['ncl', '-Q', wid, tid, sFilename, sUnit, '../plugin/workflow/python/customTasks/ncl/unit_conversion.ncl']
             args = filter(None,args)
             sysError = False
             nclError = False
@@ -73,7 +70,7 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
                     else:
                         error = "NCL Error: Error with NCL script"
                     nclError = True
-            result = "/data/{0}/{1}_unitconv.nc".format(self.workflowID,self.uid)
+            result = "data/{0}/{1}_unitconv.nc".format(self.workflowID,self.uid)
             if not sysError or not nclError:
                 if not os.path.isfile(result):
                     error = "NCL Error: Please check input parameters."

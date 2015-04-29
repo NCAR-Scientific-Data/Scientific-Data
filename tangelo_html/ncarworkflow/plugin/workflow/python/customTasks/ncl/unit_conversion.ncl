@@ -1,9 +1,25 @@
-;Inputs
-;filename
-;variable
-;outunit
+; Class: Unit Conversion
+; A NCL script that converts the units of temperature data and outputs an updated NetCDF file.
+;
+; Attributes:
+;
+;     filename - The name of the NetCDF file to plot.
+;     outunit - The unit to convert the data to.
+
 
 begin
+
+; Function: Add File
+; Opens the file for converting and returns the metadata.
+;
+; Parameters:
+;
+;     filename - The filename of the NetCDF file.
+;
+; Returns:
+;
+;     The metadata of the corresponding NetCDF file.
+
     f = addfile(filename,"r")
     variable = f@MainVariable
 
@@ -13,29 +29,47 @@ begin
 
     var = f->$variable$
 
-    if (.not.isvar("outunit")) then
+    if (.not.isvar("unit")) then
         status_exit(2)
     end if
-    if (outunit.ne."degC" .and. outunit.ne."degF" .and. outunit.ne."degK") then
+
+    if (unit.ne."degC" .and. unit.ne."degF" .and. unit.ne."degK") then
         status_exit(5)
     end if
 
     vunits = str_get_field(var@units,1," ")
     if (vunits.ne."degC" .and. vunits.ne."degF" .and. vunits.ne."degK") then
-        status_exit(5)
+        if (vunits.ne."C" .and. vunits.ne."F" .and. vunits.ne."K") then
+		if (vunits.ne."C " .and. vunits.ne."F " .and. vunits.ne."K ") then
+            		status_exit(5)
+		end if
+        end if
     end if
 
-    if (vunits.ne.outunit) then
-        if (vunits.eq."degC") then
-            if (outunit.eq."degF") then
+; Function: Unit Conversion
+; Converts temperature data between Celcius, Fahrenheit, and Kelvin and creates an output NetCDF file in the corresponding workflow folder.
+;
+; Parameters:
+;
+;     outunit - The unit to convert the data to.
+;     wid - The workflow id, passed from the python task.
+;     tid - The task id, passed from the python task.
+;
+; Returns:
+;
+;     An updated NetCDF file in the workflow folder with the name tid_unitconv.nc. The metadata of the output file contains the new unit.
+
+    if (vunits.ne.unit) then
+        if (vunits.eq."degC" .or. vunits.eq."C" .or. vunits.eq."C ") then
+            if (unit.eq."degF") then
                 var = (var * (9./5.)) + 32
                 var@units = "degF"
             else
                 var = var + 273.15
                 var@units = "degK"
             end if
-        else if (vunits.eq."degF")then
-            if (outunit.eq."degC") then
+        else if (vunits.eq."degF" .or. vunits.eq."F" .or. vunits.eq."F ")then
+            if (unit.eq."degC") then
                 var = ((var - 32) * (5./9.))
                 var@units = "degC"
             else
@@ -43,7 +77,7 @@ begin
                 var@units = "degK"
             end if
         else
-            if (outunit.eq."degC") then
+            if (unit.eq."degC") then
                 var = var - 273.15
                 var@units = "degC"
             else

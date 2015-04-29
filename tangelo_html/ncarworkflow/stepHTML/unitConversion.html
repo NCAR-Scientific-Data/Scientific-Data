@@ -1,0 +1,55 @@
+<h1>Unit Conversion</h1>
+
+<!--Form-->
+<div class="form-inline">
+
+	<!--Filename/Node-->
+	<section>
+		<div class="title">
+			<h2>Node</h2>
+			<h3>The Node this conversion pulls data from.</h3>
+		</div>
+
+		<!--Section Input-->
+		<div class="inputs">
+			<!--Select Box -->
+			<select id="node">
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Unit Conversion-->
+	<section>
+		<!--Section Title-->
+		<div class="title">
+			<h2>Unit</h2>
+			<h3>Convert variable to unit.</h3>
+		</div>
+
+		<!-- Section Inputs-->
+		<div class="inputs">
+			<select id="unit">
+				<option value="degC">Celcius</option>
+				<option value="degK">Kelvin</option>
+				<option value="degF">Fahrenheit</option>
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Submit Section-->
+	<section>
+		<!--Always have all three buttons-->
+		<button onclick="callUnitConversion()">Add New Task</button>
+		<button onclick="updateUnitConversion()">Update</button>
+		<button onclick="deleteTask()">Delete Task</button>
+	</section>
+	<!--End Section-->
+</div>
+<!--End Calculation Form-->
+
+<script type="text/javascript" src="javascript/analysis/unitConversion.js"></script>
+<script type="text/javascript">
+	generateNodeSelect();
+</script>

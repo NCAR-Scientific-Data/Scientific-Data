@@ -2,13 +2,26 @@ import subprocess
 import pyutilib.workflow
 import os
 
-#   Class: taskPlot
-#   A task that plots.
+#   Class: PluginTaskPlot
+#   A task that plots NetCDF data.
+#
+#   Attributes:
+#
+#       filename - The name of the NetCDF file to plot.
+#       timeindex - The time index of which to plot.
+#       native - Whether to plot using a standard projection or the native projection.
 class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskPlot")
     alias = "taskPlot"
-
+    #   Constructor: __init__
+    #   Creates a Plot task
+    #
+    #   Parameters:
+    #
+    #       self - A reference to the object.
+    #       *args - A list of arguments.
+    #       **kwds - A list of keyword arguments.
     def __init__(self, *args, **kwds):
         """Constructor."""
         pyutilib.workflow.Task.__init__(self, *args, **kwds)
@@ -17,20 +30,30 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
         self.inputs.declare('native')
         self.outputs.declare('plot')
         
+    #   Function: execute
+    #   Calls the NCL script to plot the NetCDF file.
+    #
+    #   Parameters:
+    #
+    #       self - A reference to the object.
+    #
+    #   Returns:
+    #
+    #       The path of the resulting png plot image.
     def execute(self):
         sFilename = "filename=\"{0}\"".format(self.filename)
         if not self.timeindex:
                 sTimeindex = "timeindex=0"
         else:
                 sTimeindex = "timeindex={0}".format(self.timeindex)
-        if self.native:
+        if self.native == "True":
                 plotScript = '../plugin/workflow/python/customTasks/ncl/plot_native.ncl'
         else:
                 plotScript = '../plugin/workflow/python/customTasks/ncl/plot.ncl'
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
 
-        args = ['ncl', '-n','-Q', wid, tid, sFilename, sTimeindex, plotScript]
+        args = ['ncl', '-Q', wid, tid, sFilename, sTimeindex, plotScript]
         args = filter(None,args)
         sysError = False
         nclError = False
@@ -40,10 +63,10 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
         except:
                 sysError = True
                 error = "System error, please contact site administrator."
-        if self.native:
-                result = "/data/{0}/{1}_nativeplot.png".format(wid,tid)
+        if self.native == "True":
+                result = "data/{0}/{1}_nativeplot.png".format(self.workflowID,self.uid)
         else:
-                result = "/data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
+                result = "data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
         if not sysError:
             if status:
                 if status == 2:

@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Define a netCDF Dimension</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for dim.def.ncdf {ncdf}"><tr><td>dim.def.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Define a netCDF Dimension</h2>
+
+<h3>Description</h3>
+
+<p>Defines a netCDF dimension.  This dimension initially only exists in memory.
+It is added to a netCDF variable using <code>var.def.ncdf()</code>, and written to disk
+using <code>create.ncdf()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ dim.def.ncdf( name, units, vals, unlim=FALSE, create_dimvar=TRUE )
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>Name of the dimension to be created (character string).</p>
+</td></tr>
+<tr valign="top"><td><code>units</code></td>
+<td>
+<p>The dimension's units (character string; empty character string to suppress creation of the coordinate variable (dimvar)).</p>
+</td></tr>
+<tr valign="top"><td><code>vals</code></td>
+<td>
+<p>The dimension's values (vector of numeric type). If integers are passed, the associated dimensional variable will be integer type; otherwise, it will be double precision.</p>
+</td></tr>
+<tr valign="top"><td><code>unlim</code></td>
+<td>
+<p>If TRUE, this dimension is unlimited.</p>
+</td></tr>
+<tr valign="top"><td><code>create_dimvar</code></td>
+<td>
+<p>If TRUE, a dimensional variable (aka coordinate variable) will be created for this dimension.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This routine creates a netCDF dimension in memory.  The dimension can then
+be passed to the routine <code>var.def.ncdf()</code> when creating a variable.
+</p>
+<p>Note that this interface to the netCDF library by default includes that more than the
+minimum required by the netCDF standard.  I.e., the netCDF standard allows
+dimensions with no units or values.  This call encourages creating dimensions
+that have units and values,
+as it is useful to ensure that all dimensions have units and
+values, and considerably easier to include them in this call than it is
+to add them later.  The units and values are implemented through &quot;dimensional
+variables,&quot; which are variables with the same name as the dimension.  By default, these
+dimensional variables are created automatically &ndash; there is no need for the
+user to create them explicitly.  Dimensional variables are standard practice
+in netCDF files.  To suppress the creation of the dimensional variable for
+the dimension, set passed parameter create\_dimvar to FALSE.  As a
+check, if create\_dimvar is FALSE, you must ALSO pass an empty string (&rdquo;) as the unit, and the values
+must be simple integers from 1 to the length of the dimension (e.g., 1:10 to
+make a dimension of length 10).
+This empahsizes that without a dimensional variable, a netCDF file cannot
+store a dimension's units or values.
+</p>
+<p>The dimensional variable is usually created as a double precision floating
+point.  The other possibility is to pass integer values (using <code>as.integer</code>,
+for example), in which case the dimensional variable with be integer.
+</p>
+<p>The return value of this function is an object of class <code>dim.ncdf</code>, which
+describes the newly created dimension.
+The <code>dim.ncdf</code> object is used for more than just creating a new 
+dimension, however.
+When opening an existing file, function <code>open.ncdf()</code> returns a 
+<code>ncdf</code> class object, which itself has a list of <code>dim.ncdf</code> objects
+that describe all the dimensions in that existing file.
+</p>
+<p>The <code>dim.ncdf</code> object has the following fields, which are all read only:
+1) name, which is a character string containing the name of the dimension;
+2) units, which is a character string containing the units for the dimension,
+if there are any (technically speaking, this is the &quot;units&quot; attribute of the
+associated coordinate variable); 3) vals, which is a vector containing the
+dimension's values (i.e., the values of the associated coordinate variable,
+or, if there is none, an integer sequence from 1 to the length of the dimension);
+3) len, which is the length of this dimension; 4) unlim, which is a boolean
+indicating whether or not this is an unlimited dimension.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>dim.ncdf</code> that can later be passed to 
+<code>var.def.ncdf()</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>It is good practice, but not necessary, to pass the dimension's values 
+to this routine when the dimension is created.  It is also possible to 
+write them later with a call to 'put.var.ncdf', using as the dimension
+name as the 'varid' in the call.  This is useful when creating large variables
+with long unlimited dimensions; it can take a long time to write out the
+unlimited dimension's values.  In this case, it can be more efficient to
+step through the file, writing one timestep at a time, and write that 
+timestep's dimensional value at the same time.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="var.def.ncdf.html">var.def.ncdf</a></code>, <code><a href="create.ncdf.html">create.ncdf</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Define some straightforward dimensions
+x &lt;- dim.def.ncdf( "Lon", "degreesE", 0.5:359.5)
+y &lt;- dim.def.ncdf( "Lat", "degreesN", as.double(-89:89))
+t &lt;- dim.def.ncdf( "Time", "days since 1900-01-01", 1:10, unlim=TRUE)
+
+# Make a variable with those dimensions.  Note order: time is LAST
+salinity &lt;- var.def.ncdf("Salinity",    "ppt",  list(x,y,t), 1.e30 )
+
+# Create a netCDF file with this variable
+ncnew &lt;- create.ncdf( "salinity.nc", salinity )
+
+close.ncdf(ncnew)
+
+# Now, illustrate some manipulations of the dim.ncdf object.
+filename &lt;- "salinity.nc"
+nc &lt;- open.ncdf( filename )
+print(paste("File",filename,"contains",nc$ndims,"dimensions"))
+for( i in 1:nc$ndims ) {
+	print(paste("Here is information about dimension number",i,":"))
+	d &lt;- nc$dim[[i]]
+	print(paste("    Name  :",d$name))
+	print(paste("    Units :",d$units))
+	print(paste("    Length:",d$len))
+	print("    Values:")
+	print(d$vals)
+	print(paste("    Unlimited:",d$unlim))
+	}
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>
