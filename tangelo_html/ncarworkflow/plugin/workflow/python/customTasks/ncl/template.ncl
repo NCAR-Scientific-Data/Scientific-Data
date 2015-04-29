@@ -1,9 +1,9 @@
-;; Class: Template
+;; Template
 ;; A template for writing NCL analysis scripts
 ;;
-;; Attributes:
+;; Attributes
 ;;
-;;     filename - The OPeNDAP url for the netCDF file to subset.
+;;     filename
 ;;     input1 
 ;;	   input2
 
