@@ -207,8 +207,18 @@ def addTaskNewLinks(task, taskUID, links, workflow):
     workflow.add(task)
     return workflow
 
-# Build a workflow from json file with id workflowID
-# Do not add task with UID = taskUID
+#   Function: buildUpdated
+#   A function that helps with rebuilding a workflow when deleting a task.
+#   Does not add task with UID = taskUID
+#
+#   Parameters:
+#   
+#       taskUID - The UID of the task to be deleted
+#       worfklowString - The ID of the workflow to delete the task from
+#
+#   Returns:
+#
+#       q - An instance of a workflow built from its representation
 def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
     data = json.loads(workflowString)
     # Create temp workflow
@@ -229,7 +239,19 @@ def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
             addTaskNewLinks(t, taskUID, task['Inputs'], q)
     return q
 
-
+#   Function: deleteTask
+#   A function that helps with rebuilding a workflow when deleting a task.
+#   Call this function to delete a task
+#
+#   Parameters:
+#   
+#       taskUID - UID of task to be deleted
+#       workflowID - ID of the workflow for the task to be deleted from
+#       workflowString - ID of the workflow for the task to be deleted from
+#
+#   Returns:
+#
+#       workflow - An instance of a workflow built from its representation
 def deleteTask(taskUID, workflowID, workflowString):
     workflow = buildUpdatedWorkflow(taskUID, workflowID, workflowString)
     workflow.setWorkflowID(workflowID)

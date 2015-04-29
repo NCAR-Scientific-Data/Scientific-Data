@@ -1,5 +1,6 @@
 <h1>Subset Data</h1>
 
+<div><p><a href="https://www.earthsystemgrid.org/project/narccap.html" target="_blank">Click here</a> for information on NARCCAP data</p></div>
 <!--Subset Form-->
 <div class="form-inline">
 
@@ -7,7 +8,7 @@
 	<section>
 		<div class="title">
 			<h2>Simulation Type</h2>
-			<h3>Explanation of Simulation</h3>
+			<h3>Select the model driver</h3>
 		</div>
 		<div class="inputs">
 			<select id="simulationType" onchange="changeBasedOnSim()">
@@ -23,7 +24,7 @@
 	<section>
 		<div class="title">
 			<h2>Variable</h2>
-			<h3>Explanation of Variable</h3>
+			<h3>Select the variable to analyze</h3>
 		</div>
 
 		<div class="inputs">
@@ -50,7 +51,10 @@
 	<section>
 		<div class="title">
 			<h2>Region</h2>
-			<h3>Explanation of Region</h3>
+			<h3>Enter the southwest and northeast coordinates of the polygon to subset the data by.</h3>
+			<p>Note: Data is first subset to the United States so coordniates must be within the ranges:<br>
+			 Latitude: 25 - 46<br>
+			 Longitude: 245- 285</p>
 		</div>
 
 		<div class="inputs">
@@ -77,7 +81,7 @@
 	<section>
 		<div class="title">
 			<h2>Time</h2>
-			<h3>Explanation of Time</h3>
+			<h3>Select the time range to analyze</h3>
 		</div>
 
 		<div class="inputs">
@@ -247,7 +251,7 @@
 	<section>
 		<div class="title">
 			<h2>Regional Climate Model</h2>
-			<h3>Explanation of Regional Climate Model</h3>
+			<h3>Select the regional model to pull data from.</h3>
 		</div>
 		<div class="inputs" onclick="changeBasedOnRCM()">
 			<div class="left">
@@ -268,7 +272,7 @@
 	<section>
 		<div class="title">
 			<h2>Global Climate Model</h2>
-			<h3>Explanation on Global Climate Model</h3>
+			<h3>Select the global climate model to pull data from</h3>
 		</div>
 		<div class="inputs">
 			<div class="left">
