@@ -1,4 +1,17 @@
+/*global localStorage, $, addTask, updateTask*/
 
+/*
+    Title: Delta
+*/
+
+/*
+    Functions: Delta Functions
+
+    delta - Creates the inputs to pass to the add task parameters.
+    callDelta - Parses the form input, creates the repopulation values, and passes them to delta.
+    updateDelta - Performs the same steps as callDelta and delta, but updates an existing node instead of creating a new one.
+    generateNodeSelect - Populates the dropdown that takes in other nodes.
+*/
 function delta(filename1, filename2, repopulateVals) {
     "use strict";
 

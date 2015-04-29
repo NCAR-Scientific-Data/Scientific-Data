@@ -1,3 +1,17 @@
+/*global localStorage, $, addTask, updateTask*/
+
+/*
+    Title: Percentile
+*/
+
+/*
+    Functions: Percentile Functions
+
+    percentile - Creates the inputs to pass to the add task parameters.
+    callAggregate - Parses the form input, creates the repopulation values, and passes them to percentile.
+    updatePercentile - Performs the same steps as callPercentile and percentile, but updates an existing node instead of creating a new one.
+    generateNodeSelect - Populates the dropdown that takes in other nodes.
+*/
 function percentile(filename, percentage, repopulateVals) {
     "use strict";
 
