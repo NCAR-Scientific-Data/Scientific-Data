@@ -1,21 +1,30 @@
-;----------------------------------------------------------------------
-; narccap_subset_tmin_time_latlon.ncl
+; Class: Subset
+; A NCL script that uses OPeNDAP to pull NARCCAP data, subset, and output a subsetted NetCDF file.
 ;
-; This script is a combination of the two scripts:
-;    narccap_subset_tmin_time.ncl
-;    narccap_subset_tmin_latlon.ncl
+; Attributes:
 ;
-;  It subsets "tmin" across both time and a lat/lon box.
-;
-;   1. Opens a NARR NetCDF file.
-;   2. Reads tmin, lat, lon off the file.
-;   3. Subsets all three variables based on a time range and
-;      a lat/lon rectangle.
-;   4. Writes subsetted data to a new NetCDF file.
-;----------------------------------------------------------------------
+;     filename - The OPeNDAP url for the netCDF file to subset.
+;     variable - The variable to subset
+;     swlat - The southwest latitude coordinate of the bounding box to subset.
+;     swlon - The southwest longitude coordinate of the bounding box to subset.
+;     nelat - The northeast latitude coordinate of the bounding box to subset.
+;     nelon - The northeast longitude coordinate of the bounding box to subset.
+;     startdate - The beginning date to subset data over.
+;     enddate - The final date to subset data over.
 
 begin
-;---Get NetCDF file
+
+; Function: Add File
+; Calls the OPeNDAP url and returns the file metadata
+;
+; Parameters:
+;
+;      filename - the OPeNDAP url for file to pull data form
+;
+; Returns:
+;
+;       The metadata of the corresponding NetCDF file.
+
   f        = addfile(filename, "r")
 
 ;---Read variable, lat, lon off the file
@@ -27,7 +36,18 @@ begin
   lon2d = f->lon
   tbnds = f->time_bnds
 
-;---Do initial subset of data to North America in order meet server size limit for downloading data
+; Function: Initial US Subset
+; Initially subsets data to US in order to meet the NARCCAP download size limit
+; 
+; Parameters:
+;
+;       lat2d - the latitude array pulled from the NetCDF file.
+;       lon2d - the longitude array pulled from the NetCDF file.
+;       variable - the variable of the file
+;
+; Returns:
+;
+;       varname - the main variable subsetted to the US
 
   sw = getind_latlon2d (lat2d, lon2d, 25, 245)
   ne = getind_latlon2d (lat2d, lon2d, 46, 285)
@@ -50,6 +70,22 @@ begin
     status_exit(3)
   end if
   end if
+
+; Function: Subset Data
+; Uses the time range selected by the user to further subset the NetCDF file.
+;
+; Parameters:
+;     swlat - The southwest latitude coordinate of the bounding box to subset.
+;     swlon - The southwest longitude coordinate of the bounding box to subset.
+;     nelat - The northeast latitude coordinate of the bounding box to subset.
+;     nelon - The northeast longitude coordinate of the bounding box to subset.
+;     startdate - The beginning date to subset data over.
+;     enddate - The final date to subset data over.
+;
+; Returns:
+;
+;     The variable array subsetted by the input time and boundaries.
+
 
 ;---Start and end date of interest
   start_year  = stringtointeger(stDate(0))
@@ -81,19 +117,29 @@ begin
   lat_sub  = lat2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   lon_sub  = lon2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   tb_sub   = tbnds(ii_time,:)
-;----------------------------------------------------------------------
-; Write subsetted data to a file, using inefficient (lazy) method.
-;----------------------------------------------------------------------
+
+
+; Function: Output Subset
+; Creates the output NetCDF file in the corresponding workflow folder.
+;
+; Parameters:
+;
+;     wid - The workflow id, passed from the python task.
+;     tid - The task id, passed from the python task.
+;
+; Returns:
+;
+;      A subset NetCDF file in the workflow folder with the name tid_subset.nc. The subsetted file contains a new attribute with the variable being analyzed.
 
 ;---Remove file first, if it exists.
-  ;Check if workflow directory exists, if not create one
+  ; Check if workflow directory exists, if not create one
   directory = "data/" + wid + "/"
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
   if (echo .eq. "notfound") then
     system("mkdir " + directory)
   end if
 
-  ;Uniquely name output file by task id
+  ; Uniquely name output file by task id
   filename_out = directory + tid + "_subset.nc"
   if(isfilepresent(filename_out)) then
     system("rm -rf " + filename_out)

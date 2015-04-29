@@ -1,9 +1,25 @@
-;Inputs
-;filename
-;variable
-;unit
+; Class: Unit Conversion
+; A NCL script that converts the units of temperature data and outputs an updated NetCDF file.
+;
+; Attributes:
+;
+;     filename - The name of the NetCDF file to plot.
+;     outunit - The unit to convert the data to.
+
 
 begin
+
+; Function: Add File
+; Opens the file for converting and returns the metadata.
+;
+; Parameters:
+;
+;     filename - The filename of the NetCDF file.
+;
+; Returns:
+;
+;     The metadata of the corresponding NetCDF file.
+
     f = addfile(filename,"r")
     variable = f@MainVariable
 
@@ -29,6 +45,19 @@ begin
 		end if
         end if
     end if
+
+; Function: Unit Conversion
+; Converts temperature data between Celcius, Fahrenheit, and Kelvin and creates an output NetCDF file in the corresponding workflow folder.
+;
+; Parameters:
+;
+;     outunit - The unit to convert the data to.
+;     wid - The workflow id, passed from the python task.
+;     tid - The task id, passed from the python task.
+;
+; Returns:
+;
+;     An updated NetCDF file in the workflow folder with the name tid_unitconv.nc. The metadata of the output file contains the new unit.
 
     if (vunits.ne.unit) then
         if (vunits.eq."degC" .or. vunits.eq."C" .or. vunits.eq."C ") then
