@@ -1,5 +1,5 @@
 /*
-    Title: Analysis Menu Items
+    Title: Analysis Menu
 
     All of the javascript calls for loading analysis pages.
 */

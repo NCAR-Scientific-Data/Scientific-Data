@@ -280,6 +280,7 @@ function changeGCM(simulationType, rcm) {
     See Also:
 
         <changeDateRange>
+        
         <changeGCM>
 */
 function changeBasedOnSim() {
