@@ -60,6 +60,8 @@ Group: Index  {
 
 Group: Tangelo Workflow Plugin  {
 
+   File: Workflow Library  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/__init__.py)
+
    Group: Tasks  {
 
       Group: Ncl  {
@@ -84,7 +86,6 @@ Group: Tangelo Workflow Plugin  {
       File: taskThreshold  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskThreshold.py)
       }  # Group: Tasks
 
-   File: Workflow Library  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/__init__.py)
    }  # Group: Tangelo Workflow Plugin
 
 Group: Website  {
@@ -102,6 +103,7 @@ Group: Website  {
          File: Aggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/aggregate.js)
          File: Plot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/plot.js)
          File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/subset.js)
+         File: Threshold  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/threshold.js)
          File: urlCatalog  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/urlCatalog.js)
          }  # Group: Analysis
 
