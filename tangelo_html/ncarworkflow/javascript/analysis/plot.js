@@ -9,6 +9,7 @@
 
     plot - Creates the inputs for the addTask call.
     callPlot - Parses the form data and creates the repopulation values.
+    updatePlot - Reparses the form and recreates the repopulation values, then calls updateTask.
     generateNodeSelect - Generates the dropdown of nodes.
 */
 

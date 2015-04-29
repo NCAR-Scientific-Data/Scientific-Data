@@ -9,6 +9,7 @@
 
     aggregate - Creates the inputs to pass to the add task parameters.
     callAggregate - Parses the form input, creates the repopulation values, and passes them to aggregate.
+    updateAggregate - Reparses the form and recreates the repopulation values, then calls updateTask.
     generateNodeSelect - Populates the dropdown that takes in other nodes.
 */
 
