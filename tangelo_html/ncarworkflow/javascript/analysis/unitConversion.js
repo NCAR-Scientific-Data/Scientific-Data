@@ -12,7 +12,6 @@
     updateAggregate - Performs the same steps as callUnitConverison and unitConversion, but updates an existing node instead of creating a new one.
     generateNodeSelect - Populates the dropdown that takes in other nodes.
 */
-
 function unitConversion(filename, unit, repopulateVals ){
 	"use strict";
 
@@ -24,7 +23,10 @@ function unitConversion(filename, unit, repopulateVals ){
 	addTask("taskUnitConversion", inputs, repopulateVals, "result");
 }
 
-//Parse values from form
+/*
+	Function: callUnitConversion
+	Parses the form and creates the repopulation values object.
+*/
 function callUnitConversion(){
 	"use strict";
 
@@ -44,6 +46,10 @@ function callUnitConversion(){
 	unitConversion(filename, unit, repopulateVals);
 }
 
+/*
+	Function: updateUnitConversion
+	Reparses the form and recreates the repopulation values, then calls updateTask.
+*/
 function updateUnitConversion() {
 	"use strict";
 
@@ -68,6 +74,10 @@ function updateUnitConversion() {
 	updateTask(inputs, repopulateVals);
 }
 
+/*
+	Function: generateNodeSelect
+	Generates the dropdowns of nodes.
+*/
 function generateNodeSelect() {
     "use strict";
     var nodeDropDown = $("#node");

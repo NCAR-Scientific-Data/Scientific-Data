@@ -9,7 +9,7 @@
 
     plot - Creates the inputs for the addTask call.
     callPlot - Parses the form data and creates the repopulation values.
-    updatePlot - A combination of plot and callPlot, but instead of creating a new node, it updates an existing one.
+    updatePlot - Reparses the form and recreates the repopulation values, then calls updateTask.
     generateNodeSelect - Generates the dropdown of nodes.
 */
 
@@ -26,7 +26,6 @@ function plot(filename, timeindex, nativeP, repopulateVals) {
     addTask("taskPlot", inputs, repopulateVals, "plot");
 }
 
-//Parse values from form
 function callPlot() {
     "use strict";
 

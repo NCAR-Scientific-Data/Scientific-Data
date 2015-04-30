@@ -19,18 +19,28 @@
 	</section>
 	<!--End Section-->
 
-	<div class="inputs">
-		<div>
-		<label for="percentage">Percentile</label>
-		<input type="text" id="percentage"><br>
+	<!--Percentile Section-->
+	<section>
+		<div class="title">
+			<h2>Percentile</h2>
+			<h3>The percentile to calculate.</h3>
 		</div>
-	</div>
+
+		<!--Section Inputs-->
+		<div class="inputs">
+			<div>
+			<label for="percentile">Percentile</label>
+			<input type="text" id="percentile"><br>
+			</div>
+		</div>
+	</section>
+	<!--End Section-->
 
 	<!--Submit Section-->
 	<section>
 		<!--Always have all three buttons.-->
 		<button onclick="callPercentile()">Add New Task</button>
-		<button onclick="updateYourAnalysis()">Update</button>
+		<button onclick="updatePercentile()">Update</button>
 		<button onclick="deleteTask()">Delete Task</button>
 	</section>
 	<!--End Section-->
