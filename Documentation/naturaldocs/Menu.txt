@@ -24,7 +24,7 @@ Timestamp: Last Updated on day month year
 # These are indexes you deleted, so Natural Docs will not add them again
 # unless you remove them from this line.
 
-Don't Index: Files, Variables
+Don't Index: Variables, Files
 
 
 # --------------------------------------------------------------------------
