@@ -27,7 +27,7 @@ class PluginTaskDelta(pyutilib.workflow.TaskPlugin):
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
         self.inputs.declare('filename1')
         self.inputs.declare('filename2')
-	    self.outputs.declare('result')
+	self.outputs.declare('result')
 
     #   Function: execute
     #   Calls the R function to calculate the delta of the two files.

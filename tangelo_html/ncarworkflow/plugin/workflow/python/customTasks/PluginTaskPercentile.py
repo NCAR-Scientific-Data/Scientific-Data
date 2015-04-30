@@ -61,7 +61,7 @@ class PluginTaskPercentile(pyutilib.workflow.TaskPlugin):
         # Get path to the netcdf file
         infile = self.filename
 
-	    percent = self.percentage
+	percent = self.percentage
 
         # Call the function that does the calculation
         ro.r['timePercentile'](infile, outfile, percent)
