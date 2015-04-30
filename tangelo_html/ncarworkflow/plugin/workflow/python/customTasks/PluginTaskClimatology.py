@@ -1,7 +1,21 @@
+#    File: PluginTaskClimatology.py
+#    This script calculates average for a specific range in a year
+#    for multiple years from a given NetCDF file via a R script
+#    takes in an input file, output file, the variable on which to average.
+#    The output file is then a NetCDF with the average data
 import pyutilib.workflow
 import rpy2.robjects as ro
 import os
 
+#    Class: taskClimatology
+#    A task class that average data
+#
+#    Attributes:
+#
+#    infile - the name of the NetCDF file to average
+#    startmonth - the start month of the range
+#    endmonth - the end month of the range
+#    result - the resulting output
 class PluginTaskClimatology(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskClimatology")
@@ -22,8 +36,8 @@ class PluginTaskClimatology(pyutilib.workflow.TaskPlugin):
         ro.r['source'](scriptname)
 
         # Check if workflow directory exists, if not create one
-        wid = "filename=\"{0}\"".format(self.workflowID)
-        tid = "filename=\"{0}\"".format(self.uid)
+        wid = self.workflowID
+        tid = self.uid
 
         workflowDirName = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + wid + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
@@ -37,10 +51,7 @@ class PluginTaskClimatology(pyutilib.workflow.TaskPlugin):
         start = self.startmonth
         end = self.endmonth
 
-        # Get field based on file name
-        #field = infile.rsplit('_')[0]
-
         # Call the function that does the calculation
-        ro.r['calculateClimatology'](infile, outfile, start, end, field)
+        ro.r['calculateClimatology'](infile, outfile, start, end)
 
         self.result = "data/{0}/{1}_climatology.nc".format(wid,tid)

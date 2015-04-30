@@ -1,0 +1,51 @@
+<h1>Analyze Data</h1>
+
+<!--Calculation Form-->
+<div class="form-inline">
+
+        <!--Filename/Node-->
+        <section>
+                <div class="title">
+                        <h2>Node</h2>
+                        <h3>The Node this analysis pulls data from.</h3>
+                </div>
+
+                <!-- Section Inputs -->
+                <div class="inputs">
+                        <!-- Select Box -->
+                        <select id="node1">
+                        </select>
+                </div>
+		<div class="inputs">
+                        <!-- Select Box -->
+                        <select id="node2">
+                        </select>
+                </div>
+        </section>
+        <!--End Section-->
+
+        <!--Region Section-->
+        <section>
+                <div class="title">
+                        <h2>Calculate delta between subsets</h2>
+                        <h3>Explanation</h3>
+                </div>
+        </section>
+        <!--End Region Section-->
+
+        <!--Submit Section-->
+        <section>
+                <!--Always have all three buttons.-->
+                <button onclick="callDelta()">Add New Task</button>
+                <button onclick="updateDelta()">Update</button>
+                <button onclick="deleteTask()">Delete Task</button>
+        </section>
+        <!--End Section-->
+</div>
+<!--End Calculation Form-->
+
+<script type="text/javascript" src="javascript/analysis/delta.js"></script>
+<script type="text/javascript">
+        generateNodeSelect();
+</script>
+

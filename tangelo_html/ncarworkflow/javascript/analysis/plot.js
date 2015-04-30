@@ -26,7 +26,6 @@ function plot(filename, timeindex, nativeP, repopulateVals) {
     addTask("taskPlot", inputs, repopulateVals, "plot");
 }
 
-//Parse values from form
 function callPlot() {
     "use strict";
 

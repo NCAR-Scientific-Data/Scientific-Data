@@ -90,14 +90,14 @@ def deserialize(workflowString):
     return q
 
 #   Function: deserializeChangeTaskLinks
-#   A function that builds a workflow from its json representation and sets inputs of
-#   specified task to new links
+#   A function that builds a workflow from its json representation and changes
+#   the inputs of a specified task to newly provided inputs.
 #
 #   Parameters:
 #   
 #       workflowString - The json dictionary representation of a workflow to be built
 #       taskUID - the UID of the task to be modified
-#       links - the new links for the specified task
+#       links - the new inputs for the specified task.
 #
 #   Returns:
 #
@@ -139,37 +139,99 @@ def deserializeChangeTaskLinks(workflowString, taskUID, links):
     return q
 
 
-# Serialize workflow into json file with UID as filename
+#   Function: serialize
+#   Takes a workflow object and builds it into a JSON string.
+#
+#   Parameters:
+#   
+#       workflow - the pyutilib workflow object to be serialized
+#
+#   Returns:
+#
+#       The workflow as a json-formatted dictionary via dumps()
 def serialize(workflow):
     #with open('/data/'+ str(workflow.workflowID) +'.json', 'w') as outfile:
     return json.dumps(workflow.__dict__())
 
+#   Function: getInstance
+#   A wrapper function for the pyutilib.workflow.TaskFactory. Builds tasks based
+#   on task types.
+#
+#   Parameters:
+#   
+#		taskType - a task type to be created by TaskFactory
+
+#   Returns:
+#
+#       The new task as a pyutilib Task
 def getInstance(taskType):
     return pyutilib.workflow.TaskFactory(taskType)
 
+#   Function: createWorkflow
+#   Creates a new pyutilib workflow object for populating with tasks
+#
+#   Parameters:
+#   
+#       None
+#
+#   Returns:
+#
+#       The new workflow object
 def createWorkflow():
     return pyutilib.workflow.Workflow()
 
+#   Function: loadWorkflow
+#   A function that loads a mongo client instance, opens database 'database',
+#	collection 'workflows', finds the workflow by searching for the workflowID,
+#	and returns the repopulation data and json-formatted workflow data
+#
+#   Parameters:
+#   
+#       workflowID - the unique ID given to any new workflow
+#
+#   Returns:
+#
+#       (document['repop'], document['data']) - a tuple consisting of the repopulation 
+#       data from the 'document' dictionary and the json formatted workflow data, 
+#       respectively.
 def loadWorkflow(workflowID):
 	# open mongodb client and database
 	client = MongoClient()
 	db = client.database
 	collection = db.workflows
 	
+	# find the workflow
 	document = collection.find_one({"_id": workflowID})
 	return (document['repop'], document['data'])
-	
+
+#   Function: saveWorkflow
+#   A function that takes in the unique workflow ID, the json-formatted workflow data,
+#	the repopulation data, and inserts the the workflow as a new document in MongoDB
+#	if no existing document is found.
+#
+#   Parameters:
+#   
+#       workflowID - the unique ID given to any new workflow
+#		data - the json-formatted workflow data
+#		repop - the repopulation data for visualization
+#
+#   Returns:
+#
+#       function 'update_one' - will search for a workflow in the collection with
+#		the workflowID, and either update the found workflow or insert a new document
+#		with the parameters inputted.
 def saveWorkflow(workflowID, data, repop):
 	# open mongodb client and database
 	client = MongoClient()
 	db = client.database
 	collection = db.workflows
 	
+	# save the workflow (upsert = True ensures an insert if no update possible)
 	return collection.update_one({"_id": workflowID}, {'$set': {'data': data, 'repop': repop}}, upsert = True)
 
 #   Function: addTaskNewLinks
-#   A function that helps with rebuilding a workflow when deleting a task.
-#   Does not set links for task with link to a deleted task
+#   A function that adds a task and sets the inputs of a task if and only if the
+#   inputs are not the deleted task.
 #
 #   Parameters:
 #   
@@ -208,8 +270,8 @@ def addTaskNewLinks(task, taskUID, links, workflow):
     return workflow
 
 #   Function: buildUpdated
-#   A function that helps with rebuilding a workflow when deleting a task.
-#   Does not add task with UID = taskUID
+#   A function that rebuilds a workflow, only adding a task if and only if it
+#   is not the deleted task.
 #
 #   Parameters:
 #   
@@ -240,8 +302,7 @@ def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
     return q
 
 #   Function: deleteTask
-#   A function that helps with rebuilding a workflow when deleting a task.
-#   Call this function to delete a task
+#   A function that deletes a task from a workflow.
 #
 #   Parameters:
 #   
@@ -255,5 +316,4 @@ def buildUpdatedWorkflow(taskUID, workflowID, workflowString):
 def deleteTask(taskUID, workflowID, workflowString):
     workflow = buildUpdatedWorkflow(taskUID, workflowID, workflowString)
     workflow.setWorkflowID(workflowID)
-    serialize(workflow)
     return workflow

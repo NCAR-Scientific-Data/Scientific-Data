@@ -8,7 +8,7 @@
 
 begin
 
-; Function: Add file
+; Function: Add File
 ; Opens the file for plotting and returns the metadata.
 ;
 ; Parameters:

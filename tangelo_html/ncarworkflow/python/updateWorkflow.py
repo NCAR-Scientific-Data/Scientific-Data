@@ -4,6 +4,8 @@ import ast
 import tangelo
 import pyutilib.workflow
 
+#   Title: Update Workflow
+
 #   Function: createWorkflow
 #   A function that creates a new empty workflow
 #
@@ -16,11 +18,9 @@ def createWorkflow():
     w.setWorkflowID(uid)
     return (w, uid)
 
-
-# Call this function to add a new task to a workflow
 #   Function: addTask
-#   A function that adds a task of type taskType with inputs in 
-#   links to a workflow instance "workflow" with the id = workflowID
+#   A function that creates a new task, declares the task's input values,
+#   and adds the task to the workflow.
 #
 #   Parameters:
 #   
@@ -33,13 +33,10 @@ def createWorkflow():
 #
 #       (workflow, task.uid) - A tuple with an instance of a workflow built from its representation and the new tasks UID
 def addTask(taskType, links, workflow, workflowID):
-    # Build workflow with filename workflowID.json
-    #workflow = tangelo.plugin.workflow.deserialize(tangelo.store()[workflowID])
     # Add task to the workflow
     
     links = ast.literal_eval(links)
 
-    # MAKE the task input be a type and call a factory to get instance of task
     task = tangelo.plugin.workflow.getInstance(taskType)
     task.setUID(str(uuid.uuid4()))
     task.setWorkflowID(workflowID)
@@ -47,34 +44,12 @@ def addTask(taskType, links, workflow, workflowID):
 
     # Set UID of workflow so it lives in the same space in memory
     workflow.setWorkflowID(workflowID)
-    # Serialize the workflow into json file
-    #tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(workflow)
-    
-    
 
-    # Return the result, list representation of the workflow, and UID of the added task
+    # Return the workflow and the new task ID.
     return (workflow, task.uid)
 
-#   Function: deleteTask
-#   A function that helps with rebuilding a workflow when deleting a task.
-#   Call this function to delete a task
-#
-#   Parameters:
-#   
-#       taskUID - UID of task to be deleted
-#       workflowID - ID of the workflow for the task to be deleted from
-#
-#   Returns:
-#
-#       workflow - An instance of a workflow built from its representation
-def deleteTask(taskUID, workflowID):
-    # Build workflow with filename workflowUID.json
-    # Don't add task with UID = taskUID
-    w = tangelo.plugin.workflow.deleteTask(taskUID, workflowID)
-    return w
-
 #   Function: getOutput
-#   A function that returns the output for a run workflow
+#   Runs the workflow and parses the output of the workflow.
 #
 #   Parameters:
 #   
@@ -96,18 +71,28 @@ def getOutput(workflow):
 
 
 #   Function: run
-#   A function that delegates calls from javascript to different ways to update a workflow
+#   A function that delegates calls to the tangelo workflow plugin, saves temporary
+#   workflows, and runs workflows.
 #
 #   Parameters:
 #   
-#       function - The type of update to be made the the workflow (Creating worfklow, Adding/Deleting/Modifying Task)
-#       args - The arguments to pass to specified modification
+#       function - A string with the name of the function to be called. Possible Values: "createWorkflow," "saveWorkflow," "loadWorkflow," "addTask," "deleteTask," "updateTask"
+#       workflowID - the Workflow ID.
+#       args - The arguments to pass to the function call.
 #
 #   Returns:
+#       
+#       A Dictionary containing up to three values, depending on what function is
+#       being performed.
 #
-#       result - The result of the new workflow
-#       workflow - The list representation of the workflow to be used in visualization
-#       repop - The input values to repopulate tasks with
+#       createWorkflow - Returns the workflow unique ID.
+#       saveWorkflow - Returns true or false depending on success.
+#       loadWorkflow - Returns the result of the workflow, the workflow as a list, and the dictionary of repopulation values for tasks.
+#       addTask - Returns the result of the workflow, the workflow as a list, and the task ID of the newly added task.
+#       deleteTask - Returns the result of the workflow and the workflow as a list.
+#       updateTask - Returns the result of the workflow and the workflow as a list.
+#       
+#       If there is an error, the dictionary returns an error message instead.
 def run(function, workflowID, args):
     w = None
     args = ast.literal_eval(args)

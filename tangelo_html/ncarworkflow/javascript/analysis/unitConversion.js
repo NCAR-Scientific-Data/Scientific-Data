@@ -1,12 +1,16 @@
-/*global $, addTask, updateTask*/
+/*global localStorage, $, addTask, updateTask*/
 
 /*
-	Title: Unit Conversion
+    Title: Unit Conversion
 */
 
 /*
-	Function: unitConversion
-	Creates the inputs and calls addTask.
+    Functions: Unit Conversion Functions
+
+    unitConversion - Creates the inputs to pass to the add task parameters.
+    callUnitConversion - Parses the form input, creates the repopulation values, and passes them to unitConversion.
+    updateAggregate - Performs the same steps as callUnitConverison and unitConversion, but updates an existing node instead of creating a new one.
+    generateNodeSelect - Populates the dropdown that takes in other nodes.
 */
 function unitConversion(filename, unit, repopulateVals ){
 	"use strict";

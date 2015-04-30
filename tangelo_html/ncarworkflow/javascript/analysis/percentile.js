@@ -1,19 +1,23 @@
-/*global $, addTask, updateTask*/
+/*global localStorage, $, addTask, updateTask*/
 
 /*
     Title: Percentile
 */
 
 /*
-    Function: percentile
-    Creates the inputs and calls addTask.
+    Functions: Percentile Functions
+
+    percentile - Creates the inputs to pass to the add task parameters.
+    callPercentile - Parses the form input, creates the repopulation values, and passes them to percentile.
+    updatePercentile - Performs the same steps as callPercentile and percentile, but updates an existing node instead of creating a new one.
+    generateNodeSelect - Populates the dropdown that takes in other nodes.
 */
-function percentile(filename, percentile, repopulateVals) {
+function percentile(filename, percentage, repopulateVals) {
     "use strict";
 
     var inputs = {
         "filename" : filename,
-        "percentile" : percentile,
+        "percentage" : percentage
     };
 
     console.log(inputs)
@@ -21,33 +25,49 @@ function percentile(filename, percentile, repopulateVals) {
     addTask("taskPercentile", inputs, repopulateVals, "result");
 }
 
-/*
-    Function: callPercentile
-    Parses the form and creates the repopulation values object.
-*/
 function callPercentile() {
     "use strict";
 
     var allNodes = JSON.parse(localStorage.nodes),
         selectedNode = $("#node option:selected").val(),
         filename = ["Port", selectedNode, allNodes[selectedNode].output],
-        percentile = $("#percentile").val(),
+        percentage = $("#percentage").val();
 
     var repopulateVals = {
         "html" : "stepHTML/percentile.html",
         "values" : {
-            "#percentile" : percentile,
+            "#percentage" : percentage,
             "#node"       : selectedNode
         }
     };
 
-    percentile(filename, percentile, repopulateVals);
+    percentile(filename, percentage, repopulateVals);
 }
 
-/*
-    Function: updatePercentile
-    Reparses the form and recreates the repopulation values, then calls updateTask.
-*/
+function updatePercentile() {
+    "use strict";
+
+    var allNodes = JSON.parse(localStorage.nodes),
+        selectedNode = $("#node option:selected").val(),
+        filename = ["Port", selectedNode, allNodes[selectedNode].output],
+        percentage = $("#percentage").val();
+
+    var repopulateVals = {
+        "html" : "stepHTML/percentile.html",
+        "values" : {
+            "#percentage" : percentage,
+            "#node"  : selectedNode
+        }
+    };
+
+    var inputs = {
+        "filename" : filename,
+        "percentage" : percentage
+    };
+
+    updateTask(inputs, repopulateVals);
+}
+
 function updatePercentile() {
     "use strict";
 
@@ -67,10 +87,6 @@ function updatePercentile() {
     updateTask(inputs, repopulateVals);
 }
 
-/*
-    Function: generateNodeSelect
-    Generates the dropdowns of nodes.
-*/
 function generateNodeSelect() {
     "use strict";
     var nodeDropDown = $("#node");

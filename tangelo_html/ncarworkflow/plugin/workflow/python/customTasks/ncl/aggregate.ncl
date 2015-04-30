@@ -104,7 +104,7 @@ if(cyclic .and. interval .eq. "day") then
   status_exit(5)
 end if
 
-; Function: Add file
+; Function: Add File
 ; Opens the file for aggregating and returns the metadata.
 ;
 ; Parameters:
