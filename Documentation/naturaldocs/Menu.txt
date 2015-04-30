@@ -24,7 +24,7 @@ Timestamp: Last Updated on day month year
 # These are indexes you deleted, so Natural Docs will not add them again
 # unless you remove them from this line.
 
-Don't Index: Variables, Files
+Don't Index: Files, Variables
 
 
 # --------------------------------------------------------------------------
@@ -79,11 +79,13 @@ Group: Tangelo Workflow Plugin  {
          }  # Group: R
 
       File: PluginTaskAggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskAggregate.py)
+      File: PluginTaskClimatology.py  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskClimatology.py)
+      File: PluginTaskPercentile  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskPercentile.py)
       File: PluginTaskPlot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskPlot.py)
       File: PluginTaskSubset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskSubset.py)
       File: PluginTaskUnitConversion  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskUnitConversion.py)
-      File: taskDelta  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskDelta.py)
-      File: taskThreshold  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskThreshold.py)
+      File: taskDelta  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskDelta.py)
+      File: taskThreshold  (no auto-title, /Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/plugin/workflow/python/customTasks/PluginTaskThreshold.py)
       }  # Group: Tasks
 
    }  # Group: Tangelo Workflow Plugin
@@ -102,9 +104,12 @@ Group: Website  {
 
          File: Aggregate  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/aggregate.js)
          File: Climatology  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/climatology.js)
+         File: Delta  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/delta.js)
+         File: Percentile  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/percentile.js)
          File: Plot  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/plot.js)
          File: Subset  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/subset.js)
          File: Threshold  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/threshold.js)
+         File: Unit Conversion  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/unitConversion.js)
          File: urlCatalog  (/Users/imaginationandtech/Git/Scientific-Data/tangelo_html/ncarworkflow/javascript/analysis/urlCatalog.js)
          }  # Group: Analysis
 
