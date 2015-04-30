@@ -1,0 +1,119 @@
+<h1>Plot Data</h1>
+
+<!--Form-->
+<div class="form-inline">
+
+	<!--Filename/Node-->
+	<section>
+		<div class="title">
+			<h2>Node</h2>
+			<h3>The Node this plot pulls data from.</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<!-- Select Box Example -->
+			<select id="node">
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Time Index-->
+	<section>
+		<!--Section Title-->
+		<div class="title">
+			<h2>Time Index</h2>
+			<h3>The index of the time step you want to plot.</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<select id="timeindex">
+				<option value="0" selected>0</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+				<option value="22">22</option>
+				<option value="23">23</option>
+				<option value="24">24</option>
+				<option value="25">25</option>
+				<option value="26">26</option>
+				<option value="27">27</option>
+				<option value="28">28</option>
+				<option value="29">29</option>
+				<option value="30">30</option>
+				<option value="31">31</option>
+				<option value="32">32</option>
+				<option value="33">33</option>
+				<option value="34">34</option>
+				<option value="35">35</option>
+				<option value="36">36</option>
+				<option value="37">37</option>
+				<option value="38">38</option>
+				<option value="39">39</option>
+				<option value="40">40</option>
+				<option value="41">41</option>
+				<option value="42">42</option>
+				<option value="43">43</option>
+				<option value="44">44</option>
+				<option value="45">45</option>
+				<option value="46">46</option>
+				<option value="47">47</option>
+				<option value="48">48</option>
+				<option value="49">49</option>
+				<option value="50">50</option>
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Native Plotting-->
+	<section>
+		<!-- Section Title -->
+		<div class="title">
+			<h2>Native Plotting</h2>
+			<h3>Plotting in the native units of the NetCDF.</h3>
+		</div>
+
+		<!-- Section Inputs-->
+		<div class="inputs">
+			<span class="radioButton"><input type="radio" name="native" id="yes" value="True" checked><label for="yes">Yes</label></span><br>
+			<span class="radioButton"><input type="radio" name="native" id="no" value="False"><label for="no">No</label></span>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Submit Section-->
+	<section>
+		<!--Always have all three buttons.-->
+		<button onclick="callPlot()">Add New Task</button>
+		<button onclick="updatePlot()">Update Task</button>
+		<button onclick="deleteTask()">Delete Task</button>
+	</section>
+	<!-- End Section -->
+</div>
+<!--End Subset Form-->
+
+<script type="text/javascript" src="javascript/analysis/plot.js"></script>
+<script type="text/javascript">
+	generateNodeSelect();
+</script>

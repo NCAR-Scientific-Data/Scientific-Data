@@ -1,0 +1,4 @@
+From tangelo_html run this command:
+
+../NaturalDocs/NaturalDocs -i ncarworkflow/javascript -i ncarworkflow/python -i ncarworkflow/plugin/workflow -o HTML ../Documentation -p ../Documentation/naturaldocs
+

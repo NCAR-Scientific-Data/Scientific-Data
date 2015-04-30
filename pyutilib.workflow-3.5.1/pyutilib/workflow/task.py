@@ -60,7 +60,7 @@ class Task(object):
 
     def next_tasks(self):
         """Return the set of tasks that succeed this task in the workflow."""
-        return set(t.to_port.task() for name in self.outputs for t in self.outputs[name].output_connections) | set(t.to_port.task() for name in self.output_controls for t in self.output_controls[name].output_connections)
+        return set([t.to_port.task() for name in self.outputs for t in self.outputs[name].output_connections]) | set([t.to_port.task() for name in self.output_controls for t in self.output_controls[name].output_connections])
             
     def prev_tasks(self):
         """Return the set of tasks that precede this task in the workflow."""
@@ -76,7 +76,7 @@ class Task(object):
 
     # Robert Crimi
     def next_task_names(self):
-        return set(task.name for task in self.next_tasks())
+        return set((task.alias + str(task.id)) if hasattr(task, "alias") else task.name for task in self.next_tasks())
 
     def prev_task_ids(self):
         """Return the set of ids for tasks that precede this task in the workflow."""
@@ -84,7 +84,7 @@ class Task(object):
 
     # Robert Crimi
     def prev_task_names(self):
-        return set(task.name for task in self.prev_tasks())
+        return set((task.alias + str(task.id)) if hasattr(task, "alias") else task.name for task in self.prev_tasks())
 
     # Robert Crimi
     def setWorkflowID(self, workflow):
@@ -93,6 +93,10 @@ class Task(object):
     # Robert Crimi
     def setUID(self, uid):
         self.uid = uid
+
+    # Hannah T
+    def getUID(self):
+        return self.uid
            
     def execute(self, debug=False):
         """Execute this task."""
@@ -236,36 +240,42 @@ class Task(object):
 
     # Robert Crimi
     # Return dictionary for serialization of workflows
-    def __dict__(self, workflow):
+    def _dict_(self, workflow):
         tmp = {}
-        tmp['Type'] = self.__class__.__name__
+        tmp['Type'] = self.alias if hasattr(self, "alias") else self.__class__.__name__
         tmp['Inputs'] = {}
+        tmp['WorkflowID'] = self.workflowID
         # Create dictionary of instances inputs
         dictionary = self.inputs._repn_()
         for key in dictionary:
             # Find the actual input values of the instance
             if not key in ['A_TYPE','Name','Mode','Owner']:
                 val = dictionary[key]
+
                 # Value is number
-                if re.match("[-+]?\d*\.\d+|\d+",val['Value']):
-                    val = [float(val['Value'])]
-                # TODO:
-                # handle files or other strings input into tasks
-                # Value is string
-                elif(".nc" in val['Value']):
-                    val = [val['Value']]
+                # if re.match("^-?(\d*\.?\d+$)",val['Value']):
+                #     val = [float(val['Value'])]
+                # # TODO:
+                # # handle files or other strings input into tasks
+                # # Value is string
+                # elif(".nc" in val['Value']):
+                #     val = [val['Value']]
 
                 # Value is port
-                else:
+                if val["Value"] == "None":
                     # Get the port connections
                     connection = dictionary[key]['Connections']['Inputs'][0]
-                    link = re.findall("[-+]?\d*\.\d+|\d+", connection)
+                    link = re.findall("-?(\d*\.?\d+)", connection)
                     # Map strings to ints
                     link = list(map(int, link))
+
                     # Find UIDS of tasks with ids in link
+                    
                     newLinks = workflow._dfs_([workflow._start_task.id], lambda t: t.getUIDWithID(link[0]))
                     # Set val to ['Port', UID, output]
                     val = ['Port', newLinks[0][0], newLinks[0][1][0]]
+                else:
+                    val = [val["Value"]]
 
                 # Set inputs value to the link
                 tmp['Inputs'][key] = val
@@ -277,7 +287,7 @@ class Task(object):
 
     # Robert Crimi
     def getTaskWithID(self, uid):
-        if self.uid == uid:
+        if str(self.uid) == uid:
             return self
 
     # Robert Crimi
@@ -297,11 +307,11 @@ class Task(object):
 
     def __str__(self):
         """Return a string representation for this task."""
-        return "%s prev: %s next: %s resources: %s" % (str(self.name),str(sorted(list(self.prev_task_names()))),str(sorted(list(self.next_task_names()))), str(sorted(self._resources.keys())))
+        return "%s prev: %s next: %s resources: %s" % (str((self.alias + str(self.id)) if hasattr(self, "alias") else self.name),str(sorted(list(self.prev_task_names()))),str(sorted(list(self.next_task_names()))), str(sorted(self._resources.keys())))
 
     # Robert Crimi
     def __list__(self):
-        return [self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices())), self.uid] 
+        return [self.alias if hasattr(self, "alias") else self.__class__.__name__, self.id-1, sorted(list(self.next_task_indices())), self.uid] 
 
     def reset(self):
         #print "RESETING "+self.name
@@ -329,10 +339,10 @@ class Task(object):
     def reset_all_outputs(self):
         for i in self.outputs:
             self.outputs[i].reset_all()
-            self.outputs[i].set_ready()
+            #self.outputs[i].set_ready()
         for i in self.output_controls:
             self.output_controls[i].reset_all()
-            self.output_controls[i].set_ready()                
+            #self.output_controls[i].set_ready()                
 
     def set_ready(self):
         for i in self.outputs:

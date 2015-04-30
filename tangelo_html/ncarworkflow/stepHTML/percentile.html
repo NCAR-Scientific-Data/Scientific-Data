@@ -1,0 +1,53 @@
+<h1>Analyze Data</h1>
+
+<!--Calculation Form-->
+<div class="form-inline">
+
+	<!--Filename/Node-->
+	<section>
+		<div class="title">
+			<h2>Node</h2>
+			<h3>The Node this analysis pulls data from.</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<!-- Select Box -->
+			<select id="node">
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Percentile Section-->
+	<section>
+		<div class="title">
+			<h2>Percentile</h2>
+			<h3>The percentile to calculate.</h3>
+		</div>
+
+		<!--Section Inputs-->
+		<div class="inputs">
+			<div>
+			<label for="percentile">Percentile</label>
+			<input type="text" id="percentile"><br>
+			</div>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Submit Section-->
+	<section>
+		<!--Always have all three buttons.-->
+		<button onclick="callPercentile()">Add New Task</button>
+		<button onclick="updatePercentile()">Update</button>
+		<button onclick="deleteTask()">Delete Task</button>
+	</section>
+	<!--End Section-->
+</div>
+<!--End Calculation Form-->
+
+<script type="text/javascript" src="javascript/analysis/percentile.js"></script>
+<script type="text/javascript">
+	generateNodeSelect();
+</script>

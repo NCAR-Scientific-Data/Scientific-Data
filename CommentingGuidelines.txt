@@ -1,0 +1,42 @@
+Example Usage:
+
+JavaScript:
+
+/*
+    Function: getIndexMap
+    Maps workflow indices to NodeLink indices.
+
+    Parameters:
+
+        workflow - The workflow JSON object.
+
+    Returns:
+
+        A JavaScript object mapping workflow indices to NodeLink indices.
+
+    See Also:
+
+        <formatWorkflow>
+*/
+
+Python:
+
+
+#   Class: taskAggregate
+#   A task class that aggregates data.
+#
+#   Attributes:
+#   
+#       filename - the name of the netCDF file to aggregate.
+#       variable - the variable to aggregate.
+#       interval - the time interval to aggregate over.
+#       method - the method of aggregation.
+#       outtime - the outtime
+#       cyclic - whatever that means
+#       result - the resulting output.
+
+For more keywords:
+http://www.naturaldocs.org/keywords.html
+
+For cool formatting options:
+www.naturaldocs.org/documenting/reference.html

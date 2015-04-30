@@ -1,6 +1,18 @@
-/*global $, urlCatalog, addTask*/
+/*global $, addTask, updateTask*/
 
-function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm) {
+/*
+    Title: Subset
+*/
+
+/*
+    Function: subset
+    Creates the inputs and calls addTask.
+
+    See Also:
+
+        <urlCatalog>
+*/
+function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm, repopulateVals) {
     "use strict";
 
     var basicString = "http://tds.ucar.edu/thredds/dodsC/narccap.",
@@ -14,6 +26,7 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
         } else {
             version = "." + String(version) + ".aggregation";
         }
+
 
     var url = basicString + modelString + version;
 
@@ -30,9 +43,13 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
 
     //inputs = JSON.stringify(inputs);
 
-    addTask("taskSubset", inputs);
+    addTask("taskSubset", inputs, repopulateVals, "subset");
 }
 
+/*
+    Function: callSubset
+    Parse the form and creates the repopulation values object.
+*/
 function callSubset() {
     "use strict";
     var simulationType = $("#simulationType option:selected").val(),
@@ -44,11 +61,119 @@ function callSubset() {
         timestart = $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#startDay option:selected").val(),
         timeend = $("#endYear option:selected").val() + "-" + $("#endMonth option:selected").val() + "-" + $("#endDay option:selected").val(),
         rcm = $("input[name='rcm']:checked").val(),
-        gcm = $("input[name='gcm']:checked").val();
+        gcm = $("input[name='gcm']:checked").val(),
+        variableSelector = "input[name='variable'][value='" + variable+ "']",
+        rcmSelector = "input[name='rcm'][value='" + rcm + "']",
+        gcmSelector = "input[name='gcm'][value='" + gcm + "']",
+        repopulateVals;
 
-    subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm);
+    repopulateVals = {
+        "html" : "stepHTML/subset.html",
+        "values" : {
+            "#simulationType" : simulationType,
+            "#swlat" : swlat,
+            "#swlon" : swlon,
+            "#nelat" : nelat,
+            "#nelon" : nelon,
+            "#startYear" :  $("#startYear option:selected").val(),
+            "#startMonth" : $("#startMonth option:selected").val(),
+            "#startDay" : $("#startDay option:selected").val(),
+            "#endYear" : $("#endYear option:selected").val(),
+            "#endMonth" : $("#endMonth option:selected").val(),
+            "#endDay" : $("#endDay option:selected").val(),
+        }
+        
+    };
+
+    repopulateVals.values[rcmSelector] = true;
+    repopulateVals.values[gcmSelector] = true;
+    repopulateVals.values[variableSelector] = true;
+
+
+    subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart, timeend, rcm, gcm, repopulateVals);
 }
 
+/*
+    Function: updateSubset()
+    Performs the same steps as callSubset() and subset(), except it updates an existing node instead of creating a new node.
+*/
+function updateSubset() {
+    "use strict";
+    var simulationType = $("#simulationType option:selected").val(),
+        variable = $("input[name='variable']:checked").val(),
+        swlat = $("#swlat").val(),
+        swlon = $("#swlon").val(),
+        nelat = $("#nelat").val(),
+        nelon = $("#nelon").val(),
+        timestart = $("#startYear option:selected").val() + "-" + $("#startMonth option:selected").val() + "-" + $("#startDay option:selected").val(),
+        timeend = $("#endYear option:selected").val() + "-" + $("#endMonth option:selected").val() + "-" + $("#endDay option:selected").val(),
+        rcm = $("input[name='rcm']:checked").val(),
+        gcm = $("input[name='gcm']:checked").val(),
+        variableSelector = "input[name='variable'][value='" + variable+ "']",
+        rcmSelector = "input[name='rcm'][value='" + rcm + "']",
+        gcmSelector = "input[name='gcm'][value='" + gcm + "']",
+        repopulateVals;
+
+    repopulateVals = {
+        "html" : "stepHTML/subset.html",
+        "values" : {
+            "#simulationType" : simulationType,
+            "#swlat" : swlat,
+            "#swlon" : swlon,
+            "#nelat" : nelat,
+            "#nelon" : nelon,
+            "#startYear" :  $("#startYear option:selected").val(),
+            "#startMonth" : $("#startMonth option:selected").val(),
+            "#startDay" : $("#startDay option:selected").val(),
+            "#endYear" : $("#endYear option:selected").val(),
+            "#endMonth" : $("#endMonth option:selected").val(),
+            "#endDay" : $("#endDay option:selected").val(),
+        }
+        
+    };
+
+    repopulateVals.values[rcmSelector] = true;
+    repopulateVals.values[gcmSelector] = true;
+    repopulateVals.values[variableSelector] = true;
+
+    var basicString = "http://tds.ucar.edu/thredds/dodsC/narccap.",
+        modelString = rcm + "." + gcm + simulationType + "." + variable.substring(0,6),
+        version = window.urlCatalog[modelString];
+
+        modelString += variable.substring(6);
+
+        if (version === 0) {
+            version = ".aggregation";
+        } else {
+            version = "." + String(version) + ".aggregation";
+        }
+
+
+    var url = basicString + modelString + version;
+
+    var inputs = {
+        "url" : url,
+        "variable" : variable.substring(7),
+        "swlat" : swlat,
+        "swlon" : swlon,
+        "nelat" : nelat,
+        "nelon" : nelon,
+        "startdate" : timestart,
+        "enddate" : timeend
+    };
+
+
+    updateTask(inputs, repopulateVals);
+}
+
+/*
+    Function: changeDateRange
+    Changes the date range available for subset based on the simulation type.
+
+    Parameters:
+
+    simulationType - a string representing the simulation type. Can either be "ncep", "-current", or "-future".
+*/
 function changeDateRange(simulationType) {
     "use strict";
     var start, end, i,
@@ -77,6 +202,15 @@ function changeDateRange(simulationType) {
     $("#endYear option:last-child").prop("selected", true);
 }
 
+/*
+    Function: changeGCM
+    Change the Global Climate Model input options based on the simulation type and Regional Climate Model.
+
+    Parameters:
+
+    simulationType -  A string with the value of the simulation type, either "ncep", "-current", or "-future".
+    rcm - A string with the value of the Regional Climate Model, either "ccsm", "cgcm3", "gfdl", or "hadcm3".
+*/
 function changeGCM(simulationType, rcm) {
     "use strict";
 
@@ -143,6 +277,16 @@ function changeGCM(simulationType, rcm) {
     }
 }
 
+/*
+    Function: changeBasedOnSim
+    Change certain input values based on the Simulation type.
+
+    See Also:
+
+        <changeDateRange>
+        
+        <changeGCM>
+*/
 function changeBasedOnSim() {
     "use strict";
 
@@ -153,6 +297,13 @@ function changeBasedOnSim() {
     changeGCM(simulationType, rcm);
 }
 
+/*
+    Function: changeBasedOnRCM
+    Change certain input values based on the Regional Climate Model.
+
+    See Also:
+        <changeGCM>
+*/
 function changeBasedOnRCM() {
     "use strict";
 

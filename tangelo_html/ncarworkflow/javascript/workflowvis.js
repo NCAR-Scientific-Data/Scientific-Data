@@ -1,9 +1,4 @@
-/*global window, $, tangelo*/
-
-/*
-    File: workflowvis.js
-    Visualizes a workflow.
-*/
+/*global window, $, tangelo, confirm, alert*/
 
 
 /*
@@ -17,6 +12,7 @@
     Returns:
 
         A JavaScript object mapping workflow indices to NodeLink indices.
+        The map is formatted "{ originalIndex : nodelinkIndex }"
 
     See Also:
 
@@ -25,19 +21,37 @@
 function getIndexMap(workflow) {
     "use strict";
     var indexMap = {},
-        nodeIndexForNodeLink = 0;
+        listOfNodeIndices = [];
 
     workflow.forEach(function (nodeProperties) {
         var nodeIndex = nodeProperties[1];
-        indexMap[nodeIndex] = nodeIndexForNodeLink;
-        nodeIndexForNodeLink += 1;
+        listOfNodeIndices.push(nodeIndex);
     });
+
+    if (listOfNodeIndices.length > 1) {
+        listOfNodeIndices.sort();
+
+        var lengthOfList = listOfNodeIndices.length,
+            minNode = listOfNodeIndices[0],
+            maxNode = listOfNodeIndices[lengthOfList-1],
+            minIndex = 0,
+            maxIndex = lengthOfList-1;
+
+        for (var i = 0; i < lengthOfList; i += 1) {
+            var node = listOfNodeIndices[i];
+
+            indexMap[node] = (node - minNode) / (maxNode - minNode) * (maxIndex - minIndex) + minIndex;
+        }
+    } else {
+        indexMap[listOfNodeIndices[0]] = 0;
+    }
+
     return indexMap;
 }
 
 /*
     Function: generateData
-    Generates nodes and links between nodes.
+    Generates nodes and links between nodes for visualization.
 
     Parameters:
 
@@ -46,14 +60,38 @@ function getIndexMap(workflow) {
 
     Returns:
 
-        A JavaScript object containing 2 properties: *nodes* and *links*.
+        A list with the data javascript object and a breadth-first search
+        representation of the workflow.
 
-        *nodes:* A list of nodes. Each node is an object consisting of a node type
-        and a node name.
+        _The Data Object_
 
-        *links:* A list of links. Each link is an object with a source node index
-        and a target node index.
+            *nodes:* A list of nodes. Each node is an object consisting of a 
+            node type and a node name.
 
+            *links:* A list of links. Each link is an object with a source node 
+            index and a target node index.
+
+        _The Breadth-First Search List_
+
+            The list is such that the index is the parent node, and the children
+            of that node are a list stored at that index. For example, say we had
+            this tree:
+
+            >       0
+            >      / \
+            >     1   2
+            >    / \
+            >   3   4
+
+            Then it would be represented as
+
+            > [
+            >   [1,2],
+            >   [3, 4],
+            >   [ ]
+            >   [ ]
+            >   [ ]
+            > ]
 
     See Also:
 
@@ -61,17 +99,22 @@ function getIndexMap(workflow) {
 */
 function generateData(workflow, indexMap) {
     "use strict";
-    var data = { nodes: [], links: [], uids: []};
+    var data = { nodes: [workflow.length], links: []},
+        bfsList = [workflow.length];
+
+    for (var i = 0; i < workflow.length; i += 1) {
+        bfsList[i] = [];
+    }
 
     workflow.forEach(function (nodeProperties) {
         var nodeType = nodeProperties[0],
             nodeIndex = nodeProperties[1],
             nodeLinks = nodeProperties[2],
             nodeUID = nodeProperties[3],
-            nodeName = nodeProperties[0] + nodeProperties[1],
+            nodeName = nodeType + nodeIndex,
             sourceIndex;
 
-        data.nodes.push({type: nodeType, name: nodeName, uid: nodeUID});
+        data.nodes[indexMap[nodeIndex]] = {type: nodeType, name: nodeName, uid: nodeUID};
 
         sourceIndex = nodeIndex;
 
@@ -81,75 +124,34 @@ function generateData(workflow, indexMap) {
                 var sourceNode = indexMap[sourceIndex],
                     targetNode = indexMap[linkedNodeIndex];
 
+                bfsList[sourceNode].push(targetNode);
+                
+
                 data.links.push({source: sourceNode, target: targetNode});
             }
         }
     });
-    return data;
 
-}
-
-/*
-    Function: listParentsOfTargetNode
-    Creates a JavaScript Object mapping nodes to their parent nodes.
-
-    Parameters:
-
-        listOfLinks - a list of links between nodes.
-
-    Returns:
-
-        A JavaScript Object mapping *nodes* to their *parents* by index.
-
-    Example Output:
-
-        (start code)
-        {
-            6 : [5, 4],
-            5 : [3],
-            4 : [3],
-            3 : [2, 1],
-            2 : 0
-        }
-        (end)
-
-        In this example, the nodes at indices 1 and 0 have no parents. 
-
-    See Also:
-
-        <generateData>
-
-        <formatWorkflow>
-*/
-function listParentsOfTargetNode(listOfLinks) {
-    "use strict";
-    var parentsOfTargetNodes = {};
-
-    listOfLinks.forEach(function (linkDictionary) {
-        var sourceNode = linkDictionary.source,
-            targetNode = linkDictionary.target;
-
-        if (parentsOfTargetNodes.hasOwnProperty(targetNode)) {
-
-            parentsOfTargetNodes[targetNode].push(sourceNode);
-
-        } else {
-
-            parentsOfTargetNodes[targetNode] = [sourceNode];
-
-        }
-    });
-    return parentsOfTargetNodes;
+    return [data, bfsList];
 }
 
 /*
     Function: assignXValue
-    Assigns an initial X value to each node.
+    Assigns an initial X value to each node using the breadth-first search list.
+
+    *1.* The web page is divided into columns based on the number of nodes.
+    
+    *2.* The farthest-left x-value is given to root nodes, and then children nodes are
+    assigned an x value equal to the width of the column plus the x value of the
+    parent.
+    
+    *3.* After all x values are assigned, the function returns the number of columns
+    it expected to create.
 
     Parameters:
 
         data - an object containing lists of the nodes and links.
-        parentsOfTargetNodes - an object mapping nodes to their parent nodes.
+        bfsList - a list representations of the tree with breadth-first-search
 
     Returns:
 
@@ -157,35 +159,39 @@ function listParentsOfTargetNode(listOfLinks) {
 
     See Also:
 
-        <generateData>
+        <readjustColumns>
 
-        <listParentsOfTargetNodes>
+        <generateData>
 
         <formatWorkflow>
 */
-function assignXValue(data, parentsOfTargetNodes) {
+function assignXValue(data, bfsList) {
     "use strict";
 
     var width = $("#workflow").width(),
-        numberOfColumns = Object.keys(parentsOfTargetNodes).length + 1,
-        columnSize = width / numberOfColumns,
-        x = columnSize / 2;
+        numberOfColumns = bfsList.length;
 
-    for (var targetNode in parentsOfTargetNodes) {
+    var columnSize = width / numberOfColumns,
+        x = columnSize / 2,
+        startbranchx = x + columnSize;
 
-        if (parentsOfTargetNodes.hasOwnProperty(targetNode)) {
-            
-            var lengthOfParentsList = parentsOfTargetNodes[targetNode].length,
-                listOfNodesToChangeX = parentsOfTargetNodes[targetNode];
-            for (var i = 0; i < lengthOfParentsList; i += 1) {
-                data.nodes[listOfNodesToChangeX[i]].x = x;
-            }
-
-            x += columnSize;
+    for (var i = 0; i < bfsList.length; i += 1) {
+        var tmpx = startbranchx;
+        if (data.nodes[i].x) {
+            tmpx = data.nodes[i].x + columnSize;
+        }
+        for (var j = 0; j < bfsList[i].length; j += 1) {
+            data.nodes[bfsList[i][j]].x = tmpx;
         }
     }
 
-    data.nodes[data.nodes.length - 1].x = x;
+    for (var i = 0; i < bfsList.length; i += 1) {
+        if (data.nodes[i].x) {
+            
+        } else {
+            data.nodes[i].x = x;
+        }
+    }
 
     return numberOfColumns;
 }
@@ -194,6 +200,14 @@ function assignXValue(data, parentsOfTargetNodes) {
     Function: readjustColumns
     Modifies node X-values to make columns more even.
 
+    *1.* The function makes a list of all x-values assigned to the nodes.
+    
+    *2.* The number of actual columns used is the length of the x-values list.
+    
+    *3.* The old x-values are mapped to the new number of columns.
+    
+    *4.* Node x-values are adjusted to use the correct x values.
+
     Parameters:
 
         data - an object containing lists of the nodes and links.
@@ -201,9 +215,9 @@ function assignXValue(data, parentsOfTargetNodes) {
 
     See Also:
 
-        <generateData>
-
         <assignXValue>
+
+        <generateData>
 
         <formatWorkflow>
 */
@@ -262,42 +276,55 @@ function readjustColumns(data, numberOfColumns) {
     Function: assignYValue
     Assigns a Y value to each node.
 
+    *1.* For each node's children, the children are assigned a y-value, evenly spaced.
+    
+    *2.* Then the same process is repeated with any missed nodes.
+
     Parameters:
 
         data - an object containing all nodes and links.
+        bfs - a breadth-first search type representation of the nodes.
 
     Returns:
 
-        Nothing
+        Nothing. Data is modified.
 
     See Also:
 
         <assignXValue>
+        
         <formatWorkflow>
 */
-function assignYValue(data) {
+function assignYValue(data, bfs) {
     "use strict";
-    var nodesInColumns = {},
-        height = $("#workflow").height();
+    var height = $("#workflow").height();
 
-    data.nodes.forEach(function (node) {
-        if (nodesInColumns.hasOwnProperty(node.x)) {
-            nodesInColumns[node.x].push(data.nodes.indexOf(node));
-        } else {
-            nodesInColumns[node.x] = [data.nodes.indexOf(node)];
-        }
-    });
+    for (var i = 0; i < bfs.length; i++) {
+        var numRows = bfs[i].length,
+            rowHeight = height / numRows,
+            y = rowHeight / 2;
 
-    for (var nodeX in nodesInColumns) {
-        if (nodesInColumns.hasOwnProperty(nodeX)) {
-            var nodeList = nodesInColumns[nodeX],
-                offset = 0;
-            for (var i = 0; i < nodeList.length; i += 1) {
-                data.nodes[nodeList[i]].y = (height/nodeList.length/2) + offset;
-                offset += height/nodeList.length;
-            }
+        for (var j = 0; j < numRows; j++) {
+            data.nodes[bfs[i][j]].y = y;
+            y += rowHeight;
         }
     }
+
+    var missedList = [];
+    for (var i = 0; i < bfs.length; i += 1) {
+        if (!data.nodes[i].hasOwnProperty("y")) {
+            missedList.push(i);
+        }
+    }
+
+    var numRows = missedList.length,
+        rowHeight = height / numRows,
+        y = rowHeight / 2;
+    for (var i = 0; i < missedList.length; i += 1) {
+        data.nodes[missedList[i]].y = y;
+        y += rowHeight;
+    }
+    
 }
 
 /*
@@ -306,7 +333,7 @@ function assignYValue(data) {
 
     Parameters:
 
-        workflow - The workflow JSON object. Each node is a list consisting of the
+        workflow - The workflow list. Each node is a list consisting of the
         node type, the node name, and a list of indices of child nodes.
 
     Returns:
@@ -319,47 +346,89 @@ function assignYValue(data) {
 
         <generateData>
 
-        <listParentsOfTargetNodes>
-
         <assignXValue>
+
+        <assignYValue>
 
         <readjustColumns>
 */
 function formatWorkflow(workflow) {
     "use strict";
+    if (workflow.length === 0) {
+        return { nodes : [], links : []};
+    }
+
     var indexMap = getIndexMap(workflow),
-        data = generateData(workflow, indexMap),
-        parentsOfTargetNodes = listParentsOfTargetNode(data.links),
-        numberOfColumns = assignXValue(data, parentsOfTargetNodes);
+        dataAndBFS = generateData(workflow, indexMap),
+        data = dataAndBFS[0],
+        bfs = dataAndBFS[1],
+        numberOfColumns = assignXValue(data, bfs);
     readjustColumns(data, numberOfColumns);
-    assignYValue(data);
+    assignYValue(data, bfs);
 
     return data;
 }
 
 /*
     Function: addTask
-    Run and then draw a workflow.
+    Add a task to a workflow, run the workflow, and then draw the workflow.
+
+    A Javascript Object of node ids and values for repopulating inputs is saved to localStorage.
+
+    Parameters:
+
+        task_Type - the type of task that is being created.
+        links - a Javascript object containing each input for the task.
+        repopulateVals - a Javascript object that contains the values for each input on the html page.
+        outputName - the name of the output variable in the workflow.
 
     See Also:
 
         <formatWorkflow>
+
+        <deleteTask>
 */
-function addTask(task_Type, links) {
+function addTask(task_Type, links, repopulateVals, outputName) {
     "use strict";
-    alert("making a task");
-    var url = "python/addTask",
+
+    var url = "python/updateWorkflow",
         stuffToPass = {
-            "taskType" : task_Type,
-            "links" : links,
+            "function" : "addTask",
             "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([task_Type, JSON.stringify(links)])
         };
 
     $.getJSON(url, stuffToPass, function (results) {
-        if (results.workflow) {
-            var data = formatWorkflow(results.workflow);
+        if (results.result) {
+            $("[id^='tangelo-drawer-icon-']").trigger("click");
+            $("#analysisWrapper").empty();
+            $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
             
-            localStorage.nodes = data;
+            var data = formatWorkflow(results.workflow),
+                tid = results.taskID,
+                nodes = JSON.parse(localStorage.nodes);
+
+            var n = data.nodes;
+
+            for (var i = 0; i < n.length; i += 1) {
+                var taskid = n[i].uid,
+                    name = n[i].name;
+
+                if (nodes.hasOwnProperty(taskid)) {
+                    nodes[taskid].name = name;
+                } else {
+                    nodes[taskid] = {};
+                    nodes[taskid].name = name;
+                }
+                
+            }
+
+            nodes[tid].repop = repopulateVals;
+            nodes[tid].output = outputName;
+                
+            localStorage.nodes = JSON.stringify(nodes);
+
+            $("#workflow").empty();
 
             $("#workflow").nodelink({
                 data: data,
@@ -367,8 +436,212 @@ function addTask(task_Type, links) {
                 linkSource: tangelo.accessor({field: "source"}),
                 linkTarget: tangelo.accessor({field: "target"}),
                 nodeColor: tangelo.accessor({field: "type"}),
-                nodeLabel: tangelo.accessor({field: "name"})
+                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeUID: tangelo.accessor({field: "uid"}),
             });
+
+            var re = new RegExp("^.+[.](png|nc)$");
+            if (re.test(results.result)) {
+                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
+
+                if (download) {
+                    window.open("python/" + results.result);
+                }
+            } else {
+                alert("Results of Workflow:\n" + results.result);
+            }
+
+        } else {
+            alert(JSON.stringify(results));
+        }
+    });
+}
+
+/*
+    Function: deleteTask
+    Delete a task from the workflow, run the workflow, and then draw the workflow.
+
+    A Javascript Object of node ids and values for repopulating inputs is saved to localStorage.
+
+    See Also:
+
+        <formatWorkflow>
+
+        <addTask>
+*/
+function deleteTask() {
+    "use strict";
+
+    var url = "python/updateWorkflow",
+        stuffToPass = {
+            "function" : "deleteTask",
+            "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([localStorage.current])
+        };
+
+    $.getJSON(url, stuffToPass, function (results) {
+        if (results.result) {
+            $("[id^='tangelo-drawer-icon-']").trigger("click");
+            $("#analysisWrapper").empty();
+            $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
+            
+            var data = formatWorkflow(results.workflow),
+                nodes = JSON.parse(localStorage.nodes);
+
+            var n = data.nodes;
+
+            for (var i = 0; i < n.length; i += 1) {
+                var taskid = n[i].uid,
+                    name = n[i].name;
+
+                if (nodes.hasOwnProperty(taskid)) {
+                    nodes[taskid].name = name;
+                } else {
+                    nodes[taskid] = {};
+                    nodes[taskid].name = name;
+                }
+                
+            }
+
+            delete nodes[localStorage.current];
+                
+            localStorage.nodes = JSON.stringify(nodes);
+
+            delete localStorage.current;
+
+            $("#workflow").empty();
+
+            $("#workflow").nodelink({
+                data: data,
+                nodeCharge: tangelo.accessor({value: -10000}),
+                linkSource: tangelo.accessor({field: "source"}),
+                linkTarget: tangelo.accessor({field: "target"}),
+                nodeColor: tangelo.accessor({field: "type"}),
+                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeUID: tangelo.accessor({field: "uid"}),
+            });
+
+
+            var re = new RegExp("^.+[.](png|nc)$");
+            if (re.test(results.result)) {
+                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
+
+                if (download) {
+                    window.open("python/" + results.result);
+                }
+            } else {
+                alert("Results of Workflow:\n" + results.result);
+            }
+
+        } else {
+            alert(JSON.stringify(results));
+        }
+    });
+}
+
+function updateTask(links, repopulateVals) {
+    "use strict";
+    var url = "python/updateWorkflow",
+        stuffToPass = {
+            "function" : "updateTask",
+            "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([localStorage.current, JSON.stringify(links)])
+        };
+
+    var tid = localStorage.current;
+
+    delete localStorage.current;
+
+    $.getJSON(url, stuffToPass, function (results) {
+        if (results.result) {
+            $("[id^='tangelo-drawer-icon-']").trigger("click");
+            $("#analysisWrapper").empty();
+            $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
+            
+            var data = formatWorkflow(results.workflow),
+                nodes = JSON.parse(localStorage.nodes);
+
+            var n = data.nodes;
+
+            for (var i = 0; i < n.length; i += 1) {
+                var taskid = n[i].uid,
+                    name = n[i].name;
+
+                if (nodes.hasOwnProperty(taskid)) {
+                    nodes[taskid].name = name;
+                } else {
+                    nodes[taskid] = {};
+                    nodes[taskid].name = name;
+                }
+                
+            }
+
+            nodes[tid].repop = repopulateVals;
+                
+            localStorage.nodes = JSON.stringify(nodes);
+
+            $("#workflow").empty();
+
+            $("#workflow").nodelink({
+                data: data,
+                nodeCharge: tangelo.accessor({value: -10000}),
+                linkSource: tangelo.accessor({field: "source"}),
+                linkTarget: tangelo.accessor({field: "target"}),
+                nodeColor: tangelo.accessor({field: "type"}),
+                nodeLabel: tangelo.accessor({field: "name"}),
+                nodeUID: tangelo.accessor({field: "uid"}),
+            });
+
+            var re = new RegExp("^.+[.](png|nc)$");
+            if (re.test(results.result)) {
+                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
+
+                if (download) {
+                    window.open("python/" + results.result);
+                }
+            } else {
+                alert("Results of Workflow:\n" + results.result);
+            }
+
+        } else {
+            alert(JSON.stringify(results));
+        }
+    });
+}
+
+/*
+    Function: saveWorkflow
+    Save a workflow to the database, along with its input repopulation values.
+
+    See Also:
+
+        <loadWorkflow>
+*/
+function saveWorkflow() {
+    "use strict";
+    var url = "python/updateWorkflow",
+        stuffToPass = {
+            "function" : "saveWorkflow",
+            "workflowID" : localStorage.uid,
+            "args" : JSON.stringify([localStorage.nodes])
+        };
+
+    $.getJSON(url, stuffToPass, function (results) {
+        if (results.result) {
+            if (results.result === "true") {
+                alert("Your Workflow Has Been Saved. You can access it again by using this serial number:\n" + localStorage.uid);
+
+                var done = confirm("Are you done working?\n Data will be removed from your local computer if you are.\n Don't worry though, your data is backed up.");
+                
+                if (done) {
+                    localStorage.clear();
+                    window.location.replace("index.html");
+                }
+            } else {
+                alert("Your workflow could not be saved to the database.\nNo worries, though, your workflow is safe in temporary storage.\nContact <person> for more information.");
+            }
+        } else {
+            alert(JSON.stringify(results));
         }
     });
 }

@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Get attribute from netCDF file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for att.get.ncdf {ncdf}"><tr><td>att.get.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Get attribute from netCDF file</h2>
+
+<h3>Description</h3>
+
+<p>Reads an attribute from a netCDF file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ att.get.ncdf( nc, varid, attname )
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>nc</code></td>
+<td>
+<p>An object of class <code>ncdf</code> (as returned from <code>open.ncdf</code>),
+indicating what file to read from.</p>
+</td></tr>
+<tr valign="top"><td><code>varid</code></td>
+<td>
+<p>The variable whose attribute is to be read.  Can be a
+character string with the variable's name, an object of class <code>var.ncdf</code>,
+or an id contained in the &quot;id&quot; field of a <code>var.ncdf</code> object. As a
+special case, if varid==0, then it is assumed that we are reading a global
+attribute rather than a particular variable's attribute.</p>
+</td></tr>
+<tr valign="top"><td><code>attname</code></td>
+<td>
+<p>Name of the attribute to read.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function gets an attribute from a netCDF variable (or a global attribute
+from a netCDF file, if the passed argument &quot;varid&quot; is zero).
+Multiple attributes are returned in a vector.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with two attributes, &quot;hasatt&quot; and &quot;value&quot;.
+&quot;hasatt&quot; is TRUE if the named attribute was found, and FALSE otherwise.
+&quot;value&quot; is the (possibly vector) value of the attribute.
+If the on-disk type of the attribute is short or integer, then an integer
+value is returned.  If the on-disk type is float or double, than a 
+double value is returned.  If the on-disk type is character, than a
+character string is returned.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="att.put.ncdf.html">att.put.ncdf</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Make a simple netCDF file
+filename &lt;- "atttest_types.nc"
+dim &lt;- dim.def.ncdf( "X", "inches", 1:12 )
+var &lt;- var.def.ncdf( "Data", "unitless", dim, -1 ) 
+ncnew &lt;- create.ncdf( filename, var )
+
+# Define some attributes of various types
+attvaldbl &lt;- 3.1415926536
+att.put.ncdf( ncnew, var, "testatt_dbl", attvaldbl, prec="double" )
+attvalsingle &lt;- c(1.0,4.0,9.0,16.0)
+att.put.ncdf( ncnew, var, "testatt_single", attvalsingle )
+# varid=0 means it is a global attribute
+att.put.ncdf( ncnew, 0, "globalatt_int", 32000, prec="int" ) 
+att.put.ncdf( ncnew, 0, "globalatt_short", 7, prec="short" )
+att.put.ncdf( ncnew, 0, "description", 
+	"this is a test file with attributes of various types")
+close.ncdf(ncnew)
+
+# Now illustrate the use of the att.get.ncdf function by reading them back in
+doitfor &lt;- function( nc, var, attname ) {
+	av &lt;- att.get.ncdf( nc, var, attname )
+	if( av$hasatt ) {
+		print(paste("File",nc$filename,", var",var,"DOES have attribute",
+				attname))
+		print(paste("Storage mode:",storage.mode(av$value)))
+		print("Attribute value:")
+		print(av$value)
+	} else {
+		print(paste("File",nc$filename,", var",var,"does NOT have",
+			"attribute", attname))
+		}
+}
+	
+nc &lt;- open.ncdf( filename )
+var &lt;- "Data"
+doitfor( nc, var, "testatt_dbl" )
+doitfor( nc, var, "testatt_single" )
+doitfor( nc, var, "testatt_wacko" )
+doitfor( nc, 0,   "globalatt_int" )
+doitfor( nc, 0,   "globalatt_short" )
+doitfor( nc, 0,   "description" )
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

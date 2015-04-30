@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Print Information About a netCDF File</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for print.ncdf {ncdf}"><tr><td>print.ncdf {ncdf}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Print Information About a netCDF File</h2>
+
+<h3>Description</h3>
+
+<p>Prints information about a netCDF file, including the variables and dimensions
+it contains.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ ## S3 method for class 'ncdf'
+print( x, ... )
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An object of class &quot;ncdf&quot;.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Extra arguments are passed to the generic print function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>NetCDF files contain variables, which themselves have dimensions.  
+This routine prints out useful information about a netCDF file's
+variables and dimensions.  It is overloaded on the regular print
+function, so if &quot;nc&quot; is an object of class &quot;ncdf&quot;, then just
+calling <code>print(nc)</code> will suffice.  Objects of class
+&quot;ncdf&quot; are returned from <code>open.ncdf</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David W. Pierce <a href="mailto:dpierce@ucsd.edu">dpierce@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>http://www.unidata.ucar.edu/packages/netcdf/
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code><a href="var.def.ncdf.html">var.def.ncdf</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Open a netCDF file, print information about it
+nc &lt;- open.ncdf( "salinity.nc" )
+print(nc)
+</pre>
+
+<hr><div align="center">[Package <em>ncdf</em> version 1.6.8 <a href="00Index.html">Index</a>]</div>
+</body></html>

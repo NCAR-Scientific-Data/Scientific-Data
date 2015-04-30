@@ -121,7 +121,7 @@ class Port(object):
     def validate(self):
         if self.action in ['store', 'store_any']:
             if not self.optional and self.get_value() is None:
-                raise ValueError("Task %s Port %s requires a nontrivial value.  Value specified is None." % (str(self.task().id), self.name))
+                raise ValueError("Task %s Port %s requires a nontrivial value.  Value specified is None." % ((self.task().alias + str(self.task().id)) if hasattr(self.task(), "alias") else self.task().id, self.name))
         #
         elif self.action in ['append', 'append_any']:
             if not self.optional and self.get_value() is None:

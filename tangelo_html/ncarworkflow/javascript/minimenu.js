@@ -1,10 +1,24 @@
 /*global $*/
+/*
+    Title: Mini Menu
+    Functions pertaining to the mini-menu in the top right corner of the workflow builder.
+*/
 
+/*
+    Function: toggleMiniMenu
+
+    Toggles the mini menu's display.
+*/
 function toggleMiniMenu() {
     "use strict";
     $(".miniMenuOption").toggle("fast");
 }
 
+/*
+    Function: openClosedDrawer
+
+    If the edit drawer is closed, it is opened.
+*/
 function openClosedDrawer() {
     "use strict";
     if ($("#StepMaker").height() <= 20) {
@@ -12,32 +26,34 @@ function openClosedDrawer() {
     }
 }
 
+/* 
+    Functions: Load Basic Pages
+
+    newSubset - Loads a Subset page.
+    newAnalysis - Loads an Analysis page.
+    newPlot - Loads a Plot page.
+*/
+
 function newSubset() {
     "use strict";
-    $("#HTMLLoadSection").empty();
-    $("#HTMLLoadSection").load("stepHTML/subset.html");
+    $("#analysisWrapper").empty();
+    $("#analysisWrapper").load("stepHTML/subset.html");
     toggleMiniMenu();
     openClosedDrawer();
 }
 
 function newAnalysis() {
     "use strict";
-    $("#HTMLLoadSection").empty();
-    $("#HTMLLoadSection").load("stepHTML/analysis.html");
+    $("#analysisWrapper").empty();
+    $("#analysisWrapper").load("stepHTML/analysis.html");
     toggleMiniMenu();
     openClosedDrawer();
 }
 
 function newPlot() {
     "use strict";
-    //Load Goes Here
-    toggleMiniMenu();
-    openClosedDrawer();
-}
-
-function newDownload() {
-    "use strict";
-    //Load Goes Here
+    $("#analysisWrapper").empty();
+    $("#analysisWrapper").load("stepHTML/plot.html");
     toggleMiniMenu();
     openClosedDrawer();
 }

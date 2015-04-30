@@ -1,6 +1,6 @@
 <h1>Subset Data</h1>
-<button class="delete" onclick="deleteStep()">Delete This Subset</button>
 
+<div><p><a href="https://www.earthsystemgrid.org/project/narccap.html" target="_blank">Click here</a> for information on NARCCAP data</p></div>
 <!--Subset Form-->
 <div class="form-inline">
 
@@ -8,7 +8,7 @@
 	<section>
 		<div class="title">
 			<h2>Simulation Type</h2>
-			<h3>Explanation of Simulation</h3>
+			<h3>Select the model driver</h3>
 		</div>
 		<div class="inputs">
 			<select id="simulationType" onchange="changeBasedOnSim()">
@@ -24,11 +24,11 @@
 	<section>
 		<div class="title">
 			<h2>Variable</h2>
-			<h3>Explanation of Variable</h3>
+			<h3>Select the variable to analyze</h3>
 		</div>
 
 		<div class="inputs">
-			<div id="radioButtonContainerLeft">
+			<div class="left">
 				<span class="radioButton"><input type="radio" name="variable" id="sic" value="table1.sic" checked><label for="sic">Daily Average Sea Ice Fraction</label></span><br>
 				<span class="radioButton"><input type="radio" name="variable" id="spdmax" value="table1.spdmax"><label for="spdmax">Maximum Daily 10-Meter Wind Speed</label></span><br>
 				<span class="radioButton"><input type="radio" name="variable" id="tasmax" value="table1.tasmax"><label for="tasmax">Maximum Daily Surface Air Temperature</label></span><br>
@@ -36,7 +36,7 @@
 				<span class="radioButton"><input type="radio" name="variable" id="huss" value="table2.huss"><label for="huss">Surface Specific Humidity</label></span><br>
 				<span class="radioButton"><input type="radio" name="variable" id="pr" value="table2.pr"><label for="pr">Precipitation</label></span><br>
 			</div>
-			<div id="radioButtonContainerRight">
+			<div class="right">
 				<span class="radioButton"><input type="radio" name="variable" id="ps" value="table2.ps"><label for="ps">Surface Pressure</label></span><br>
 				<span class="radioButton"><input type="radio" name="variable" id="rsds" value="table2.rsds"><label for="rsds">Surface Downwelling Shortwave Radiation</label></span><br>
 				<span class="radioButton"><input type="radio" name="variable" id="tas" value="table2.tas"><label for="tas">Surface Air Temperature</label></span><br>
@@ -51,33 +51,27 @@
 	<section>
 		<div class="title">
 			<h2>Region</h2>
-			<h3>Explanation of Region</h3>
+			<h3>Enter the southwest and northeast coordinates of the polygon to subset the data by.</h3>
+			<p>Note: Data is first subset to the United States so coordniates must be within the ranges:<br>
+			 Latitude: 25 - 46<br>
+			 Longitude: 245- 285</p>
 		</div>
 
 		<div class="inputs">
-			<div id="regionSelect">
-				<label>Southwest Corner</label><br>
-				<div id="latlonContainer">
-					<div id="latlonLabel">
-						<span class="textbox"><label for="swlat">Latitude</label><br>
-						<span class="textbox"><label for="swlon">Longitude</label><br>
-					</div>
-					<div id="latlonInput">
-						<input type="text" id="swlat"></span><br>
-						<input type="text" id="swlon"></span><br>
-					</div>
-				</div><br>
-				<label>Northeast Corner</label><br>
-				<div id="latlonContainer">
-					<div id="latlonLabel">
-						<span class="textbox"><label for="nelat">Latitude</label><br>
-						<span class="textbox"><label for="nelon">Longitude</label><br>
-					</div>
-					<div id="latlonInput">
-						<input type="text" id="nelat"></span><br>
-						<input type="text" id="nelon"></span><br>
-					</div>
-				</div>
+			<div class="left">
+			<label>Southwest Corner</label><br>
+			<label for="swlat">Latitude</label>
+			<input type="text" id="swlat"><br>
+			<label for="swlon">Longitude</label>
+			<input type="text" id="swlon"><br>
+			</div>
+			
+			<div class="right">
+			<label>Northeast Corner</label><br>
+			<label for="nelat">Latitude</label>
+			<input type="text" id="nelat"><br>
+			<label for="nelon">Longitude</label>
+			<input type="text" id="nelon"><br>
 			</div>
 		</div>
 	</section>
@@ -87,11 +81,11 @@
 	<section>
 		<div class="title">
 			<h2>Time</h2>
-			<h3>Explanation of Time</h3>
+			<h3>Select the time range to analyze</h3>
 		</div>
 
 		<div class="inputs">
-			<div id="timeSelect">
+			<div class="left">
 				<label>Begin</label>
 				<select id="startYear">
 					<option value="1979" selected="selected">1979</option>
@@ -169,7 +163,8 @@
 					<option value="29">29</option>
 					<option value="30">30</option>
 				</select>
-
+			</div>
+			<div class="right">
 				<label>End</label>
 				<select id="endYear">
 					<option value="1979">1979</option>
@@ -256,15 +251,15 @@
 	<section>
 		<div class="title">
 			<h2>Regional Climate Model</h2>
-			<h3>Explanation of Regional Climate Model</h3>
+			<h3>Select the regional model to pull data from.</h3>
 		</div>
 		<div class="inputs" onclick="changeBasedOnRCM()">
-			<div id="regionalCliModSelectLeft">
+			<div class="left">
 				<span class="radioButton"><input type="radio" name="rcm" id="crcm" value="crcm" checked><label for="crcm">CRCM</label></span><br>
 				<span class="radioButton"><input type="radio" name="rcm" id="ecp2" value="ecp2"><label for="ecp2">ECP2</label></span><br>
 				<span class="radioButton"><input type="radio" name="rcm" id="hrm3" value="hrm3"><label for="hrm3">HRM3</label></span><br>
 			</div>
-			<div id="regionalCliModSelectRight">
+			<div class="right">
 				<span class="radioButton"><input type="radio" name="rcm" id="mm5i" value="mm5i"><label for="mm5i">MM5I</label></span><br>
 				<span class="radioButton"><input type="radio" name="rcm" id="rcm3" value="rcm3"><label for="rcm3">RCM3</label></span><br>
 				<span class="radioButton"><input type="radio" name="rcm" id="wrfg" value="wrfg"><label for="wrfg">WRFG</label></span>
@@ -277,25 +272,28 @@
 	<section>
 		<div class="title">
 			<h2>Global Climate Model</h2>
-			<h3>Explanation on Global Climate Model</h3>
+			<h3>Select the global climate model to pull data from</h3>
 		</div>
 		<div class="inputs">
-			<div id="globalCliModSelectLeft">
+			<div class="left">
 				<span class="radioButton"><input type="radio" name="gcm" id="gfdl" value="gfdl" disabled><label for="gfdl">GFDL</label></span><br>
 				<span class="radioButton"><input type="radio" name="gcm" id="cgcm3" value="cgcm3" disabled><label for="cgcm3">CGCM3</label></span><br>
 				<span class="radioButton"><input type="radio" name="gcm" id="hadcm3" value="hadcm3" disabled><label for="hadcm3">HADCM3</label></span><br>
 			</div>
-			<div id="globalCliModSelectRight">
+			<div class="right">
 				<span class="radioButton"><input type="radio" name="gcm" id="ccsm" value="ccsm" disabled><label for="ccsm">CCSM</label></span><br>
 				<span class="radioButton"><input type="radio" name="gcm" id="none" value="" checked><label for="none">None</label></span>
 			</div>
 		</div>
 	</section><br>
 	<!--End Global Climate Model Section-->
-
-	<button class="btn btn-class subset" onclick="callSubset()">Subset Data</button>
+	<section>
+		<button onclick="callSubset()">Add New Task</button>
+		<button onclick="updateSubset()">Update Task</button>
+		<button onclick="deleteTask()">Delete Task</button>
+	</section>
 </div>
 <!--End Subset Form-->
 
-<script type="text/javascript" src="javascript/urlCatalog.js"></script>
+<script type="text/javascript" src="javascript/analysis/urlCatalog.js"></script>
 <script type="text/javascript" src="javascript/analysis/subset.js"></script>

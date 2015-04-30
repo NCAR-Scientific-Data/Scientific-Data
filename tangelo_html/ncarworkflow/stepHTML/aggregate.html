@@ -1,0 +1,110 @@
+<h1>Analyze Data</h1>
+
+<!--Calculation Form-->
+<div class="form-inline">
+
+	<!--Filename/Node-->
+	<section>
+		<div class="title">
+			<h2>Node</h2>
+			<h3>The Node this analysis pulls data from.</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<!-- Select Box -->
+			<select id="node">
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Aggregate Type Section-->
+	<section>
+		<div class="title">
+			<h2>Aggregate Type</h2>
+			<h3>The type of aggregate you want to use.</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<select id="method">
+				<option value="mean" selected>Average</option>
+				<option value="min">Find Minimum</option>
+				<option value="max">Find Maximum</option>
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Time Interval Section-->
+	<section>
+		<!-- Section Title -->
+		<div class="title">
+			<h2>Time Interval</h2>
+			<h3>The time interval over which to aggregate.</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<select id="interval">
+				<option value="day" selected>Daily</option>
+				<option value="month">Monthly</option>
+				<option value="year">Yearly</option>
+				<option value="season">Seasonally</option>
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Output Date Section-->
+	<section>
+		<!-- Section Title -->
+		<div class="title">
+			<h2>Output Date</h2>
+			<h3>The date of which to set aggregate values. Ex: If the output date is set to "start" for a monthly aggregate, the aggregate values will be set at the first over every month in the output data.</h3>
+		</div>
+
+		<!-- Section Inputs -->
+		<div class="inputs">
+			<select id="outtime">
+				<option value="start" selected>Beginning</option>
+				<option value="mid">Middle</option>
+				<option value="end">End</option>
+			</select>
+		</div>
+	</section>
+	<!--End Section-->
+
+	<!--Cyclic Aggregation Section-->
+	<section>
+		<!--Section Title-->
+		<div class="title">
+			<h2>Cyclic Aggregation</h2>
+			<h3>Aggregate over years if there is more than one year in input data.</h3>
+		</div>
+
+		<!--Section Inputs-->
+		<div class="inputs">
+			<span class="radioButton"><input type="radio" name="cyclic" id="yes" value="True"><label for="yes">Yes</label></span><br>
+			<span class="radioButton"><input type="radio" name="cyclic" id="no" value="False" checked><label for="no">No</label></span>
+		</div>
+	</section>
+	<!--End Section-->
+
+
+	<!--Submit Section-->
+	<section>
+		<!--Always have all three buttons.-->
+		<button onclick="callAggregate()">Add New Task</button>
+		<button onclick="updateAggregate()">Update</button>
+		<button onclick="deleteTask()">Delete Task</button>
+	</section>
+	<!--End Section-->
+</div>
+<!--End Calculation Form-->
+
+<script type="text/javascript" src="javascript/analysis/aggregate.js"></script>
+<script type="text/javascript">
+	generateNodeSelect();
+</script>
