@@ -51,11 +51,11 @@ begin
 
   sw = getind_latlon2d (lat2d, lon2d, 24, 246)
   ne = getind_latlon2d (lat2d, lon2d, 44, 286)
-  varname = f->$variable$(:,sw(0,0):ne(0,0),sw(0,1):ne(0,1))
+;  varname = f->$variable$(:,sw(0,0):ne(0,0),sw(0,1):ne(0,1))
 
 ;---Convert "time" array into something we can more easily understand.
   opt      = -2
-  new_time = cd_calendar(varname&time,opt)    ; ntime x 6
+  new_time = cd_calendar(f->$variable$&time,opt)    ; ntime x 6
   stDate = str_split(startDate, "-")
   edDate = str_split(endDate, "-")
 
@@ -113,7 +113,7 @@ begin
   ii_time = ind(new_time.ge.startTime.and.new_time.le.endTime)
 
 ;---Subset the variables with calculated indexes
-  var_sub =  varname(ii_time,ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
+  var_sub =  f->$variable$(ii_time,ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   lat_sub  = lat2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   lon_sub  = lon2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   tb_sub   = tbnds(ii_time,:)
