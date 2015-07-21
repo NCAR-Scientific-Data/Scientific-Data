@@ -100,6 +100,12 @@ label {
 	top: 55px;
 }
 
+#runWorkflow {
+	position: fixed;
+	right: 25px;
+	top: 60px;
+}
+
 #analysisWrapper {
 	text-align: justify;
 	background-color: white;
