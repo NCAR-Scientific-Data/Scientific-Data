@@ -134,9 +134,9 @@ begin
 ;---Remove file first, if it exists.
   ; Check if workflow directory exists, if not create one
   directory = "data/" + wid + "/"
-  ;echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
-  ;if (echo .eq. "notfound") then
-  system("mkdir " + directory)
+  echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
+  if (echo .eq. "notfound") then
+    system("mkdir " + directory)
 
   end if
 
