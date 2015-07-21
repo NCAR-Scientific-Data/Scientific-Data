@@ -92,9 +92,9 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.uid)
         if not sysError or not nclError:
             if not os.path.isfile(result):
-                error = "NCL Error - Error with NCL script "+result
+                error = "NCL Error - Error with NCL script "
                 nclError = True
         if nclError or sysError:
-            self.subset = error
+            self.subset = result
         else:
             self.subset = result
