@@ -83,7 +83,7 @@ label {
 
 #miniMenu {
     position: fixed;
-    right: 150px;
+    right: 300px;
     top: 50px;
     width: 150px;
     height: 200px;
@@ -96,14 +96,14 @@ label {
 
 #save {
 	position: fixed;
-	right: 75px;
+	right: 150px;
 	top: 55px;
 }
 
 #runWorkflow {
 	position: fixed;
 	right: 25px;
-	top: 60px;
+	top: 55px;
 }
 
 #analysisWrapper {
