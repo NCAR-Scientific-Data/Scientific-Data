@@ -241,10 +241,19 @@ class Task(object):
     # Robert Crimi
     # Return dictionary for serialization of workflows
     def _dict_(self, workflow):
-        tmp = {}
-        tmp['Type'] = self.alias if hasattr(self, "alias") else self.__class__.__name__
-        tmp['Inputs'] = {}
+        tmp               = {}
+        tmp['Type']       = self.alias if hasattr(self, "alias") else self.__class__.__name__
+        tmp['Inputs']     = {}
+        tmp['Outputs']    = {}
         tmp['WorkflowID'] = self.workflowID
+        outputDictionary  = self.outputs._repn_()
+
+        for key in outputDictionary:
+            if key not in ['A_TYPE', 'Name', 'Mode', 'Owner']:
+                val = outputDictionary[key]
+                tmp['Outputs'][key] = val['Value']
+
+
         # Create dictionary of instances inputs
         dictionary = self.inputs._repn_()
         for key in dictionary:

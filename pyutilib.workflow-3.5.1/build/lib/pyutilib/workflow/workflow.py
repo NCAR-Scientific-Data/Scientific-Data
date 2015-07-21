@@ -100,7 +100,7 @@ class Workflow(Task):
                 for c in task.outputs[name].output_connections:
                     self.add(c.to_port.task())
             else:
-                workflowOutputName = name + "_" + str(task.uid)
+                workflowOutputName = name
                 if workflowOutputName in self._final_task.inputs:
                     raise ValueError("Cannot declare a workplan with multiple output values that share the same name: %s" % name)
                 self.outputs.declare(workflowOutputName)
