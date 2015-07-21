@@ -137,6 +137,7 @@ begin
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
   if (echo .eq. "notfound") then
     system("mkdir " + directory)
+    print(directory)
   end if
 
   ; Uniquely name output file by task id
