@@ -74,6 +74,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         
         outfile = workflowDirName + tid + "_climatology.nc"
         if os.path.exists(outfile): os.system("rm -rf " + outfile)
+        os.system("touch " + outfile)
 
         try:
             status = subprocess.call(args)
