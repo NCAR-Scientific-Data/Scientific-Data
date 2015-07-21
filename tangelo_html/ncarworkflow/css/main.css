@@ -83,7 +83,7 @@ label {
 
 #miniMenu {
     position: fixed;
-    right: 100px;
+    right: 150px;
     top: 50px;
     width: 150px;
     height: 200px;
@@ -96,7 +96,7 @@ label {
 
 #save {
 	position: fixed;
-	right: 25px;
+	right: 75px;
 	top: 55px;
 }
 
