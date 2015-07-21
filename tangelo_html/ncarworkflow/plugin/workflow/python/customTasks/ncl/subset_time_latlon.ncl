@@ -135,10 +135,10 @@ begin
   ; Check if workflow directory exists, if not create one
   directory = "data/" + wid + "/"
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
-  ;if (echo .eq. "notfound") then
-  system("mkdir " + directory)
+  if (echo .eq. "notfound") then
+    system("mkdir " + directory)
 
-  ;end if
+  end if
 
   ; Uniquely name output file by task id
   filename_out = directory + tid + "_subset.nc"

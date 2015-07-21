@@ -69,6 +69,12 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         sysError = False
         nclError = False
 
+        workflowDirName = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + self.workflowID + "/"
+        if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
+        
+        outfile = workflowDirName + tid + "_climatology.nc"
+        if os.path.exists(outfile): os.system("rm -rf " + outfile)
+
         try:
             status = subprocess.call(args)
         except:
@@ -95,6 +101,6 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
                 error = "NCL Error - Error with NCL script "
                 nclError = True
         if nclError or sysError:
-            self.subset = result
+            self.subset = error
         else:
             self.subset = result
