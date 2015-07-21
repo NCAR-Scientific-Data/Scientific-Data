@@ -22,7 +22,7 @@ from pymongo import MongoClient
 #   Returns:
 #
 #       workflow - An updated instance of the workflow with the new task added and linked
-def addTask(task, links, workflow):
+def addTask(task, links, output, workflow):
     for i in task.inputs:
         # Input is Port
         if(links[i][0] == 'Port'):
@@ -42,6 +42,10 @@ def addTask(task, links, workflow):
         else:
             task.inputs[i] = links[i]
 
+    for i in task.outputs:
+        if output[i] != 'None':
+            task.outputs[i] = output[i]
+            task.set_ready()
     # Add updated task to workflow and return new workflow
     workflow.add(task)
     return workflow
@@ -82,10 +86,10 @@ def deserialize(workflowString):
                 else:
                     task["Inputs"][key] = ["Port", value[1].encode("ascii", "ignore"), value[2].encode("ascii", "ignore")]
 
-            taskList.append((t, task["Inputs"]))
+            taskList.append((t, task["Inputs"], task["Outputs"]))
     
     for task in taskList:
-        addTask(task[0], task[1], q)
+        addTask(task[0], task[1], task[2] q)
 
     return q
 
