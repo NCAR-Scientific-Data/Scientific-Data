@@ -87,7 +87,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
                 elif status == 6:
                     error = "NCL Error - Conversion error"
                 else:
-                    error = "NCL Error - Error with NCL script"
+                    error = status
                 nclError = True
         result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.uid)
         if not sysError or not nclError:
