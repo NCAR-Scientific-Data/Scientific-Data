@@ -89,7 +89,7 @@ def deserialize(workflowString):
             taskList.append((t, task["Inputs"], task["Outputs"]))
     
     for task in taskList:
-        addTask(task[0], task[1], task[2] q)
+        addTask(task[0], task[1], task[2], q)
 
     return q
 
