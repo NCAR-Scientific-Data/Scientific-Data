@@ -133,13 +133,13 @@ def deserializeChangeTaskLinks(workflowString, taskUID, links):
                 else:
                     task["Inputs"][key] = ["Port", value[1].encode("ascii", "ignore"), value[2].encode("ascii", "ignore")]
 
-            taskList.append((t, task["Inputs"]))
+            taskList.append((t, task["Inputs"], task["Outputs"]))
     
     for task in taskList:
         if(task[0].UID() in [taskUID]):
-            addTask(task[0], links, q)
+            addTask(task[0], links, task[2], q)
         else:
-            addTask(task[0], task[1], q)
+            addTask(task[0], task[1], task[2], q)
 
     return q
 
