@@ -98,6 +98,6 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
                 error = "NCL Error - Error with NCL script "
                 nclError = True
         if nclError or sysError:
-            self.subset = result
+            self.subset = error
         else:
             self.subset = result
