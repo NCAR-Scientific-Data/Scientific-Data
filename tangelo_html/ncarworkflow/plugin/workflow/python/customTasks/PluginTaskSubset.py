@@ -72,7 +72,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         workflowDirName = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + self.workflowID + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
         
-        outfile = workflowDirName + tid + "_climatology.nc"
+        outfile = workflowDirName + tid + "_subset.nc"
         if os.path.exists(outfile): os.system("rm -rf " + outfile)
         os.system("touch " + outfile)
 
