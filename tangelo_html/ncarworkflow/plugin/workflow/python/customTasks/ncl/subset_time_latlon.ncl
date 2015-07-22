@@ -55,7 +55,7 @@ begin
 
 ;---Convert "time" array into something we can more easily understand.
   opt      = -2
-  new_time = cd_calendar(f->$variable$&time,opt)    ; ntime x 6
+  ;new_time = cd_calendar(f->$variable$&time,opt)    ; ntime x 6
   stDate = str_split(startDate, "-")
   edDate = str_split(endDate, "-")
 
@@ -100,9 +100,9 @@ begin
   endTime   = end_year*100 + end_month
   endTime   = endTime*100 + end_day
 
-  if (startTime .lt. min(new_time) .or. startTime .gt. max(new_time) .or. endTime .lt. min(new_time) .or. endTime .gt. max(new_time)) then
-    status_exit(4)
-  end if
+  ;if (startTime .lt. min(new_time) .or. startTime .gt. max(new_time) .or. endTime .lt. min(new_time) .or. endTime .gt. max(new_time)) then
+  ;  status_exit(4)
+  ;end if
 
 ;---Call function to get indexes closest to the SW and NE corners
   ii_sw = getind_latlon2d (lat2d, lon2d, swLat, swLon)
