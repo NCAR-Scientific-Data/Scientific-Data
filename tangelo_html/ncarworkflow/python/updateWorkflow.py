@@ -39,6 +39,8 @@ def addTask(taskType, links, workflow, workflowID):
 
     task = tangelo.plugin.workflow.getInstance(taskType)
     task.setUID(str(uuid.uuid4()))
+    print "-"*100
+    print task.UID
     task.setWorkflowID(workflowID)
     workflow = tangelo.plugin.workflow.addTask(task, links, None, workflow)
 
