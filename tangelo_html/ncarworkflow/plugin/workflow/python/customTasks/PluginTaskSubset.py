@@ -63,8 +63,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         v = "variable=\"{0}\"".format(str(self.variable))
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
-        print "-"*50
-        print tid
+
         args = ['ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl']
         args = filter(None,args)
         sysError = False
@@ -97,6 +96,8 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.uid)
         if not sysError or not nclError:
             if not os.path.isfile(result):
+                print "-"*100
+                print(result)
                 error = "NCL Error - Error creating file"
                 nclError = True
         if nclError or sysError:
