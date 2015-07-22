@@ -147,8 +147,6 @@ begin
 
 ;---Open NetCDF file to write to.
   fout = addfile(filename_out,"c")
-  print("----------------------------------------")
-  print(fout)
   att_names = getvaratts(f)
   do i=0, dimsizes(att_names)-1
     fout@$att_names(i)$ = f@$att_names(i)$
@@ -173,4 +171,6 @@ begin
   fout->lat  = lat_sub
   fout->lon  = lon_sub
   fout->time_bnds = tb_sub
+  print("--------------------------------------------------------------------")
+  print(fout)
 end
