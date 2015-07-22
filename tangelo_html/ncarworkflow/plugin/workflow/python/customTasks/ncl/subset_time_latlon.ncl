@@ -137,14 +137,13 @@ begin
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
   if (echo .eq. "notfound") then
     system("mkdir " + directory)
-
   end if
 
   ; Uniquely name output file by task id
   filename_out = directory + tid + "_subset.nc"
-  ;if(isfilepresent(filename_out)) then
-  ;  system("rm -rf " + filename_out)
-  ;end if
+  if(isfilepresent(filename_out)) then
+    system("rm -rf " + filename_out)
+  end if
 
 ;---Open NetCDF file to write to.
   fout = addfile(filename_out,"c")
