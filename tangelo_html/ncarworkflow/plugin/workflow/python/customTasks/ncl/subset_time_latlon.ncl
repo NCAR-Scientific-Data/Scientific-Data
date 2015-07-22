@@ -171,6 +171,4 @@ begin
   fout->lat  = lat_sub
   fout->lon  = lon_sub
   fout->time_bnds = tb_sub
-  print("--------------------------------------------------------------------")
-  print(fout)
 end
