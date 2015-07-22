@@ -34,8 +34,9 @@ begin
 
   lat2d = f->lat
   lon2d = f->lon
-  tbnds = f->time_bnds
-
+  if(isfilevar(f, time_bnds)) then
+    tbnds = f->time_bnds
+  end if
 ; Function: Initial US Subset
 ; Initially subsets data to US in order to meet the NARCCAP download size limit
 ; 
@@ -116,8 +117,9 @@ begin
   var_sub =  f->$variable$(ii_time,ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   lat_sub  = lat2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
   lon_sub  = lon2d(        ii_sw(0,0):ii_ne(0,0),ii_sw(0,1):ii_ne(0,1))
-  tb_sub   = tbnds(ii_time,:)
-
+  if(isfilevar(f, time_bnds)) then
+    tb_sub   = tbnds(ii_time,:)
+  end if
 
 ; Function: Output Subset
 ; Creates the output NetCDF file in the corresponding workflow folder.
@@ -170,5 +172,7 @@ begin
   fout->$variable$ = var_sub
   fout->lat  = lat_sub
   fout->lon  = lon_sub
-  fout->time_bnds = tb_sub
+  if(isfilevar(f, time_bnds)) then
+    fout->time_bnds = tb_sub
+  end if
 end

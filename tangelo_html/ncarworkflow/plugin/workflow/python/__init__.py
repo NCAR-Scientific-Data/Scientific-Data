@@ -87,7 +87,7 @@ def deserialize(workflowString):
                 else:
                     task["Inputs"][key] = ["Port", value[1].encode("ascii", "ignore"), value[2].encode("ascii", "ignore")]
 
-            taskList.append((t, task["Inputs"], None))
+            taskList.append((t, task["Inputs"], task["Outputs"]))
     
     for task in taskList:
         addTask(task[0], task[1], task[2], q)
