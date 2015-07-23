@@ -26,7 +26,9 @@ begin
 ;       The metadata of the corresponding NetCDF file.
 
   f        = addfile(filename, "r")
-
+  if (.not. isfilepresent(filename)) then
+    status_exit(8)
+  end if
 ;---Read variable, lat, lon off the file
   if (.not. isfilevar(f, variable)) then
     status_exit(5)

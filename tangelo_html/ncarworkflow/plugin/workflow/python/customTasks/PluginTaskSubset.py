@@ -66,8 +66,6 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
 
         args = ['ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl']
         args = filter(None,args)
-        print "-"*50
-        print args
         sysError = False
         nclError = False
 
@@ -94,6 +92,8 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
                     error = "NCL Error - Conversion error"
                 elif status == 7:
                     error = "NCL Error - Error Creating File"
+                elif status == 8:
+                    error = "NCL Error - Problem with OPeNDAP"
                 else:
                     error = "NCL Error - Error with NCL script"
                 nclError = True
@@ -103,3 +103,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
             self.subset = error
         else:
             self.subset = result
+        if error:
+            print error
+        else:
+            print "sysError = ", sysError
