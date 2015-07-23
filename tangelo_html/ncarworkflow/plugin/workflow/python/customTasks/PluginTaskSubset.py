@@ -64,7 +64,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
 
-        args = ['ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../ncl/subset_time_latlon.ncl', "> output.txt"]
+        args = ['ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../ncl/subset_time_latlon.ncl']
         args = filter(None,args)
         sysError = False
         nclError = False
