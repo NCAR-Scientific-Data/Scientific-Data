@@ -56,7 +56,7 @@ begin
 
 ;---Convert "time" array into something we can more easily understand.
   opt      = -2
-  ;new_time = cd_calendar(f->$variable$&time,opt)    ; ntime x 6
+  new_time = cd_calendar(f->$variable$&time,opt)    ; ntime x 6
   stDate = str_split(startDate, "-")
   edDate = str_split(endDate, "-")
 
