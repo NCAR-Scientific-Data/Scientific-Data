@@ -114,4 +114,4 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         else:
             self.subset = result
         print "-"*100
-        print status, err
+        print result
