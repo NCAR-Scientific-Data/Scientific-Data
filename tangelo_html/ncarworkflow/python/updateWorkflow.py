@@ -3,7 +3,6 @@ import json
 import ast
 import tangelo
 import pyutilib.workflow
-import traceback
 
 #   Title: Update Workflow
 
@@ -35,12 +34,13 @@ def createWorkflow():
 #       (workflow, task.uid) - A tuple with an instance of a workflow built from its representation and the new tasks UID
 def addTask(taskType, links, workflow, workflowID):
     # Add task to the workflow
-    print traceback.format_exc()
     links = ast.literal_eval(links)
 
     task = tangelo.plugin.workflow.getInstance(taskType)
     task.setUID(str(uuid.uuid4()))
     task.setWorkflowID(workflowID)
+    print "-"*100
+    print task.workflowID
     workflow = tangelo.plugin.workflow.addTask(task, links, None, workflow)
 
     # Set UID of workflow so it lives in the same space in memory
