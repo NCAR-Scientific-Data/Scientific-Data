@@ -73,14 +73,14 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
         
 
-        try:
-            p  = subprocess.Popen(args, stdout=subprocess.PIPE)
-            status, err = p.communicate()
-            p.stdout.close()
 
-        except:
+        p  = subprocess.Popen(args, stdout=subprocess.PIPE)
+        status, err = p.communicate()
+        p.stdout.close()
+        if err:
             sysError = True
             error = "System Error: Please contact the site administrator"
+
         if not sysError:
             if status:
                 if status == 2:
