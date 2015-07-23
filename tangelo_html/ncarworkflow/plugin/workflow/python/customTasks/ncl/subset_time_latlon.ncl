@@ -175,4 +175,6 @@ begin
   if(isfilevar(f, time_bnds)) then
     fout->time_bnds = tb_sub
   end if
+
+  if(.not. isfilepresent(filename_out)) then status_exit(7) end if
 end

@@ -90,14 +90,13 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
                     error = "NCL Error - Invalid parameter value"
                 elif status == 6:
                     error = "NCL Error - Conversion error"
+                elif status == 7:
+                    error = "NCL Error - Error Creating File"
                 else:
                     error = "NCL Error - Error with NCL script"
                 nclError = True
         result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.uid)
-        if not sysError or not nclError:
-            if not os.path.isfile(result):
-                error = "NCL Error - Error creating file"
-                nclError = True
+
         if nclError or sysError:
             self.subset = error
         else:
