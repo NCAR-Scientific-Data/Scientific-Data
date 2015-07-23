@@ -81,34 +81,31 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         p  = subprocess.Popen(args, stdout=subprocess.PIPE)
         status, err = p.communicate()
         p.stdout.close()
-        print "-"*100
-        print status      
+     
         if err:
-            sysError = True
             error = "System Error: Please contact the site administrator"
 
-        if not sysError:
-            if status:
-                if status == 2:
-                    error = "NCL Error - Missing input parameter"
-                elif status == 3:
-                    error = "NCL Error - Lat/Lon values out of range"
-                elif status == 4:
-                    error = "NCL Error - Date value out of range"
-                elif status == 5:
-                    error = "NCL Error - Invalid parameter value"
-                elif status == 6:
-                    error = "NCL Error - Conversion error"
-                elif status == 7:
-                    error = "NCL Error - Error Creating File"
-                elif status == 8:
-                    error = "NCL Error - Problem with OPeNDAP"
-                else:
-                    error = "NCL Error - Error with NCL script"
-                nclError = True
+        elif status:
+            if status == 2:
+                error = "NCL Error - Missing input parameter"
+            elif status == 3:
+                error = "NCL Error - Lat/Lon values out of range"
+            elif status == 4:
+                error = "NCL Error - Date value out of range"
+            elif status == 5:
+                error = "NCL Error - Invalid parameter value"
+            elif status == 6:
+                error = "NCL Error - Conversion error"
+            elif status == 7:
+                error = "NCL Error - Error Creating File"
+            elif status == 8:
+                error = "NCL Error - Problem with OPeNDAP"
+            else:
+                error = "NCL Error - Error with NCL script"
+            nclError = True
         result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.uid)
 
-        if nclError or sysError:
+        if nclError or err:
             self.subset = error
         else:
             self.subset = result
