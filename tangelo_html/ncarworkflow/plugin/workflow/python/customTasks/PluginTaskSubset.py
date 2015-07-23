@@ -73,7 +73,8 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
         
 
-
+        print "-"*100
+        print args
         p  = subprocess.Popen(args, stdout=subprocess.PIPE)
         status, err = p.communicate()
         p.stdout.close()
