@@ -527,7 +527,7 @@ function deleteTask() {
                 var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
 
                 if (download) {
-                    window.open("python/" + results.result);
+                    window.open("../plugin/workflow/python/" + results.result);
                 }
             } else {
                 alert("Results of Workflow:\n" + results.result);
