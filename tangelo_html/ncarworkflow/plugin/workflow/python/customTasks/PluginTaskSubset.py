@@ -110,4 +110,4 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         else:
             self.subset = os.getcwd()+"/"+result
         print "-"*100
-        print result
+        print self.subset
