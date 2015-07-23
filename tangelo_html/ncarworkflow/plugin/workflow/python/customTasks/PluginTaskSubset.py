@@ -3,6 +3,12 @@ import pyutilib.workflow
 import os
 import tangelo
 
+
+def get_file_name_location(self, fileName):
+    scriptDir = os.path.dirname(os.path.abspath(__file__))
+    for root, dirs, files in os.walk(scriptDir):
+        if fileName in files:
+            return os.path.join(root, fileName) + " "
 #   Class: PluginTaskSubset
 #   A task class that subsets NetCDF data.
 #
@@ -64,7 +70,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
 
-        args = ['ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../ncl/subset_time_latlon.ncl']
+        args = ['ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, get_file_name_location('subset_time_latlon.ncl')]
         args = filter(None,args)
         sysError = False
         nclError = False
