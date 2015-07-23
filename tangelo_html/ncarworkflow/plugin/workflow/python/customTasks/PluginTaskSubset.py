@@ -66,6 +66,8 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
 
         args = ['ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, '../plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl']
         args = filter(None,args)
+        print "-"*50
+        print args
         sysError = False
         nclError = False
 
