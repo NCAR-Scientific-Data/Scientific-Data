@@ -70,7 +70,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
 
-        args = ['/usr/local/ncl-6.2.1/bin/ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, "../plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl"]
+        args = ['/usr/local/ncl/bin/ncl', '-Q', filename, v, swLat, swLon, neLat, neLon, startDate, endDate, wid, tid, "../plugin/workflow/python/customTasks/ncl/subset_time_latlon.ncl"]
         args = filter(None,args)
         sysError = False
         nclError = False
@@ -78,9 +78,6 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         workflowDirName = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + self.workflowID + "/"
         if not os.path.isdir(workflowDirName): os.system("mkdir " + workflowDirName)
         
-
-        print "-"*100
-        print args
         p  = subprocess.Popen(args, stdout=subprocess.PIPE)
         status, err = p.communicate()
         p.stdout.close()
