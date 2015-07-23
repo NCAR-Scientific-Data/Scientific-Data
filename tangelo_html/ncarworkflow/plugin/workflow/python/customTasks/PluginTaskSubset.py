@@ -84,6 +84,8 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         p  = subprocess.Popen(args, stdout=subprocess.PIPE)
         status, err = p.communicate()
         p.stdout.close()
+        print "-"*100
+        print status      
         if err:
             sysError = True
             error = "System Error: Please contact the site administrator"
