@@ -78,7 +78,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         workflowDirName = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + self.workflowID + "/"
         if not os.path.isdir(workflowDirName): 
             print "8"*100
-            os.system("mkdir " + workflowDirName)
+            os.makedirs(workflowDirName)
         
         p  = subprocess.Popen(args, stdout=subprocess.PIPE)
         status, err = p.communicate()
