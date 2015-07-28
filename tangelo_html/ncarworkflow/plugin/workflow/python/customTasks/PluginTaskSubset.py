@@ -111,6 +111,6 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         if nclError or err:
             self.subset = error
         else:
-            self.subset = ".."+os.getcwd()+"/"+result
+            self.subset = result
         print "-"*100
         print self.subset
