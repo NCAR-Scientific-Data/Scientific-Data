@@ -137,7 +137,7 @@ begin
 
 ;---Remove file first, if it exists.
   ; Check if workflow directory exists, if not create one
-  directory = "data/" + wid + "/"
+  directory = "/home/project/Scientific-Data/tangelo_html/ncarworkflow/python/data/" + wid + "/"
   echo = systemfunc("[ -d " + directory + " ] && echo 'found' || echo 'notfound'")
   if (echo .eq. "notfound") then
     system("mkdir " + directory)
