@@ -58,17 +58,17 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
             if not sysError:
                 if status:
                     if status == 2:
-                        error = "NCL Error: Missing input parameter"
+                        error = "NCL Error - Missing input parameter"
                     elif status == 3:
-                        error = "NCL Error: Lat/Lon values out of range"
+                        error = "NCL Error - Lat/Lon values out of range"
                     elif status == 4:
-                        error = "NCL Error: Date value out of range"
+                        error = "NCL Error - Date value out of range"
                     elif status == 5:
-                        error = "NCL Error: Invalid parameter value"
+                        error = "NCL Error - Invalid parameter value"
                     elif status == 6:
-                        error = "NCL Error: Conversion error"
+                        error = "NCL Error - Conversion error"
                     else:
-                        error = "NCL Error: Error with NCL script"
+                        error = "NCL Error - Error with NCL script"
                     nclError = True
             result = "data/{0}/{1}_unitconv.nc".format(self.workflowID,self.uid)
             if not sysError or not nclError:
