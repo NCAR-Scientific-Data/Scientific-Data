@@ -91,6 +91,6 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
                 result = "data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
 
         if nclError or err:
-            self.subset = error
+            self.plot = error
         else:
-            self.subset = result
+            self.plot = result
