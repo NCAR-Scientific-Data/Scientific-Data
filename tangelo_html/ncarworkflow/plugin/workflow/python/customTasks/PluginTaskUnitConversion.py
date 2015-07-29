@@ -45,37 +45,41 @@ class PluginTaskUnitConversion(pyutilib.workflow.TaskPlugin):
             wid = "wid=\"{0}\"".format(self.workflowID)
             tid = "tid=\"{0}\"".format(self.uid)
             
-            args = ['ncl', '-Q', wid, tid, sFilename, sUnit, '../plugin/workflow/python/customTasks/ncl/unit_conversion.ncl']
+            args = ['/usr/local/ncl/bin/ncl', '-Q', wid, tid, sFilename, sUnit, '../plugin/workflow/python/customTasks/ncl/unit_conversion.ncl']
             args = filter(None,args)
             sysError = False
             nclError = False
 
-            try:
-                    status = subprocess.call(args)
-            except:
-                    sysError = True
-                    error = "System Error: Please contact site administrator."
-            if not sysError:
-                if status:
-                    if status == 2:
-                        error = "NCL Error - Missing input parameter"
-                    elif status == 3:
-                        error = "NCL Error - Lat/Lon values out of range"
-                    elif status == 4:
-                        error = "NCL Error - Date value out of range"
-                    elif status == 5:
-                        error = "NCL Error - Invalid parameter value"
-                    elif status == 6:
-                        error = "NCL Error - Conversion error"
-                    else:
-                        error = "NCL Error - Error with NCL script"
-                    nclError = True
+            
+            os.environ["NCARG_ROOT"] = '/usr/local/ncl'
+            p  = subprocess.Popen(args, stdout=subprocess.PIPE)
+            status, err = p.communicate()
+            p.stdout.close()
+
+            if err:
+                error = "System Error: Please contact the site administrator"
+            elif status:
+                if status == 2:
+                    error = "NCL Error - Missing input parameter"
+                elif status == 3:
+                    error = "NCL Error - Lat/Lon values out of range"
+                elif status == 4:
+                    error = "NCL Error - Date value out of range"
+                elif status == 5:
+                    error = "NCL Error - Invalid parameter value"
+                elif status == 6:
+                    error = "NCL Error - Conversion error"
+                elif status == 7:
+                    error = "NCL Error - Error Creating File"
+                elif status == 8:
+                    error = "NCL Error - Problem with OPeNDAP"
+                else:
+                    error = "NCL Error - Error with NCL script"
+                nclError = True
+
+
             result = "data/{0}/{1}_unitconv.nc".format(self.workflowID,self.uid)
-            if not sysError or not nclError:
-                if not os.path.isfile(result):
-                    error = "NCL Error: Please check input parameters."
-                    nclError = True
-            if nclError or sysError:
-                    self.result = error 
+            if nclError or err:
+                self.result = error
             else:
-                    self.result = result
+                self.result = result
