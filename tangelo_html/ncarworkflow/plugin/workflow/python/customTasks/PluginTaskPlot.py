@@ -53,7 +53,7 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
         wid = "wid=\"{0}\"".format(self.workflowID)
         tid = "tid=\"{0}\"".format(self.uid)
 
-        args = ['ncl', '-Q', wid, tid, sFilename, sTimeindex, plotScript]
+        args = ['/usr/local/ncl/bin/ncl', '-Q', wid, tid, sFilename, sTimeindex, plotScript]
         args = filter(None,args)
         sysError = False
         nclError = False
