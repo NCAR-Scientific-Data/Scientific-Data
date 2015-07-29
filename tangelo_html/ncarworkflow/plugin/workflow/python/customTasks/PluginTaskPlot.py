@@ -58,35 +58,39 @@ class PluginTaskPlot(pyutilib.workflow.TaskPlugin):
         sysError = False
         nclError = False
 
-        try:
-                status = subprocess.call(args)
-        except:
-                sysError = True
-                error = "System error, please contact site administrator."
+
+        os.environ["NCARG_ROOT"] = '/usr/local/ncl'
+        p  = subprocess.Popen(args, stdout=subprocess.PIPE)
+        status, err = p.communicate()
+        p.stdout.close()
+     
+        if err:
+            error = "System Error: Please contact the site administrator"
+
+        elif status:
+            if status == 2:
+                error = "NCL Error - Missing input parameter"
+            elif status == 3:
+                error = "NCL Error - Lat/Lon values out of range"
+            elif status == 4:
+                error = "NCL Error - Date value out of range"
+            elif status == 5:
+                error = "NCL Error - Invalid parameter value"
+            elif status == 6:
+                error = "NCL Error - Conversion error"
+            elif status == 7:
+                error = "NCL Error - Error Creating File"
+            elif status == 8:
+                error = "NCL Error - Problem with OPeNDAP"
+            else:
+                error = "NCL Error - Error with NCL script"
+            nclError = True
         if self.native == "True":
                 result = "data/{0}/{1}_nativeplot.png".format(self.workflowID,self.uid)
         else:
                 result = "data/{0}/{1}_plot.png".format(self.workflowID,self.uid)
-        if not sysError:
-            if status:
-                if status == 2:
-                    error = "NCL Error - Missing input parameter"
-                elif status == 3:
-                    error = "NCL Error - Lat/Lon values out of range"
-                elif status == 4:
-                    error = "NCL Error - Date value out of range"
-                elif status == 5:
-                    error = "NCL Error - Invalid parameter value"
-                elif status == 6:
-                    error = "NCL Error - Conversion error"
-                else:
-                    error = "NCL Error - Error with NCL script"
-                nclError = True
-        if not sysError or not nclError:
-            if not os.path.isfile(result):
-                error = "NCL Error - Please check input parameters."
-                nclError = True
-        if nclError or sysError:
-                self.plot = error
+
+        if nclError or err:
+            self.subset = error
         else:
-                self.plot = result
+            self.subset = result
