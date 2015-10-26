@@ -400,7 +400,6 @@ function addTask(task_Type, links, repopulateVals, outputName) {
 
     $.getJSON(url, stuffToPass, function (results) {
         if (results.workflow) {
-            alert("SIMETHING WENT WRONG");
             $("[id^='tangelo-drawer-icon-']").trigger("click");
             $("#analysisWrapper").empty();
             $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
@@ -449,7 +448,7 @@ function addTask(task_Type, links, repopulateVals, outputName) {
 
 function runWorkflow(){
     "use strict";
-
+    window.alert("YOU GOT HERE");
     var url = "python/updateWorkflow",
         stuffToPass = {
             "function": "runWorkflow",
