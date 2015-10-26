@@ -452,7 +452,7 @@ function runWorkflow(){
 
     var url = "python/updateWorkflow",
         stuffToPass = {
-            "function": "deleteTask",
+            "function": "runWorkflow",
             "workflowID": localStorage.uid,
             "args": JSON.stringify([localStorage.current])
         }
