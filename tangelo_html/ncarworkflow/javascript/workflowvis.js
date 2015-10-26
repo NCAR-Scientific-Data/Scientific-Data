@@ -440,6 +440,7 @@ function addTask(task_Type, links, repopulateVals, outputName) {
                 nodeUID: tangelo.accessor({field: "uid"}),
             });
         } else {
+            alert("SOMETHING WENT WRONG");
             alert(JSON.stringify(results));
         }
     });
