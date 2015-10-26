@@ -144,6 +144,8 @@ def run(function, workflowID, args):
 
             return {"workflow": w.__list__()}
         elif function == "runWorkflow":
+            print "I GOT HERE"
+            print "*"*100
             results = getOutput(w)
 
             return {"result": results, "workflow": w.__list__()}
