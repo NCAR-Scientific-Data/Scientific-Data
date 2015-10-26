@@ -441,7 +441,7 @@ function addTask(task_Type, links, repopulateVals, outputName) {
             });
         } else {
             alert("SOMETHING WENT WRONG");
-            alert(JSON.stringify(results));
+            //alert(JSON.stringify(results));
         }
     });
 }
