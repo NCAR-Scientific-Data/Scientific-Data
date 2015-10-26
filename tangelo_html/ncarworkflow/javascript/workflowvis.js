@@ -611,6 +611,7 @@ function updateTask(links, repopulateVals) {
 */
 function saveWorkflow() {
     "use strict";
+    window.alert("YOU GOT HERE");
     var url = "python/updateWorkflow",
         stuffToPass = {
             "function" : "saveWorkflow",
