@@ -23,6 +23,8 @@ from pymongo import MongoClient
 #
 #       workflow - An updated instance of the workflow with the new task added and linked
 def addTask(task, links, output, workflow):
+    print "LINKS = ", links
+    print "OUTPUT = ", output
     for i in task.inputs:
         # Input is Port
         if(links[i][0] == 'Port'):
@@ -46,7 +48,7 @@ def addTask(task, links, output, workflow):
         for i in task.outputs:
             if output[i] != 'None':
                 task.outputs[i] = output[i]
-                #task.set_ready()
+                task.set_ready()
     # Add updated task to workflow and return new workflow
     workflow.add(task)
     return workflow
