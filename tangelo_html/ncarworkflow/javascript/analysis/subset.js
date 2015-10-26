@@ -51,6 +51,7 @@ function subset(simulationType, variable, swlat, swlon, nelat, nelon, timestart,
     Parse the form and creates the repopulation values object.
 */
 function callSubset() {
+    alert("HEY YO I GOT HERE");
     "use strict";
     var simulationType = $("#simulationType option:selected").val(),
         variable = $("input[name='variable']:checked").val(),
