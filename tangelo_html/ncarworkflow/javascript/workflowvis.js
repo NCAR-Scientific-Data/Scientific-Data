@@ -448,7 +448,7 @@ function addTask(task_Type, links, repopulateVals, outputName) {
 
 function runWorkflow(){
     "use strict";
-    
+
     window.alert("YOU GOT HERE");
     var url = "python/updateWorkflow",
         stuffToPass = {
@@ -469,6 +469,9 @@ function runWorkflow(){
             } else {
                 alert("Results of Workflow:\n" + results.result);
             }
+        }
+        else{
+            alert("THERE WAS A PROBLEM HERE");
         }
     });
 }
@@ -612,7 +615,7 @@ function updateTask(links, repopulateVals) {
 */
 function saveWorkflow() {
     "use strict";
-    alert("YOU GOT HERE");
+
     var url = "python/updateWorkflow",
         stuffToPass = {
             "function" : "saveWorkflow",
