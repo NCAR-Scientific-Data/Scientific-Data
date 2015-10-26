@@ -399,7 +399,7 @@ function addTask(task_Type, links, repopulateVals, outputName) {
         };
 
     $.getJSON(url, stuffToPass, function (results) {
-        if (results.result) {
+        if (results.workflow) {
             $("[id^='tangelo-drawer-icon-']").trigger("click");
             $("#analysisWrapper").empty();
             $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
@@ -439,7 +439,24 @@ function addTask(task_Type, links, repopulateVals, outputName) {
                 nodeLabel: tangelo.accessor({field: "name"}),
                 nodeUID: tangelo.accessor({field: "uid"}),
             });
+        } else {
+            alert(JSON.stringify(results));
+        }
+    });
+}
 
+function runWorkflow(){
+    "use strict";
+
+    var url = "python/updateWorkflow",
+        stuffToPass = {
+            "function": "deleteTask",
+            "workflowID": localStorage.uid,
+            "args": JSON.stringify([localStorage.current])
+        }
+
+    $.getJSON(url, stuffToPass, function (results){
+        if (results.result) {
             var re = new RegExp("^.+[.](png|nc)$");
             if (re.test(results.result)) {
                 var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
@@ -450,9 +467,6 @@ function addTask(task_Type, links, repopulateVals, outputName) {
             } else {
                 alert("Results of Workflow:\n" + results.result);
             }
-
-        } else {
-            alert(JSON.stringify(results));
         }
     });
 }
@@ -480,7 +494,7 @@ function deleteTask() {
         };
 
     $.getJSON(url, stuffToPass, function (results) {
-        if (results.result) {
+        if (results.workflow) {
             $("[id^='tangelo-drawer-icon-']").trigger("click");
             $("#analysisWrapper").empty();
             $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
@@ -521,18 +535,6 @@ function deleteTask() {
                 nodeUID: tangelo.accessor({field: "uid"}),
             });
 
-
-            var re = new RegExp("^.+[.](png|nc)$");
-            if (re.test(results.result)) {
-                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
-
-                if (download) {
-                    window.open("python/" + results.result);
-                }
-            } else {
-                alert("Results of Workflow:\n" + results.result);
-            }
-
         } else {
             alert(JSON.stringify(results));
         }
@@ -553,7 +555,7 @@ function updateTask(links, repopulateVals) {
     delete localStorage.current;
 
     $.getJSON(url, stuffToPass, function (results) {
-        if (results.result) {
+        if (results.workflow) {
             $("[id^='tangelo-drawer-icon-']").trigger("click");
             $("#analysisWrapper").empty();
             $("#analysisWrapper").html("<h1>NCAR Scientific Workflows</h1>");
@@ -591,17 +593,6 @@ function updateTask(links, repopulateVals) {
                 nodeLabel: tangelo.accessor({field: "name"}),
                 nodeUID: tangelo.accessor({field: "uid"}),
             });
-
-            var re = new RegExp("^.+[.](png|nc)$");
-            if (re.test(results.result)) {
-                var download = confirm("Workflow Resulted In:\n" + results.result + ".\n Would you like to download?");
-
-                if (download) {
-                    window.open("python/" + results.result);
-                }
-            } else {
-                alert("Results of Workflow:\n" + results.result);
-            }
 
         } else {
             alert(JSON.stringify(results));

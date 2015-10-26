@@ -116,35 +116,38 @@ def run(function, workflowID, args):
         (repop, w) = tangelo.plugin.workflow.loadWorkflow(workflowID)
         tangelo.store()[workflowID] = w
         w = tangelo.plugin.workflow.deserialize(w)
-        result = getOutput(w)
+        #result = getOutput(w)
 
-        return {"result": result, "workflow" : w.__list__(), "repop" : repop}
+        return {"workflow" : w.__list__(), "repop" : repop}
 
     elif workflowID in tangelo.store():
 
         w = tangelo.plugin.workflow.deserialize(tangelo.store()[workflowID])
         
         if function == "addTask":
-
             (w, tid) = addTask(args[0], args[1], w, workflowID)
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
-            result = getOutput(w)
+            #result = getOutput(w)
 
-            return {"result":result, "workflow":w.__list__(), "taskID": tid}
+            return {"workflow": w.__list__(), "taskID": tid}
+            #return {"result":result, "workflow":w.__list__(), "taskID": tid}
         elif function == "deleteTask":
-
             w = tangelo.plugin.workflow.deleteTask(args[0], workflowID, tangelo.store()[workflowID])
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
-            result = getOutput(w)
+            #result = getOutput(w)
 
-            return {"result":result, "workflow":w.__list__()}
+            return {"workflow":w.__list__()}
         elif function == "updateTask":
-            
             w = tangelo.plugin.workflow.deserializeChangeTaskLinks(tangelo.store()[workflowID], args[0], args[1])
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
-            result = getOutput(w)
+            #result = getOutput(w)
 
-            return {"result":result, "workflow":w.__list__()}
+            return {"workflow": w.__list__()}
+        elif function == "runWorkflow":
+            results = getOutput(w)
+
+            return {"result": results, "workflow": w.__list__()}
+
         else:
             return {"Error": "Error - Could Not Update Workflow"}
 
