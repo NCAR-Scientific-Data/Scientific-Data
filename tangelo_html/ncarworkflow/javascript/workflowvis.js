@@ -440,8 +440,7 @@ function addTask(task_Type, links, repopulateVals, outputName) {
                 nodeUID: tangelo.accessor({field: "uid"}),
             });
         } else {
-            alert("SOMETHING WENT WRONG");
-            //alert(JSON.stringify(results));
+            alert(JSON.stringify(results));
         }
     });
 }
@@ -449,7 +448,6 @@ function addTask(task_Type, links, repopulateVals, outputName) {
 function runWorkflow(){
     "use strict";
 
-    window.alert("YOU GOT HERE");
     var url = "python/updateWorkflow",
         stuffToPass = {
             "function": "runWorkflow",
