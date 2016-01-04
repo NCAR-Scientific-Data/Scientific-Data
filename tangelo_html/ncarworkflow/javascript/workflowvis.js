@@ -445,7 +445,7 @@ function addTask(task_Type, links, repopulateVals, outputName) {
     });
 }
 
-function runTheWorkflow(){
+function runWorkflow(){
     "use strict";
 
     var url = "python/updateWorkflow",
