@@ -468,9 +468,6 @@ function runWorkflow(){
                 alert("Results of Workflow:\n" + results.result);
             }
         }
-        else{
-            alert("THERE WAS A PROBLEM HERE");
-        }
     });
 }
 
