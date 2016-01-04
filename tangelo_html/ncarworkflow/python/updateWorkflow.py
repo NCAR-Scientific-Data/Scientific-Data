@@ -94,10 +94,6 @@ def getOutput(workflow):
 #       If there is an error, the dictionary returns an error message instead.
 def run(function, workflowID, args):
     w = None
-    print "-"*50
-    print function
-    print args == "[null]"
-    print "-"*50
     if args != "[null]":
         args = ast.literal_eval(args)
     
@@ -145,16 +141,12 @@ def run(function, workflowID, args):
         elif function == "updateTask":
             w = tangelo.plugin.workflow.deserializeChangeTaskLinks(tangelo.store()[workflowID], args[0], args[1])
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
-            #result = getOutput(w)
 
             return {"workflow": w.__list__()}
         elif function == "runWorkflow":
-            print "I GOT HERE"
-            print "*"*100
             results = getOutput(w)
 
             return {"result": results, "workflow": w.__list__()}
-
         else:
             return {"Error": "Error - Could Not Update Workflow"}
 
