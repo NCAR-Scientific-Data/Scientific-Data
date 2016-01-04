@@ -95,6 +95,7 @@ def getOutput(workflow):
 def run(function, workflowID, args):
     w = None
     print "-"*50
+    print function
     print args
     print "-"*50
     if args != "None":

@@ -452,7 +452,7 @@ function runWorkflow(){
         stuffToPass = {
             "function": "runWorkflow",
             "workflowID": localStorage.uid,
-            "args": "None")
+            "args": "RUN")
         }
 
     $.getJSON(url, stuffToPass, function (results){
