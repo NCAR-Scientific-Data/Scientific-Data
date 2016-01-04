@@ -96,7 +96,7 @@ def run(function, workflowID, args):
     w = None
     print "-"*50
     print function
-    print args
+    print type(args)
     print "-"*50
     if args != "None":
         args = ast.literal_eval(args)
