@@ -94,8 +94,7 @@ def getOutput(workflow):
 #       If there is an error, the dictionary returns an error message instead.
 def run(function, workflowID, args):
     w = None
-    print "ARGS = %s" % args
-    if args != "[null]":
+    if args != "null":
         args = ast.literal_eval(args)
     
     if function == "createWorkflow":
