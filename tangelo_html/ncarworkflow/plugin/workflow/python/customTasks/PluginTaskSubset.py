@@ -46,7 +46,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         self.inputs.declare('nelon')
         self.inputs.declare('startdate')
         self.inputs.declare('enddate')
-        self.outputs.declare('subset'+self.id)
+        self.outputs.declare('subset'+str(self.id))
 
     #   Function: execute
     #   Calls the NCL script to subset the NetCDF file.
@@ -108,6 +108,6 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         result = "data/{0}/{1}_subset.nc".format(self.workflowID, self.uid)
 
         if nclError or err:
-            self.subset = error
+            setattr(self, 'subset'+str(self.id), error)
         else:
-            self.subset = result
+            setattr(self, 'subset'+str(self.id), result)
