@@ -14,6 +14,7 @@ __all__ = ['Task', 'EmptyTask', 'Component']
 import argparse
 import pprint
 import re
+import uuid
 from pyutilib.workflow import globals
 from pyutilib.misc import Options
 from pyutilib.workflow import port 
@@ -48,7 +49,7 @@ class Task(object):
         self.debug = False
         # Robert Crimi
         self.workflowID = None
-        self.uid = None
+        self.uid = str(uuid.uuid4())
 
     def add_resource(self, resource):
         """Add a resource that is required for this task to execute."""
