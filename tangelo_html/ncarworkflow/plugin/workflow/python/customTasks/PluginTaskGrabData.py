@@ -23,7 +23,7 @@ def get_file_name_location(fileName):
 #       startdate - The beginning date to subset data over.
 #       enddate - The final date to subset data over.
 #       result - The output subsetted NetCDF file.
-class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
+class PluginTaskGrabData(pyutilib.workflow.TaskPlugin):
 
     pyutilib.component.core.alias("taskSubset")
     alias = "taskSubset"
@@ -46,7 +46,7 @@ class PluginTaskSubset(pyutilib.workflow.TaskPlugin):
         self.inputs.declare('nelon')
         self.inputs.declare('startdate')
         self.inputs.declare('enddate')
-        self.outputs.declare('subset'+self.id)
+        self.outputs.declare('subset')
 
     #   Function: execute
     #   Calls the NCL script to subset the NetCDF file.
