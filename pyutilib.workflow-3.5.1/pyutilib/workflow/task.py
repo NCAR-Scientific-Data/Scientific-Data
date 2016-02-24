@@ -50,7 +50,10 @@ class Task(object):
         # Robert Crimi
         self.workflowID = None
         self.uid = str(uuid.uuid4())
+        print "-"*50
         print self.uid
+        print "-"*50
+        
 
     def add_resource(self, resource):
         """Add a resource that is required for this task to execute."""
