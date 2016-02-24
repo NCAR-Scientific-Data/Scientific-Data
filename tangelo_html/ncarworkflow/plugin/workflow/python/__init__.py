@@ -1,5 +1,5 @@
 # Title: Workflow Library
-
+import pprint
 import tangelo
 import pyutilib.workflow
 import json
@@ -156,7 +156,7 @@ def deserializeChangeTaskLinks(workflowString, taskUID, links):
 #       The workflow as a json-formatted dictionary via dumps()
 def serialize(workflow):
     print "*"*50
-    print json.dumps(workflow.__dict__())
+    pprint.pprint(json.dumps(workflow.__dict__()))
     #with open('/data/'+ str(workflow.workflowID) +'.json', 'w') as outfile:
     return json.dumps(workflow.__dict__())
 
