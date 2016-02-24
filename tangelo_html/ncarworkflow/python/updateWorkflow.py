@@ -3,6 +3,8 @@ import json
 import ast
 import tangelo
 import pyutilib.workflow
+from pyutilib.workflow import globals
+
 
 #   Title: Update Workflow
 
@@ -128,6 +130,7 @@ def run(function, workflowID, args):
         if function == "addTask":
             (w, tid) = addTask(args[0], args[1], w, workflowID)
             tangelo.store()[workflowID] = tangelo.plugin.workflow.serialize(w)
+            globals.reset_id_counter()
             #result = getOutput(w)
 
             return {"workflow": w.__list__(), "taskID": tid}
