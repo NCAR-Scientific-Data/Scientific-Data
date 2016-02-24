@@ -6,6 +6,7 @@ import json
 import unicodedata
 import ast
 from customTasks import  *
+from pyutilib.workflow import globals
 
 from pymongo import MongoClient
 
@@ -63,7 +64,7 @@ def addTask(task, links, output, workflow):
 #
 #       q - An instance of a workflow built from its representation
 def deserialize(workflowString):
-    pyutilib.workflow.globals.reset_id_counter()
+    globals.reset_id_counter()
     print "HERE"
     data = json.loads(workflowString)
 
