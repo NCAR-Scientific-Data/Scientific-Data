@@ -64,6 +64,7 @@ def addTask(task, links, output, workflow):
 #       q - An instance of a workflow built from its representation
 def deserialize(workflowString):
     pyutilib.workflow.globals.reset_id_counter()
+    print "HERE"
     data = json.loads(workflowString)
 
     taskList = []
