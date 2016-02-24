@@ -40,12 +40,6 @@ class PluginTaskGrabData(pyutilib.workflow.TaskPlugin):
         pyutilib.workflow.Task.__init__(self,*args,**kwds)
         self.inputs.declare('url')
         self.inputs.declare('variable')
-        self.inputs.declare('swlat')
-        self.inputs.declare('swlon')
-        self.inputs.declare('nelat')
-        self.inputs.declare('nelon')
-        self.inputs.declare('startdate')
-        self.inputs.declare('enddate')
         self.outputs.declare('subset')
 
     #   Function: execute
